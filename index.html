@@ -11,7 +11,7 @@
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
     
@@ -19,39 +19,33 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        /* ===== RESET & BASE ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
             background: #f0f4fa;
             color: #0b1a2e;
         }
 
+        /* ===== NAVBAR ===== */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
             padding: 12px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
         }
 
         .navbar-brand {
@@ -60,7 +54,6 @@
             gap: 10px;
             text-decoration: none;
         }
-
         .navbar-brand i {
             font-size: 1.6rem;
             color: #e63946;
@@ -68,7 +61,6 @@
             padding: 8px 12px;
             border-radius: 14px;
         }
-
         .navbar-brand h1 {
             font-weight: 700;
             font-size: 1.4rem;
@@ -78,7 +70,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .navbar-brand span {
             font-weight: 500;
             color: #4a5f73;
@@ -95,7 +86,6 @@
             gap: 6px;
             flex-wrap: wrap;
         }
-
         .navbar-menu a {
             text-decoration: none;
             color: #4a5f73;
@@ -109,25 +99,14 @@
             gap: 6px;
             white-space: nowrap;
         }
-
-        .navbar-menu a i {
-            font-size: 0.9rem;
-        }
-
-        .navbar-menu a:hover {
-            background: #e4ebf3;
-            color: #0b1a2e;
-        }
-
+        .navbar-menu a i { font-size: 0.9rem; }
+        .navbar-menu a:hover { background: #e4ebf3; color: #0b1a2e; }
         .navbar-menu a.active {
             background: #0b1a2e;
             color: white;
-            box-shadow: 0 4px 14px rgba(11, 26, 46, 0.2);
+            box-shadow: 0 4px 14px rgba(11,26,46,0.2);
         }
-
-        .navbar-menu a.hidden-link {
-            display: none !important;
-        }
+        .navbar-menu a.hidden-link { display: none !important; }
 
         .user-badge-nav {
             display: flex;
@@ -138,11 +117,7 @@
             border-radius: 60px;
             font-size: 0.8rem;
         }
-
-        .user-badge-nav i {
-            color: #1d3b5c;
-        }
-
+        .user-badge-nav i { color: #1d3b5c; }
         .user-badge-nav .role-badge {
             background: #d4e0ed;
             padding: 1px 10px;
@@ -164,12 +139,18 @@
             transition: 0.2s;
             white-space: nowrap;
         }
+        .btn-switch-nav:hover { background: #e4ebf3; border-color: #b0c8e0; }
 
-        .btn-switch-nav:hover {
-            background: #e4ebf3;
-            border-color: #b0c8e0;
+        .fcm-status {
+            font-size: 0.65rem;
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
+        .fcm-status.error { color: #dc3545; }
 
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             padding-top: 85px;
             max-width: 1440px;
@@ -185,20 +166,11 @@
             padding: 20px 0 40px;
             min-height: 70vh;
         }
-
-        .section.active {
-            display: block;
-        }
+        .section.active { display: block; }
 
         @keyframes fadeSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
@@ -210,18 +182,15 @@
             gap: 12px;
             color: #0b1a2e;
         }
+        .section-title i { color: #1d3b5c; }
 
-        .section-title i {
-            color: #1d3b5c;
-        }
-
+        /* ===== COMPONENTS ===== */
         .service-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 18px;
             margin: 16px 0 20px;
         }
-
         .service-card {
             background: #f9fbfd;
             border-radius: 20px;
@@ -229,26 +198,18 @@
             transition: 0.2s;
             border: 1px solid #eef3f8;
         }
-
         .service-card:hover {
             background: white;
-            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08);
             border-color: #d0ddee;
         }
-
-        .service-card h4 {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-
+        .service-card h4 { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
         .service-card .price {
             font-weight: 700;
             font-size: 1.3rem;
             color: #e63946;
             margin: 6px 0 4px;
         }
-
         .service-card .desc {
             color: #4f657b;
             font-size: 0.8rem;
@@ -256,7 +217,6 @@
             padding-top: 8px;
             margin-top: 8px;
         }
-
         .badge-mekanik {
             background: #d2e5ff;
             color: #004080;
@@ -268,6 +228,7 @@
             margin-top: 6px;
         }
 
+        /* Booking WA */
         .booking-wa-container {
             background: #f2f7fe;
             border-radius: 24px;
@@ -275,14 +236,12 @@
             margin: 16px 0;
             border: 1px solid #e2ebf5;
         }
-
         .booking-wa-container .wa-header {
             display: flex;
             align-items: center;
             gap: 14px;
             margin-bottom: 20px;
         }
-
         .booking-wa-container .wa-header i {
             font-size: 2.4rem;
             color: #25D366;
@@ -290,13 +249,7 @@
             padding: 14px;
             border-radius: 16px;
         }
-
-        .booking-wa-container .wa-header h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #0b1a2e;
-        }
-
+        .booking-wa-container .wa-header h3 { font-size: 1.3rem; font-weight: 700; color: #0b1a2e; }
         .booking-wa-container .wa-header .wa-number {
             font-size: 1.1rem;
             color: #25D366;
@@ -309,17 +262,8 @@
             gap: 16px 20px;
             margin: 16px 0;
         }
-
-        .form-wa .field-full {
-            grid-column: 1 / -1;
-        }
-
-        .form-wa .field {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
+        .form-wa .field-full { grid-column: 1 / -1; }
+        .form-wa .field { display: flex; flex-direction: column; gap: 4px; }
         .form-wa label {
             font-weight: 600;
             font-size: 0.75rem;
@@ -327,9 +271,7 @@
             letter-spacing: 0.5px;
             color: #2a4b6e;
         }
-
-        .form-wa input,
-        .form-wa select {
+        .form-wa input, .form-wa select {
             padding: 12px 16px;
             border-radius: 40px;
             border: 1px solid #d6e2f0;
@@ -339,16 +281,9 @@
             transition: 0.2s;
             width: 100%;
         }
-
-        .form-wa input:focus,
-        .form-wa select:focus {
+        .form-wa input:focus, .form-wa select:focus {
             outline: 2px solid #b4cef0;
             border-color: transparent;
-        }
-
-        .form-wa input:disabled {
-            background: #f0f4fa;
-            color: #6a7f94;
         }
 
         .btn-wa-send {
@@ -364,24 +299,12 @@
             gap: 12px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+            box-shadow: 0 6px 20px rgba(37,211,102,0.35);
             margin-top: 8px;
         }
-
-        .btn-wa-send:hover {
-            background: #20b85a;
-            transform: scale(0.97);
-        }
-
-        .btn-wa-send i {
-            font-size: 1.2rem;
-        }
-
-        .btn-wa-send:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-wa-send:hover { background: #20b85a; transform: scale(0.97); }
+        .btn-wa-send i { font-size: 1.2rem; }
+        .btn-wa-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .wa-preview {
             background: #f8faff;
@@ -390,7 +313,6 @@
             margin: 16px 0;
             border: 1px solid #dce5ef;
         }
-
         .wa-preview .preview-label {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -399,7 +321,6 @@
             letter-spacing: 0.5px;
             margin-bottom: 6px;
         }
-
         .wa-preview .preview-message {
             background: white;
             padding: 14px 18px;
@@ -422,11 +343,19 @@
             gap: 12px;
             color: #1e7e34;
         }
+        .info-booking-wa i { font-size: 1.2rem; }
 
-        .info-booking-wa i {
+        .wa-number-display {
             font-size: 1.2rem;
+            font-weight: 700;
+            color: #25D366;
+            background: #e8f5e9;
+            padding: 4px 16px;
+            border-radius: 40px;
+            display: inline-block;
         }
 
+        /* Buttons */
         .btn-primary {
             background: #0b1a2e;
             border: none;
@@ -440,19 +369,10 @@
             gap: 8px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(11, 26, 46, 0.15);
+            box-shadow: 0 6px 14px rgba(11,26,46,0.15);
         }
-
-        .btn-primary:hover {
-            background: #1d3b5c;
-            transform: scale(0.97);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:hover { background: #1d3b5c; transform: scale(0.97); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .btn-success {
             background: #28a745;
@@ -467,13 +387,9 @@
             gap: 8px;
             cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 6px 14px rgba(40,167,69,0.3);
         }
-
-        .btn-success:hover {
-            background: #218838;
-            transform: scale(0.97);
-        }
+        .btn-success:hover { background: #218838; transform: scale(0.97); }
 
         .btn-outline {
             background: transparent;
@@ -486,10 +402,7 @@
             transition: 0.2s;
             font-size: 0.85rem;
         }
-
-        .btn-outline:hover {
-            background: #e9f0fa;
-        }
+        .btn-outline:hover { background: #e9f0fa; }
 
         .btn-danger {
             background: #dc3545;
@@ -501,18 +414,15 @@
             cursor: pointer;
             transition: 0.2s;
         }
+        .btn-danger:hover { background: #c82333; }
 
-        .btn-danger:hover {
-            background: #c82333;
-        }
-
+        /* Mekanik */
         .mekanik-list {
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
             margin: 16px 0;
         }
-
         .mekanik-item {
             background: white;
             border-radius: 60px;
@@ -521,14 +431,9 @@
             align-items: center;
             gap: 10px;
             border: 1px solid #e2ebf5;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
-
-        .mekanik-item i {
-            color: #2c6b9e;
-            font-size: 1.1rem;
-        }
-
+        .mekanik-item i { color: #2c6b9e; font-size: 1.1rem; }
         .mekanik-item .schedule {
             background: #e1edfb;
             padding: 2px 12px;
@@ -537,7 +442,6 @@
             font-weight: 600;
             color: #00427a;
         }
-
         .mekanik-item .status {
             width: 8px;
             height: 8px;
@@ -545,11 +449,9 @@
             background: #34a853;
             display: inline-block;
         }
+        .mekanik-item .status.busy { background: #e63946; }
 
-        .mekanik-item .status.busy {
-            background: #e63946;
-        }
-
+        /* Admin Panel */
         .admin-panel {
             background: #f8faff;
             border-radius: 24px;
@@ -557,27 +459,19 @@
             border: 1px solid #e2ebf5;
             margin-top: 16px;
         }
-
         .product-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 14px;
             margin-bottom: 18px;
         }
-
-        .product-form .field {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
+        .product-form .field { display: flex; flex-direction: column; gap: 4px; }
         .product-form label {
             font-weight: 600;
             font-size: 0.7rem;
             text-transform: uppercase;
             color: #2a4b6e;
         }
-
         .product-form input {
             padding: 10px 14px;
             border-radius: 40px;
@@ -586,7 +480,6 @@
             font-weight: 500;
             font-size: 0.85rem;
         }
-
         .product-form input:focus {
             outline: 2px solid #b4cef0;
             border-color: transparent;
@@ -598,7 +491,6 @@
             font-size: 0.85rem;
             margin-top: 12px;
         }
-
         .product-table th {
             text-align: left;
             padding: 10px 8px;
@@ -608,17 +500,11 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
-
         .product-table td {
             padding: 10px 8px;
             border-bottom: 1px solid #eef3f8;
         }
-
-        .product-table .actions {
-            display: flex;
-            gap: 6px;
-        }
-
+        .product-table .actions { display: flex; gap: 6px; }
         .product-table .actions button {
             background: transparent;
             border: none;
@@ -627,30 +513,18 @@
             border-radius: 30px;
             font-size: 0.8rem;
         }
+        .product-table .actions .edit-btn { color: #0066cc; }
+        .product-table .actions .delete-btn { color: #e63946; }
 
-        .product-table .actions .edit-btn {
-            color: #0066cc;
-        }
-        .product-table .actions .delete-btn {
-            color: #e63946;
-        }
-
+        /* Kasir */
         .kasir-row {
             display: flex;
             flex-wrap: wrap;
             gap: 24px;
             margin-top: 16px;
         }
-
-        .kasir-col {
-            flex: 2;
-            min-width: 280px;
-        }
-
-        .kasir-col:last-child {
-            flex: 1.2;
-            min-width: 220px;
-        }
+        .kasir-col { flex: 2; min-width: 280px; }
+        .kasir-col:last-child { flex: 1.2; min-width: 220px; }
 
         .cart-item {
             display: flex;
@@ -659,20 +533,9 @@
             border-bottom: 1px solid #ecf2f9;
             align-items: center;
         }
-
-        .cart-item .item-name {
-            font-weight: 500;
-        }
-
-        .cart-item .item-price {
-            font-weight: 700;
-        }
-
-        .cart-item .item-serial {
-            font-size: 0.7rem;
-            color: #6a7f94;
-            font-weight: 400;
-        }
+        .cart-item .item-name { font-weight: 500; }
+        .cart-item .item-price { font-weight: 700; }
+        .cart-item .item-serial { font-size: 0.7rem; color: #6a7f94; font-weight: 400; }
 
         .total-box {
             background: #f0f6fe;
@@ -680,29 +543,24 @@
             border-radius: 20px;
             margin-top: 16px;
         }
-
         .total-box .total-line {
             display: flex;
             justify-content: space-between;
             font-weight: 600;
             font-size: 1.1rem;
         }
-
         .total-box .total-line span:last-child {
             color: #e63946;
             font-size: 1.4rem;
         }
-
         .total-box .total-line.dp-line {
             color: #856404;
             font-size: 0.95rem;
         }
-
         .total-box .total-line.dp-line span:last-child {
             color: #28a745;
             font-size: 1.1rem;
         }
-
         .separator {
             height: 2px;
             background: linear-gradient(to right, #d3e2f5, transparent);
@@ -720,7 +578,6 @@
             border: 2px dashed #b8cee8;
             flex-wrap: wrap;
         }
-
         .scan-area input {
             flex: 1;
             border: none;
@@ -731,11 +588,7 @@
             outline: none;
             min-width: 150px;
         }
-
-        .scan-area input::placeholder {
-            color: #8aa0b8;
-        }
-
+        .scan-area input::placeholder { color: #8aa0b8; }
         .scan-area .scan-btn {
             background: #0b1a2e;
             color: white;
@@ -750,11 +603,9 @@
             gap: 6px;
             transition: 0.2s;
         }
+        .scan-area .scan-btn:hover { background: #1d3b5c; }
 
-        .scan-area .scan-btn:hover {
-            background: #1d3b5c;
-        }
-
+        /* Scanner Overlay */
         .scanner-overlay {
             display: none;
             position: fixed;
@@ -762,18 +613,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0,0,0,0.85);
             z-index: 10001;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             padding: 20px;
         }
-
-        .scanner-overlay.show {
-            display: flex;
-        }
-
+        .scanner-overlay.show { display: flex; }
         .scanner-container {
             background: white;
             border-radius: 20px;
@@ -782,7 +629,6 @@
             padding: 20px;
             position: relative;
         }
-
         .scanner-container #scannerBox {
             width: 100%;
             aspect-ratio: 1/0.8;
@@ -791,20 +637,17 @@
             overflow: hidden;
             position: relative;
         }
-
         .scanner-container #scannerBox video {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .scanner-container .scanner-actions {
             display: flex;
             gap: 10px;
             margin-top: 16px;
             justify-content: center;
         }
-
         .scanner-container .scanner-actions button {
             padding: 10px 28px;
             border-radius: 60px;
@@ -814,16 +657,11 @@
             font-size: 0.85rem;
             transition: 0.2s;
         }
-
         .scanner-container .scanner-actions .btn-close-scanner {
             background: #e9ecef;
             color: #333;
         }
-
-        .scanner-container .scanner-actions .btn-close-scanner:hover {
-            background: #dde0e3;
-        }
-
+        .scanner-container .scanner-actions .btn-close-scanner:hover { background: #dde0e3; }
         .scanner-container .scanner-status {
             text-align: center;
             padding: 8px;
@@ -831,11 +669,9 @@
             color: #28a745;
             margin-top: 8px;
         }
+        .scanner-container .scanner-status.error { color: #dc3545; }
 
-        .scanner-container .scanner-status.error {
-            color: #dc3545;
-        }
-
+        /* Struk */
         .struk-container {
             display: none;
             position: fixed;
@@ -843,17 +679,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.5);
             z-index: 9999;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-
-        .struk-container.show {
-            display: flex;
-        }
-
+        .struk-container.show { display: flex; }
         .struk-modal {
             background: white;
             border-radius: 20px;
@@ -862,21 +694,13 @@
             max-height: 90vh;
             overflow-y: auto;
             padding: 24px 28px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
             animation: slideUp 0.3s ease;
         }
-
         @keyframes slideUp {
-            from {
-                transform: translateY(30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-
         .struk-content {
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -884,32 +708,24 @@
             color: #000;
             padding: 8px 0;
         }
-
         .struk-content .header-struk {
             text-align: center;
             border-bottom: 2px dashed #000;
             padding-bottom: 12px;
             margin-bottom: 12px;
         }
-
         .struk-content .header-struk h2 {
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 2px;
             margin-bottom: 4px;
         }
-
-        .struk-content .header-struk .sub {
-            font-size: 10px;
-            color: #555;
-        }
-
+        .struk-content .header-struk .sub { font-size: 10px; color: #555; }
         .struk-content .struk-row {
             display: flex;
             justify-content: space-between;
             padding: 4px 0;
         }
-
         .struk-content .struk-row.total {
             font-weight: 700;
             font-size: 14px;
@@ -917,28 +733,18 @@
             padding-top: 10px;
             margin-top: 8px;
         }
-
         .struk-content .struk-row.dp-row {
             color: #28a745;
             border-top: 1px dashed #28a745;
             padding-top: 6px;
             margin-top: 4px;
         }
-
         .struk-content .item-detail {
             padding: 3px 0;
             border-bottom: 1px dotted #ddd;
         }
-
-        .struk-content .item-detail .item-name {
-            font-weight: 600;
-        }
-
-        .struk-content .item-detail .item-serial {
-            font-size: 10px;
-            color: #666;
-        }
-
+        .struk-content .item-detail .item-name { font-weight: 600; }
+        .struk-content .item-detail .item-serial { font-size: 10px; color: #666; }
         .struk-content .footer-struk {
             text-align: center;
             border-top: 2px dashed #000;
@@ -947,7 +753,6 @@
             font-size: 10px;
             color: #555;
         }
-
         .struk-actions {
             display: flex;
             gap: 10px;
@@ -955,7 +760,6 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-
         .struk-actions button {
             padding: 10px 28px;
             border-radius: 60px;
@@ -965,33 +769,14 @@
             font-size: 0.85rem;
             transition: 0.2s;
         }
-
-        .struk-actions .btn-print {
-            background: #0b1a2e;
-            color: white;
-        }
-
-        .struk-actions .btn-print:hover {
-            background: #1d3b5c;
-        }
-
-        .struk-actions .btn-close-struk {
-            background: #e9ecef;
-            color: #333;
-        }
-
-        .struk-actions .btn-close-struk:hover {
-            background: #dde0e3;
-        }
+        .struk-actions .btn-print { background: #0b1a2e; color: white; }
+        .struk-actions .btn-print:hover { background: #1d3b5c; }
+        .struk-actions .btn-close-struk { background: #e9ecef; color: #333; }
+        .struk-actions .btn-close-struk:hover { background: #dde0e3; }
 
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            .struk-container,
-            .struk-container * {
-                visibility: visible;
-            }
+            body * { visibility: hidden; }
+            .struk-container, .struk-container * { visibility: visible; }
             .struk-container {
                 position: fixed;
                 left: 0;
@@ -1004,17 +789,11 @@
                 justify-content: center;
                 align-items: flex-start;
             }
-            .struk-modal {
-                box-shadow: none;
-                max-width: 100%;
-                padding: 10px;
-                border-radius: 0;
-            }
-            .struk-actions {
-                display: none !important;
-            }
+            .struk-modal { box-shadow: none; max-width: 100%; padding: 10px; border-radius: 0; }
+            .struk-actions { display: none !important; }
         }
 
+        /* Notification */
         .notification {
             padding: 12px 18px;
             border-radius: 12px;
@@ -1024,45 +803,51 @@
             font-weight: 500;
             display: none;
         }
+        .notification.show { display: block; }
 
-        .notification.show {
-            display: block;
+        /* Loading */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
         }
-
-        .admin-only {
-            display: none !important;
+        .loading-overlay.show { display: flex; }
+        .loading-overlay .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e2ebf5;
+            border-top: 4px solid #0b1a2e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
-
-        .customer-only {
-            display: block;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
+        .loading-overlay p { color: #0b1a2e; font-weight: 600; }
 
-        .show-admin .admin-only {
-            display: flex !important;
-        }
-
-        .show-admin .customer-only-nav {
-            display: none !important;
-        }
-
-        .show-customer .admin-only {
-            display: none !important;
-        }
-
-        .show-customer .customer-only-nav {
-            display: flex !important;
-        }
-
+        /* Role visibility */
+        .admin-only { display: none !important; }
+        .customer-only { display: block; }
+        .show-admin .admin-only { display: flex !important; }
+        .show-admin .customer-only-nav { display: none !important; }
+        .show-customer .admin-only { display: none !important; }
+        .show-customer .customer-only-nav { display: flex !important; }
         .show-admin #section-layanan,
-        .show-admin #section-booking {
-            display: none !important;
-        }
-
+        .show-admin #section-booking { display: none !important; }
         .show-customer #section-kasir,
-        .show-customer #section-admin {
-            display: none !important;
-        }
+        .show-customer #section-admin { display: none !important; }
 
+        /* Password Modal */
         .password-modal {
             display: none;
             position: fixed;
@@ -1070,27 +855,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0,0,0,0.6);
             z-index: 10000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-
-        .password-modal.show {
-            display: flex;
-        }
-
+        .password-modal.show { display: flex; }
         .password-modal-content {
             background: white;
             border-radius: 24px;
             max-width: 400px;
             width: 100%;
             padding: 32px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
             animation: slideUp 0.3s ease;
         }
-
         .password-modal-content h3 {
             font-size: 1.2rem;
             margin-bottom: 8px;
@@ -1098,13 +878,7 @@
             align-items: center;
             gap: 10px;
         }
-
-        .password-modal-content p {
-            color: #4a5f73;
-            font-size: 0.9rem;
-            margin-bottom: 16px;
-        }
-
+        .password-modal-content p { color: #4a5f73; font-size: 0.9rem; margin-bottom: 16px; }
         .password-modal-content input {
             width: 100%;
             padding: 12px 16px;
@@ -1115,17 +889,12 @@
             outline: none;
             transition: 0.2s;
         }
-
-        .password-modal-content input:focus {
-            border-color: #0b1a2e;
-        }
-
+        .password-modal-content input:focus { border-color: #0b1a2e; }
         .password-modal-content .password-actions {
             display: flex;
             gap: 10px;
             margin-top: 16px;
         }
-
         .password-modal-content .password-actions button {
             flex: 1;
             padding: 10px;
@@ -1135,249 +904,70 @@
             cursor: pointer;
             transition: 0.2s;
         }
-
         .password-modal-content .password-actions .btn-confirm-pass {
             background: #0b1a2e;
             color: white;
         }
-
-        .password-modal-content .password-actions .btn-confirm-pass:hover {
-            background: #1d3b5c;
-        }
-
+        .password-modal-content .password-actions .btn-confirm-pass:hover { background: #1d3b5c; }
         .password-modal-content .password-actions .btn-cancel-pass {
             background: #e9ecef;
             color: #333;
         }
-
-        .password-modal-content .password-actions .btn-cancel-pass:hover {
-            background: #dde0e3;
-        }
-
+        .password-modal-content .password-actions .btn-cancel-pass:hover { background: #dde0e3; }
         .password-error {
             color: #dc3545;
             font-size: 0.85rem;
             margin-top: 8px;
             display: none;
         }
+        .password-error.show { display: block; }
 
-        .password-error.show {
-            display: block;
-        }
-
-        .wa-number-display {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #25D366;
-            background: #e8f5e9;
-            padding: 4px 16px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-overlay .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #e2ebf5;
-            border-top: 4px solid #0b1a2e;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-overlay p {
-            color: #0b1a2e;
-            font-weight: 600;
-        }
-
-        .firebase-error {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin: 12px 0;
-            color: #721c24;
-            display: none;
-        }
-
-        .firebase-error.show {
-            display: block;
-        }
-
-        .firebase-error i {
-            margin-right: 10px;
-        }
-
-        .notification-badge {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .notification-badge .badge-count {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e63946;
-            color: white;
-            font-size: 0.55rem;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 40px;
-            min-width: 18px;
-            text-align: center;
-        }
-
-        .fcm-status {
+        .db-status {
             font-size: 0.7rem;
-            color: #28a745;
             display: flex;
             align-items: center;
             gap: 4px;
         }
-
-        .fcm-status.error {
-            color: #dc3545;
-        }
+        .db-status.online { color: #28a745; }
+        .db-status.offline { color: #dc3545; }
 
         @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 16px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-
-            .navbar-menu {
-                justify-content: center;
-                gap: 4px;
-                flex-wrap: wrap;
-            }
-
-            .navbar-menu a {
-                padding: 6px 12px;
-                font-size: 0.7rem;
-            }
-
-            .navbar-menu a i {
-                font-size: 0.75rem;
-            }
-
-            .main-content {
-                padding-top: 120px;
-                padding-left: 16px;
-                padding-right: 16px;
-            }
-
-            .section {
-                padding: 12px 0 30px;
-            }
-
-            .section-title {
-                font-size: 1.2rem;
-            }
-
-            .form-wa {
-                grid-template-columns: 1fr;
-            }
-
-            .product-form {
-                grid-template-columns: 1fr;
-            }
-
-            .scan-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .scan-area input {
-                width: 100%;
-            }
-
-            .kasir-row {
-                flex-direction: column;
-            }
-
-            .struk-modal {
-                padding: 16px;
-                margin: 10px;
-            }
-
-            .user-badge-nav .name {
-                display: none;
-            }
-
-            .booking-wa-container {
-                padding: 20px;
-            }
-
-            .password-modal-content {
-                padding: 24px;
-            }
-
-            .scanner-container {
-                padding: 12px;
-            }
-
-            .scanner-container #scannerBox {
-                aspect-ratio: 1/1;
-            }
+            .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+            .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
+            .navbar-menu a { padding: 6px 12px; font-size: 0.7rem; }
+            .navbar-menu a i { font-size: 0.75rem; }
+            .main-content { padding-top: 120px; padding-left: 16px; padding-right: 16px; }
+            .section { padding: 12px 0 30px; }
+            .section-title { font-size: 1.2rem; }
+            .form-wa { grid-template-columns: 1fr; }
+            .product-form { grid-template-columns: 1fr; }
+            .scan-area { flex-direction: column; align-items: stretch; }
+            .scan-area input { width: 100%; }
+            .kasir-row { flex-direction: column; }
+            .struk-modal { padding: 16px; margin: 10px; }
+            .user-badge-nav .name { display: none; }
+            .booking-wa-container { padding: 20px; }
+            .password-modal-content { padding: 24px; }
+            .scanner-container { padding: 12px; }
+            .scanner-container #scannerBox { aspect-ratio: 1/1; }
         }
-
         @media (max-width: 480px) {
-            .navbar-menu a {
-                font-size: 0.6rem;
-                padding: 4px 10px;
-            }
-
-            .navbar-brand h1 {
-                font-size: 1rem;
-            }
-
-            .navbar-brand i {
-                font-size: 1.2rem;
-                padding: 6px 10px;
-            }
-
-            .booking-wa-container .wa-header {
-                flex-direction: column;
-                text-align: center;
-            }
+            .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
+            .navbar-brand h1 { font-size: 1rem; }
+            .navbar-brand i { font-size: 1.2rem; padding: 6px 10px; }
+            .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============ LOADING OVERLAY ============ -->
+    <!-- ===== LOADING OVERLAY ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <p id="loadingText">Memuat data dari server...</p>
     </div>
 
-    <!-- ============ NAVBAR ============ -->
+    <!-- ===== NAVBAR ===== -->
     <nav class="navbar" id="navbar">
         <a href="#section-layanan" class="navbar-brand">
             <i class="fas fa-motorcycle"></i>
@@ -1385,23 +975,18 @@
         </a>
 
         <div class="navbar-menu" id="navMenu">
-            <!-- Customer Menu -->
             <a href="#section-layanan" class="active customer-only-nav" data-section="section-layanan">
                 <i class="fas fa-tools"></i> Layanan
             </a>
             <a href="#section-booking" class="customer-only-nav" data-section="section-booking">
                 <i class="fas fa-calendar-check"></i> Booking
             </a>
-
-            <!-- Admin Menu -->
             <a href="#section-kasir" class="admin-only" data-section="section-kasir">
                 <i class="fas fa-cash-register"></i> Kasir
             </a>
             <a href="#section-admin" class="admin-only" data-section="section-admin">
                 <i class="fas fa-boxes"></i> Produk
             </a>
-
-            <!-- Shared Menu -->
             <a href="#section-mekanik" data-section="section-mekanik">
                 <i class="fas fa-user-cog"></i> Mekanik
             </a>
@@ -1410,8 +995,11 @@
                 <i class="fas fa-user-circle"></i>
                 <span class="name" id="navUserName">Publik</span>
                 <span class="role-badge" id="navUserRole">Customer</span>
+                <span class="db-status" id="dbStatus">
+                    <i class="fas fa-circle" style="font-size:0.4rem;"></i> RTDB
+                </span>
                 <span class="fcm-status" id="fcmStatus">
-                    <i class="fas fa-circle" style="font-size:0.5rem;"></i> Notifikasi
+                    <i class="fas fa-circle" style="font-size:0.4rem;"></i> Notif
                 </span>
             </div>
             <button class="btn-switch-nav" id="switchNavBtn">
@@ -1420,7 +1008,7 @@
         </div>
     </nav>
 
-    <!-- ============ PASSWORD MODAL ============ -->
+    <!-- ===== PASSWORD MODAL ===== -->
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
             <h3><i class="fas fa-lock" style="color:#0b1a2e;"></i> Admin Access</h3>
@@ -1434,7 +1022,7 @@
         </div>
     </div>
 
-    <!-- ============ SCANNER OVERLAY ============ -->
+    <!-- ===== SCANNER OVERLAY ===== -->
     <div class="scanner-overlay" id="scannerOverlay">
         <div class="scanner-container">
             <div id="scannerBox"></div>
@@ -1445,31 +1033,24 @@
         </div>
     </div>
 
-    <!-- ============ MAIN CONTENT ============ -->
+    <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
 
-        <!-- NOTIFICATION -->
         <div class="notification" id="notification"></div>
 
-        <!-- Firebase Error -->
-        <div class="firebase-error" id="firebaseError">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span id="firebaseErrorText">Gagal terhubung ke server. Periksa koneksi internet atau konfigurasi Firebase.</span>
-        </div>
-
-        <!-- ======== SECTION 1: LAYANAN (Customer Only) ======== -->
+        <!-- ===== SECTION 1: LAYANAN ===== -->
         <section id="section-layanan" class="section active">
             <h2 class="section-title"><i class="fas fa-list-ul"></i> Daftar Layanan & Harga</h2>
             <div class="service-grid" id="serviceGrid"></div>
-            <div style="margin: 8px 0 0; background: #f4f9ff; padding: 10px 16px; border-radius: 60px; display: inline-block; font-size:0.9rem;">
-                <i class="fas fa-wrench" style="margin-right: 8px;"></i> Semua layanan didukung mekanik bersertifikat
+            <div style="margin:8px 0 0;background:#f4f9ff;padding:10px 16px;border-radius:60px;display:inline-block;font-size:0.9rem;">
+                <i class="fas fa-wrench" style="margin-right:8px;"></i> Semua layanan didukung mekanik bersertifikat
             </div>
         </section>
 
-        <!-- ======== SECTION 2: BOOKING VIA WA (Customer Only) ======== -->
+        <!-- ===== SECTION 2: BOOKING ===== -->
         <section id="section-booking" class="section">
             <h2 class="section-title"><i class="fas fa-calendar-check"></i> Booking Service</h2>
-            <p style="color: #3c5b78; margin-bottom: 16px;">Booking via WhatsApp dengan mengisi form di bawah ini. Pesan akan otomatis terkirim ke admin.</p>
+            <p style="color:#3c5b78;margin-bottom:16px;">Booking via WhatsApp dengan mengisi form di bawah ini.</p>
 
             <div class="booking-wa-container">
                 <div class="wa-header">
@@ -1487,7 +1068,7 @@
                     <span>Isi data diri Anda, pilih layanan dan tanggal. Pesan akan otomatis terkirim ke WhatsApp admin.</span>
                 </div>
 
-                <div class="form-wa" id="waForm">
+                <div class="form-wa">
                     <div class="field field-full">
                         <label><i class="fas fa-user"></i> Nama Lengkap</label>
                         <input type="text" id="waName" placeholder="Masukkan nama lengkap Anda" required />
@@ -1518,7 +1099,6 @@
                     </div>
                 </div>
 
-                <!-- Preview Pesan -->
                 <div class="wa-preview">
                     <div class="preview-label"><i class="fas fa-eye"></i> Preview Pesan WhatsApp</div>
                     <div class="preview-message" id="waPreviewMessage">
@@ -1529,35 +1109,35 @@
                 <button class="btn-wa-send" id="waSendBtn">
                     <i class="fab fa-whatsapp"></i> Kirim ke WhatsApp
                 </button>
-                <div id="waMessage" style="margin-top: 12px; font-weight: 500;"></div>
+                <div id="waMessage" style="margin-top:12px;font-weight:500;"></div>
             </div>
 
-            <div style="margin-top: 24px;">
-                <h4 style="font-weight: 600; display: flex; gap: 8px;"><i class="fas fa-clock"></i> Jadwal Mekanik</h4>
+            <div style="margin-top:24px;">
+                <h4 style="font-weight:600;display:flex;gap:8px;"><i class="fas fa-clock"></i> Jadwal Mekanik</h4>
                 <div class="mekanik-list">
                     <div class="mekanik-item"><i class="fas fa-user-md"></i> Elan Herlani <span class="schedule">Sen-Sab 08:00-17:00</span> <span class="status"></span></div>
                 </div>
             </div>
         </section>
 
-        <!-- ======== SECTION 3: KASIR (Admin Only) ======== -->
+        <!-- ===== SECTION 3: KASIR ===== -->
         <section id="section-kasir" class="section">
             <h2 class="section-title"><i class="fas fa-shopping-cart"></i> Kasir / Transaksi</h2>
 
             <div class="scan-area">
-                <i class="fas fa-barcode" style="font-size: 1.4rem; color: #1d3b5c;"></i>
+                <i class="fas fa-barcode" style="font-size:1.4rem;color:#1d3b5c;"></i>
                 <input type="text" id="barcodeInput" placeholder="Scan barcode atau input serial produk..." />
                 <button class="scan-btn" id="scanBtn"><i class="fas fa-search"></i> Cari</button>
-                <button class="scan-btn" style="background: #28a745;" id="scanCameraBtn">
+                <button class="scan-btn" style="background:#28a745;" id="scanCameraBtn">
                     <i class="fas fa-camera"></i> Scan Kamera
                 </button>
-                <button class="scan-btn" style="background: #2c6b9e;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
+                <button class="scan-btn" style="background:#2c6b9e;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
             </div>
 
             <div class="kasir-row">
                 <div class="kasir-col">
                     <div id="cartItems"></div>
-                    <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
                         <button class="btn-outline" id="clearCartBtn"><i class="fas fa-trash-alt"></i> Kosongkan</button>
                     </div>
                 </div>
@@ -1565,18 +1145,18 @@
                     <div class="total-box">
                         <div class="total-line"><span>Subtotal</span><span id="subtotalDisplay">Rp 0</span></div>
                         <div class="total-line dp-line" id="dpDisplayLine" style="display:none;">
-                            <span>DP Booking <i class="fas fa-info-circle" style="font-size:0.7rem;color:#856404;"></i></span>
+                            <span>DP Booking</span>
                             <span id="dpDisplay">Rp 0</span>
                         </div>
                         <div class="separator"></div>
                         <div class="total-line"><span>Total</span><span id="totalDisplay">Rp 0</span></div>
-                        <button class="btn-success" style="width:100%; justify-content:center; margin-top: 16px;" id="checkoutBtn"><i class="fas fa-credit-card"></i> Bayar Sekarang</button>
+                        <button class="btn-success" style="width:100%;justify-content:center;margin-top:16px;" id="checkoutBtn"><i class="fas fa-credit-card"></i> Bayar Sekarang</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ======== SECTION 4: MANAJEMEN PRODUK (Admin Only) ======== -->
+        <!-- ===== SECTION 4: MANAJEMEN PRODUK ===== -->
         <section id="section-admin" class="section">
             <h2 class="section-title"><i class="fas fa-boxes"></i> Manajemen Produk & Stok</h2>
 
@@ -1595,22 +1175,17 @@
                         <label>Serial / Barcode</label>
                         <input type="text" id="prodSerial" placeholder="Scan atau ketik barcode" />
                     </div>
-                    <div class="field" style="display: flex; align-items: flex-end; gap: 8px;">
+                    <div class="field" style="display:flex;align-items:flex-end;gap:8px;">
                         <button class="btn-primary" id="addProductBtn"><i class="fas fa-save"></i> Simpan</button>
                         <button class="btn-outline" id="resetProductBtn">Reset</button>
                     </div>
                 </div>
 
-                <h4 style="margin-top: 20px;"><i class="fas fa-list"></i> Daftar Produk</h4>
-                <div style="overflow-x: auto;">
+                <h4 style="margin-top:20px;"><i class="fas fa-list"></i> Daftar Produk</h4>
+                <div style="overflow-x:auto;">
                     <table class="product-table">
                         <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>Harga</th>
-                                <th>Serial / Barcode</th>
-                                <th>Aksi</th>
-                            </tr>
+                            <tr><th>Nama</th><th>Harga</th><th>Serial / Barcode</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="productTableBody"></tbody>
                     </table>
@@ -1618,12 +1193,11 @@
             </div>
         </section>
 
-        <!-- ======== SECTION 5: MEKANIK (Shared) ======== -->
+        <!-- ===== SECTION 5: MEKANIK ===== -->
         <section id="section-mekanik" class="section">
             <h2 class="section-title"><i class="fas fa-users"></i> Tim Mekanik</h2>
-
-            <div class="mekanik-list" style="margin-top: 12px;">
-                <div class="mekanik-item" style="flex:1; min-width:180px;">
+            <div class="mekanik-list" style="margin-top:12px;">
+                <div class="mekanik-item" style="flex:1;min-width:180px;">
                     <i class="fas fa-user-tie"></i>
                     <div>
                         <strong>Elan Herlani</strong>
@@ -1633,20 +1207,20 @@
                     <span class="status"></span>
                 </div>
             </div>
-            <p style="margin-top: 16px; background: #eaf1fb; padding: 10px 18px; border-radius: 60px; font-size:0.9rem;">
+            <p style="margin-top:16px;background:#eaf1fb;padding:10px 18px;border-radius:60px;font-size:0.9rem;">
                 <i class="fas fa-info-circle"></i> Mekanik spesialis mesin & kelistrikan. Booking via WhatsApp.
             </p>
         </section>
 
         <!-- Footer -->
-        <div style="margin-top: 40px; border-top: 1px solid #e6eef8; padding-top: 14px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; color: #3e5e7a; font-size:0.8rem;">
+        <div style="margin-top:40px;border-top:1px solid #e6eef8;padding-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;color:#3e5e7a;font-size:0.8rem;">
             <span><i class="far fa-clock"></i> Buka Senin-Sabtu 08:00 - 18:00</span>
             <span><i class="fas fa-phone-alt"></i> 0812-3456-7890</span>
             <span><i class="fas fa-map-pin"></i> Jl. Motor No. 88, Jakarta</span>
         </div>
     </div>
 
-    <!-- ========== STRUK MODAL ========== -->
+    <!-- ===== STRUK MODAL ===== -->
     <div class="struk-container" id="strukContainer">
         <div class="struk-modal">
             <div class="struk-content" id="strukContent"></div>
@@ -1658,10 +1232,13 @@
     </div>
 
     <script>
-        // ============ FIREBASE CONFIG ============
+        // ============================================================
+        // FIREBASE REALTIME DATABASE CONFIG
+        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyAx4g5iVPxIP8e16TDh_K-1kN8qOl7fLng",
             authDomain: "data-beleks-motor-service.firebaseapp.com",
+            databaseURL: "https://data-beleks-motor-service-default-rtdb.firebaseio.com",
             projectId: "data-beleks-motor-service",
             storageBucket: "data-beleks-motor-service.firebasestorage.app",
             messagingSenderId: "271147805985",
@@ -1669,20 +1246,17 @@
             measurementId: "G-YKK2GHBX9N"
         };
 
-        // ============ INIT FIREBASE ============
-        try {
-            firebase.initializeApp(firebaseConfig);
-        } catch (e) {
-            console.warn('Firebase already initialized');
-        }
-        const db = firebase.firestore();
+        // ============================================================
+        // INIT FIREBASE
+        // ============================================================
+        try { firebase.initializeApp(firebaseConfig); } catch(e) { console.warn('Firebase already initialized'); }
+        const db = firebase.database();
 
-        // ============ FCM ============
-        const messaging = firebase.messaging.isSupported() ? firebase.messaging() : null;
-
-        // ============ MAIN APP ============
+        // ============================================================
+        // MAIN APP
+        // ============================================================
         (function() {
-            // ============ DATA ============
+            // ===== DATA =====
             const services = [
                 { name: 'Servis Rutin', price: 150000, desc: 'Cek mesin, kelistrikan, & pelumas' },
                 { name: 'Ganti Oli + Filter', price: 220000, desc: 'Oli sintetik + filter original' },
@@ -1696,14 +1270,12 @@
             let currentRole = 'customer';
             let transactionNumber = 1;
             let dpInCart = 0;
-            let isFirebaseReady = false;
-            let fcmToken = null;
 
             // Scanner
             let html5QrCode = null;
             let isScanning = false;
 
-            // ============ DOM REFS ============
+            // ===== DOM REFS =====
             const app = document.body;
             const notification = document.getElementById('notification');
             const strukContainer = document.getElementById('strukContainer');
@@ -1716,11 +1288,10 @@
             const scannerStatus = document.getElementById('scannerStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const loadingText = document.getElementById('loadingText');
-            const firebaseError = document.getElementById('firebaseError');
-            const firebaseErrorText = document.getElementById('firebaseErrorText');
+            const dbStatus = document.getElementById('dbStatus');
             const fcmStatus = document.getElementById('fcmStatus');
 
-            // WA Booking Elements
+            // WA Booking
             const waName = document.getElementById('waName');
             const waPhone = document.getElementById('waPhone');
             const waDate = document.getElementById('waDate');
@@ -1730,66 +1301,9 @@
             const waSendBtn = document.getElementById('waSendBtn');
             const waMessage = document.getElementById('waMessage');
 
-            // ============ FCM FUNCTIONS ============
-
-            async function initFCM() {
-                if (!messaging) {
-                    fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> FCM tidak didukung';
-                    fcmStatus.className = 'fcm-status error';
-                    return;
-                }
-
-                try {
-                    // Request permission
-                    const permission = await Notification.requestPermission();
-                    if (permission !== 'granted') {
-                        fcmStatus.innerHTML = '<i class="fas fa-times" style="color:#dc3545;"></i> Izin ditolak';
-                        fcmStatus.className = 'fcm-status error';
-                        return;
-                    }
-
-                    // Get FCM token
-                    const token = await messaging.getToken({
-                        vapidKey: 'BGUV77DEyUET8Q08c3l-ceh64Q7U6a5Czi5J_TQhSYJtKbkuKwh2RTIaP81oYnvN09ybLzj4kRLM_VJ-O0BjFUU'
-                    });
-
-                    if (token) {
-                        fcmToken = token;
-                        fcmStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.5rem;"></i> Notifikasi aktif';
-                        fcmStatus.className = 'fcm-status';
-                        console.log('FCM Token:', token);
-                        
-                        // Save token to Firestore
-                        try {
-                            await db.collection('fcmTokens').doc(token).set({
-                                token: token,
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                userAgent: navigator.userAgent
-                            });
-                        } catch (e) {
-                            console.warn('Gagal simpan token ke Firestore:', e);
-                        }
-                    } else {
-                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#856404;"></i> Token tidak tersedia';
-                        fcmStatus.className = 'fcm-status error';
-                    }
-
-                    // Handle incoming messages
-                    messaging.onMessage((payload) => {
-                        console.log('Message received:', payload);
-                        const title = payload.notification?.title || 'Notifikasi Baru';
-                        const body = payload.notification?.body || 'Ada notifikasi baru';
-                        showNotification(`🔔 ${title}: ${body}`, 'success');
-                    });
-
-                } catch (error) {
-                    console.error('FCM Error:', error);
-                    fcmStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> ${error.message}`;
-                    fcmStatus.className = 'fcm-status error';
-                }
-            }
-
-            // ============ FIREBASE FUNCTIONS ============
+            // ============================================================
+            // REALTIME DATABASE FUNCTIONS
+            // ============================================================
 
             function showLoading(show, text = 'Memuat data dari server...') {
                 if (show) {
@@ -1800,171 +1314,119 @@
                 }
             }
 
-            function showFirebaseError(message) {
-                firebaseErrorText.textContent = message;
-                firebaseError.classList.add('show');
-                setTimeout(() => {
-                    firebaseError.classList.remove('show');
-                }, 8000);
-            }
-
-            function hideFirebaseError() {
-                firebaseError.classList.remove('show');
-            }
-
-            // Enable Firestore offline persistence
-            db.enablePersistence()
-                .catch(function(err) {
-                    if (err.code == 'failed-precondition') {
-                        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
-                    } else if (err.code == 'unimplemented') {
-                        console.warn('The current browser does not support all of the features required to enable persistence');
-                    }
-                });
-
-            // Load Products from Firebase
-            async function loadProducts() {
-                try {
-                    showLoading(true, 'Menghubungkan ke server...');
-                    hideFirebaseError();
-
-                    const snapshot = await db.collection('products')
-                        .orderBy('createdAt', 'desc')
-                        .get();
-
-                    products = [];
-                    snapshot.forEach(doc => {
-                        products.push({ id: doc.id, ...doc.data() });
-                    });
-
-                    isFirebaseReady = true;
-                    renderProductTable();
-                    showLoading(false);
-                    showNotification('✅ Data produk berhasil dimuat dari server', 'success');
-
-                } catch (error) {
-                    console.error('Error loading products:', error);
-                    showLoading(false);
-
-                    if (error.code === 'permission-denied') {
-                        showFirebaseError('❌ Akses ke database ditolak. Pastikan Firestore Security Rules sudah diatur ke mode "test".');
-                    } else if (error.code === 'unavailable') {
-                        showFirebaseError('❌ Server tidak dapat dijangkau. Periksa koneksi internet Anda.');
-                    } else {
-                        showFirebaseError('❌ Gagal memuat data: ' + error.message);
-                    }
-
-                    renderProductTable();
+            function showNotification(msg, type = 'info') {
+                notification.textContent = msg;
+                notification.className = 'notification show';
+                if (type === 'success') {
+                    notification.style.background = '#d4edda';
+                    notification.style.color = '#155724';
+                } else if (type === 'error') {
+                    notification.style.background = '#f8d7da';
+                    notification.style.color = '#721c24';
+                } else {
+                    notification.style.background = '#cce5ff';
+                    notification.style.color = '#004085';
                 }
+                setTimeout(() => { notification.className = 'notification'; }, 4000);
             }
 
-            // Add Product to Firebase
-            async function addProductToFirebase(name, price, serial) {
-                try {
-                    showLoading(true, 'Menyimpan produk ke server...');
-                    hideFirebaseError();
+            // Load Products from Realtime Database
+            function loadProducts() {
+                showLoading(true, 'Menghubungkan ke Realtime Database...');
+                
+                db.ref('products').on('value', function(snapshot) {
+                    showLoading(false);
+                    const data = snapshot.val();
+                    products = [];
+                    
+                    if (data) {
+                        Object.keys(data).forEach(key => {
+                            products.push({ id: key, ...data[key] });
+                        });
+                        // Sort by newest first
+                        products.reverse();
+                    }
+                    
+                    renderProductTable();
+                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.4rem;"></i> RTDB Online';
+                    dbStatus.className = 'db-status online';
+                    showNotification('✅ Data produk berhasil dimuat dari Realtime Database', 'success');
+                }, function(error) {
+                    showLoading(false);
+                    console.error('Error loading products:', error);
+                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#dc3545;font-size:0.4rem;"></i> RTDB Offline';
+                    dbStatus.className = 'db-status offline';
+                    renderProductTable();
+                    showNotification('❌ Gagal memuat data: ' + error.message, 'error');
+                });
+            }
 
-                    const docRef = await db.collection('products').add({
+            // Add Product to Realtime Database
+            async function addProductToRTDB(name, price, serial) {
+                try {
+                    showLoading(true, 'Menyimpan produk ke Realtime Database...');
+                    
+                    const newRef = db.ref('products').push();
+                    await newRef.set({
                         name: name,
                         price: price,
                         serial: serial,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: Date.now()
                     });
-
-                    products.push({ id: docRef.id, name, price, serial });
-                    renderProductTable();
+                    
                     showLoading(false);
-                    showNotification('✅ Produk berhasil disimpan ke server!', 'success');
+                    showNotification('✅ Produk berhasil disimpan ke Realtime Database!', 'success');
                     return true;
-
                 } catch (error) {
                     console.error('Error adding product:', error);
                     showLoading(false);
-
-                    if (error.code === 'permission-denied') {
-                        showFirebaseError('❌ Akses ditolak! Atur Security Rules Firestore ke mode "test".');
-                    } else {
-                        showFirebaseError('❌ Gagal menyimpan: ' + error.message);
-                    }
+                    showNotification('❌ Gagal menyimpan: ' + error.message, 'error');
                     return false;
                 }
             }
 
-            // Delete Product from Firebase
-            async function deleteProductFromFirebase(productId) {
+            // Delete Product from Realtime Database
+            async function deleteProductFromRTDB(productId) {
                 try {
                     showLoading(true, 'Menghapus produk...');
-                    hideFirebaseError();
-
-                    await db.collection('products').doc(productId).delete();
-                    products = products.filter(p => p.id !== productId);
-                    renderProductTable();
+                    await db.ref('products/' + productId).remove();
                     showLoading(false);
-                    showNotification('✅ Produk berhasil dihapus dari server!', 'success');
-
+                    showNotification('✅ Produk berhasil dihapus dari Realtime Database!', 'success');
                 } catch (error) {
                     console.error('Error deleting product:', error);
                     showLoading(false);
-
-                    if (error.code === 'permission-denied') {
-                        showFirebaseError('❌ Akses ditolak! Atur Security Rules Firestore ke mode "test".');
-                    } else {
-                        showFirebaseError('❌ Gagal menghapus: ' + error.message);
-                    }
+                    showNotification('❌ Gagal menghapus: ' + error.message, 'error');
                 }
             }
 
-            // Save Transaction to Firebase
-            async function saveTransactionToFirebase(transactionData) {
+            // Save Transaction to Realtime Database
+            async function saveTransactionToRTDB(transactionData) {
                 try {
-                    await db.collection('transactions').add({
+                    const newRef = db.ref('transactions').push();
+                    await newRef.set({
                         ...transactionData,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        createdAt: Date.now()
                     });
-                    
-                    // Kirim notifikasi via FCM setelah transaksi
-                    sendBookingNotification('Transaksi baru', `Total: Rp ${transactionData.total.toLocaleString('id-ID')}`);
-                    
+                    console.log('Transaction saved to RTDB');
                 } catch (error) {
                     console.error('Error saving transaction:', error);
                 }
             }
 
-            // ============ SEND FCM NOTIFICATION ============
-            function sendBookingNotification(title, body) {
-                if (!messaging || !fcmToken) {
-                    console.warn('FCM tidak aktif, tidak bisa kirim notifikasi');
-                    return;
-                }
-
-                // Kirim notifikasi melalui Firebase Cloud Messaging
-                // Note: Ini hanya akan berfungsi jika ada service worker dan FCM setup lengkap
-                // Untuk production, sebaiknya kirim via server-side menggunakan Firebase Admin SDK
-                try {
-                    // Tampilkan notifikasi lokal sebagai fallback
-                    if ('Notification' in window && Notification.permission === 'granted') {
-                        new Notification(title, {
-                            body: body,
-                            icon: 'https://firebasestorage.googleapis.com/v0/b/data-beleks-motor-service.appspot.com/o/icon.png?alt=media'
-                        });
-                    }
-                } catch (e) {
-                    console.warn('Gagal kirim notifikasi lokal:', e);
-                }
-            }
-
-            // ============ RENDER FUNCTIONS ============
+            // ============================================================
+            // RENDER FUNCTIONS
+            // ============================================================
 
             function renderServices() {
                 const grid = document.getElementById('serviceGrid');
                 if (!grid) return;
                 grid.innerHTML = services.map(s => `
-                  <div class="service-card">
-                    <h4>${s.name}</h4>
-                    <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
-                    <div class="desc">${s.desc}</div>
-                    <span class="badge-mekanik"><i class="fas fa-user-cog"></i> mekanik tersedia</span>
-                  </div>
+                    <div class="service-card">
+                        <h4>${s.name}</h4>
+                        <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
+                        <div class="desc">${s.desc}</div>
+                        <span class="badge-mekanik"><i class="fas fa-user-cog"></i> mekanik tersedia</span>
+                    </div>
                 `).join('');
             }
 
@@ -1978,7 +1440,6 @@
                             <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
                                 <i class="fas fa-box-open" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
                                 Belum ada produk. Tambahkan produk baru di atas.
-                                ${!isFirebaseReady ? '<br><small style="color:#dc3545;">⚠️ Belum terhubung ke server</small>' : ''}
                             </td>
                         </tr>
                     `;
@@ -1986,22 +1447,22 @@
                 }
 
                 tbody.innerHTML = products.map(p => `
-                  <tr>
-                    <td><strong>${p.name}</strong></td>
-                    <td>Rp ${p.price.toLocaleString('id-ID')}</td>
-                    <td><code style="background:#eef3f8;padding:2px 10px;border-radius:20px;font-size:0.8rem;">${p.serial}</code></td>
-                    <td class="actions">
-                      <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
-                      <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                  </tr>
+                    <tr>
+                        <td><strong>${p.name}</strong></td>
+                        <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+                        <td><code style="background:#eef3f8;padding:2px 10px;border-radius:20px;font-size:0.8rem;">${p.serial}</code></td>
+                        <td class="actions">
+                            <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
                 `).join('');
 
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = this.dataset.id;
                         if (confirm('Hapus produk ini dari server?')) {
-                            deleteProductFromFirebase(id);
+                            deleteProductFromRTDB(id);
                         }
                     });
                 });
@@ -2014,9 +1475,7 @@
                             document.getElementById('prodName').value = prod.name;
                             document.getElementById('prodPrice').value = prod.price;
                             document.getElementById('prodSerial').value = prod.serial;
-                            products = products.filter(p => p.id !== id);
-                            renderProductTable();
-                            showNotification('Edit produk: isi form dan simpan', 'info');
+                            deleteProductFromRTDB(id);
                         }
                     });
                 });
@@ -2026,40 +1485,39 @@
                 const container = document.getElementById('cartItems');
                 if (!container) return;
                 if (cart.length === 0 && dpInCart === 0) {
-                    container.innerHTML =
-                        `<div style="padding:20px;text-align:center;color:#8aa0b8;"><i class="fas fa-shopping-bag"></i> Keranjang kosong</div>`;
+                    container.innerHTML = `<div style="padding:20px;text-align:center;color:#8aa0b8;"><i class="fas fa-shopping-bag"></i> Keranjang kosong</div>`;
                 } else {
                     let html = '';
                     cart.forEach((item, idx) => {
                         html += `
-                      <div class="cart-item">
-                        <div>
-                          <div class="item-name">${item.name}</div>
-                          <div class="item-serial"><i class="fas fa-barcode"></i> ${item.serial || 'N/A'}</div>
-                        </div>
-                        <div>
-                          <span class="item-price">Rp ${item.price.toLocaleString('id-ID')}</span>
-                          <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;" data-index="${idx}"><i class="fas fa-times"></i></button>
-                        </div>
-                      </div>
-                    `;
+                            <div class="cart-item">
+                                <div>
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-serial"><i class="fas fa-barcode"></i> ${item.serial || 'N/A'}</div>
+                                </div>
+                                <div>
+                                    <span class="item-price">Rp ${item.price.toLocaleString('id-ID')}</span>
+                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;" data-index="${idx}"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        `;
                     });
 
                     if (dpInCart > 0) {
                         html += `
-                      <div class="cart-item" style="background:#f8fff8;border-radius:12px;padding:12px 16px;border:1px solid #28a745;">
-                        <div>
-                          <div class="item-name" style="color:#28a745;">
-                            <i class="fas fa-money-bill-wave"></i> DP Booking
-                          </div>
-                          <div class="item-serial">Jaminan booking</div>
-                        </div>
-                        <div>
-                          <span class="item-price" style="color:#28a745;">Rp ${dpInCart.toLocaleString('id-ID')}</span>
-                          <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#dc3545;color:#dc3545;" id="removeDpBtn"><i class="fas fa-times"></i></button>
-                        </div>
-                      </div>
-                    `;
+                            <div class="cart-item" style="background:#f8fff8;border-radius:12px;padding:12px 16px;border:1px solid #28a745;">
+                                <div>
+                                    <div class="item-name" style="color:#28a745;">
+                                        <i class="fas fa-money-bill-wave"></i> DP Booking
+                                    </div>
+                                    <div class="item-serial">Jaminan booking</div>
+                                </div>
+                                <div>
+                                    <span class="item-price" style="color:#28a745;">Rp ${dpInCart.toLocaleString('id-ID')}</span>
+                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#dc3545;color:#dc3545;" id="removeDpBtn"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        `;
                     }
 
                     container.innerHTML = html;
@@ -2092,7 +1550,6 @@
 
             function updateTotal() {
                 const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-
                 const subtotalDisplay = document.getElementById('subtotalDisplay');
                 const totalDisplay = document.getElementById('totalDisplay');
                 const dpDisplayLine = document.getElementById('dpDisplayLine');
@@ -2125,89 +1582,43 @@
                 }
             }
 
-            function showNotification(message, type = 'info') {
-                notification.textContent = message;
-                notification.className = 'notification show';
-                if (type === 'success') {
-                    notification.style.background = '#d4edda';
-                    notification.style.color = '#155724';
-                } else if (type === 'error') {
-                    notification.style.background = '#f8d7da';
-                    notification.style.color = '#721c24';
-                } else {
-                    notification.style.background = '#cce5ff';
-                    notification.style.color = '#004085';
-                }
-                setTimeout(() => {
-                    notification.className = 'notification';
-                }, 4000);
-            }
-
-            // ============ SCANNER FUNCTIONS ============
+            // ============================================================
+            // SCANNER FUNCTIONS
+            // ============================================================
 
             async function startScanner() {
                 if (isScanning) return;
-
                 try {
                     scannerOverlay.classList.add('show');
                     scannerStatus.textContent = '📷 Mengakses kamera...';
                     scannerStatus.className = 'scanner-status';
-
                     html5QrCode = new Html5Qrcode("scannerBox");
-
-                    const config = {
-                        fps: 15,
-                        qrbox: { width: 250, height: 200 },
-                        aspectRatio: 1.0
-                    };
-
-                    await html5QrCode.start({ facingMode: "environment" },
-                        config,
-                        onScanSuccess,
-                        onScanError
-                    );
-
+                    const config = { fps: 15, qrbox: { width: 250, height: 200 }, aspectRatio: 1.0 };
+                    await html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess, onScanError);
                     isScanning = true;
                     scannerStatus.textContent = '📷 Arahkan kamera ke barcode produk';
                     scannerStatus.className = 'scanner-status';
-
                 } catch (err) {
                     console.error(err);
                     scannerStatus.textContent = '❌ Gagal mengakses kamera: ' + err.message;
                     scannerStatus.className = 'scanner-status error';
-                    setTimeout(() => {
-                        closeScanner();
-                    }, 3000);
+                    setTimeout(() => { closeScanner(); }, 3000);
                 }
             }
 
-            function onScanSuccess(decodedText, decodedResult) {
+            function onScanSuccess(decodedText) {
                 stopScanner();
                 const success = addToCartBySerial(decodedText);
-                if (success) {
-                    scannerStatus.textContent = '✅ Barcode berhasil di-scan!';
-                    scannerStatus.className = 'scanner-status';
-                } else {
-                    scannerStatus.textContent = '❌ Produk tidak ditemukan!';
-                    scannerStatus.className = 'scanner-status error';
-                }
-                setTimeout(() => {
-                    closeScanner();
-                }, 1500);
+                scannerStatus.textContent = success ? '✅ Barcode berhasil di-scan!' : '❌ Produk tidak ditemukan!';
+                scannerStatus.className = success ? 'scanner-status' : 'scanner-status error';
+                setTimeout(() => { closeScanner(); }, 1500);
             }
 
-            function onScanError(errorMessage) {
-                // Ignore
-            }
+            function onScanError(errorMessage) {}
 
             async function stopScanner() {
                 if (html5QrCode && isScanning) {
-                    try {
-                        await html5QrCode.stop();
-                        await html5QrCode.clear();
-                    } catch (err) {
-                        console.error(err);
-                    }
+                    try { await html5QrCode.stop(); await html5QrCode.clear(); } catch(e) {}
                     isScanning = false;
                 }
             }
@@ -2215,20 +1626,18 @@
             function closeScanner() {
                 stopScanner();
                 scannerOverlay.classList.remove('show');
-                if (html5QrCode) {
-                    html5QrCode = null;
-                }
+                html5QrCode = null;
                 isScanning = false;
             }
 
-            // ============ WA BOOKING FUNCTIONS ============
+            // ============================================================
+            // WA BOOKING FUNCTIONS
+            // ============================================================
 
             function formatDateForWA(dateStr) {
                 if (!dateStr) return '[Tanggal belum dipilih]';
                 const parts = dateStr.split('-');
-                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
-                    'November', 'Desember'
-                ];
+                const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
                 return `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]} ${parts[0]}`;
             }
 
@@ -2237,24 +1646,7 @@
                 const date = waDate.value ? formatDateForWA(waDate.value) : '[Tanggal belum dipilih]';
                 const service = waService.value || '[Layanan]';
                 const mekanik = waMekanik.value || 'Elan Herlani';
-
-                const message =
-                    `Halo, saya atas nama ${name} ingin mengajukan booking pada ${date} untuk layanan ${service} dengan mekanik ${mekanik}.`;
-                waPreview.textContent = message;
-            }
-
-            function generateWAMessage() {
-                const name = waName.value.trim();
-                const phone = waPhone.value.trim();
-                const date = waDate.value ? formatDateForWA(waDate.value) : '[Tanggal belum dipilih]';
-                const service = waService.value || '[Layanan]';
-                const mekanik = waMekanik.value || 'Elan Herlani';
-
-                if (!name || !phone || !waDate.value) {
-                    return null;
-                }
-
-                return `Halo, saya atas nama ${name} ingin mengajukan booking pada ${date} untuk layanan ${service} dengan mekanik ${mekanik}.`;
+                waPreview.textContent = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${date} untuk layanan ${service} dengan mekanik ${mekanik}.`;
             }
 
             function sendToWA() {
@@ -2262,57 +1654,24 @@
                 const phone = waPhone.value.trim();
                 const date = waDate.value;
 
-                if (!name) {
-                    waMessage.innerHTML = '⚠️ Silakan isi nama lengkap Anda.';
-                    waMessage.style.color = '#721c24';
-                    waName.focus();
-                    return;
-                }
-
-                if (!phone) {
-                    waMessage.innerHTML = '⚠️ Silakan isi nomor WhatsApp aktif.';
-                    waMessage.style.color = '#721c24';
-                    waPhone.focus();
-                    return;
-                }
-
+                if (!name) { waMessage.innerHTML = '⚠️ Silakan isi nama lengkap Anda.'; waMessage.style.color = '#721c24'; waName.focus(); return; }
+                if (!phone) { waMessage.innerHTML = '⚠️ Silakan isi nomor WhatsApp aktif.'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
                 const phoneClean = phone.replace(/\D/g, '');
-                if (phoneClean.length < 10) {
-                    waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).';
-                    waMessage.style.color = '#721c24';
-                    waPhone.focus();
-                    return;
-                }
+                if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
+                if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#721c24'; waDate.focus(); return; }
 
-                if (!date) {
-                    waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.';
-                    waMessage.style.color = '#721c24';
-                    waDate.focus();
-                    return;
-                }
-
-                const message = generateWAMessage();
-                if (!message) {
-                    waMessage.innerHTML = '⚠️ Data tidak lengkap.';
-                    waMessage.style.color = '#721c24';
-                    return;
-                }
-
+                const message = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${formatDateForWA(date)} untuk layanan ${waService.value} dengan mekanik ${waMekanik.value}.`;
                 const encodedMessage = encodeURIComponent(message);
-                const waNumber = '6283895433600';
-                const waUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`;
-
+                const waUrl = `https://wa.me/6283895433600?text=${encodedMessage}`;
                 window.open(waUrl, '_blank');
-
-                waMessage.innerHTML =
-                    `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
+                waMessage.innerHTML = `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
                 waMessage.style.color = '#155724';
-                
-                // Kirim notifikasi ke admin
-                sendBookingNotification('📅 Booking Baru!', `${name} booking ${waService.value} pada ${formatDateForWA(date)}`);
             }
 
-            // ============ PASSWORD MODAL ============
+            // ============================================================
+            // PASSWORD MODAL
+            // ============================================================
+
             function showPasswordModal() {
                 passwordModal.classList.add('show');
                 document.getElementById('passwordInput').value = '';
@@ -2320,16 +1679,12 @@
                 document.getElementById('passwordInput').focus();
             }
 
-            function closePasswordModal() {
-                passwordModal.classList.remove('show');
-            }
+            function closePasswordModal() { passwordModal.classList.remove('show'); }
 
             function checkPassword() {
                 const input = document.getElementById('passwordInput');
                 const error = document.getElementById('passwordError');
-                const password = input.value.trim();
-
-                if (password === '123456789') {
+                if (input.value.trim() === '123456789') {
                     closePasswordModal();
                     applyRole('admin');
                     showNotification('✅ Selamat datang Admin!', 'success');
@@ -2340,62 +1695,49 @@
                 }
             }
 
-            // ============ STRUK ============
+            // ============================================================
+            // STRUK
+            // ============================================================
+
             function generateStruk() {
                 const now = new Date();
-                const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = now.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric' });
+                const timeStr = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
                 const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-                let total = subtotal;
-
-                let itemsHtml = cart.map(item => `
-                  <div class="item-detail">
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-serial">Serial: ${item.serial || '-'}</div>
-                    <div class="struk-row">
-                      <span>${item.price.toLocaleString('id-ID')}</span>
-                      <span>Rp ${item.price.toLocaleString('id-ID')}</span>
-                    </div>
-                  </div>
-                `).join('');
-
+                let finalTotal = subtotal;
                 let dpHtml = '';
-                let finalTotal = total;
                 if (dpInCart > 0) {
-                    dpHtml = `
-                    <div class="struk-row dp-row">
-                      <span>DP Booking (potongan)</span>
-                      <span>-Rp ${dpInCart.toLocaleString('id-ID')}</span>
-                    </div>
-                  `;
-                    finalTotal = total - dpInCart;
+                    dpHtml = `<div class="struk-row dp-row"><span>DP Booking (potongan)</span><span>-Rp ${dpInCart.toLocaleString('id-ID')}</span></div>`;
+                    finalTotal = subtotal - dpInCart;
                 }
 
+                let itemsHtml = cart.map(item => `
+                    <div class="item-detail">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-serial">Serial: ${item.serial || '-'}</div>
+                        <div class="struk-row"><span>${item.price.toLocaleString('id-ID')}</span><span>Rp ${item.price.toLocaleString('id-ID')}</span></div>
+                    </div>
+                `).join('');
+
                 return `
-                  <div class="header-struk">
-                    <h2>BELEKS MOTOR SERVICE</h2>
-                    <div class="sub">Jl. Motor No. 88, Jakarta</div>
-                    <div class="sub">Telp: 0812-3456-7890</div>
-                    <div class="sub">${dateStr} ${timeStr}</div>
-                    <div class="sub" style="font-weight:700;margin-top:4px;">#TRX-${String(transactionNumber).padStart(4,'0')}</div>
-                  </div>
-
-                  ${itemsHtml}
-
-                  <div class="struk-row" style="border-top:1px dashed #999;padding-top:6px;margin-top:6px;">
-                    <span>Subtotal</span>
-                    <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
-                  </div>
-                  ${dpHtml}
-                  <div class="struk-row total">
-                    <span>TOTAL</span>
-                    <span>Rp ${finalTotal.toLocaleString('id-ID')}</span>
-                  </div>
-
-                  <div class="footer-struk">
-                    Terima kasih atas kunjungan Anda!<br>
-                    Barang yang sudah dibeli tidak dapat dikembalikan
-                  </div>
+                    <div class="header-struk">
+                        <h2>BELEKS MOTOR SERVICE</h2>
+                        <div class="sub">Jl. Motor No. 88, Jakarta</div>
+                        <div class="sub">Telp: 0812-3456-7890</div>
+                        <div class="sub">${dateStr} ${timeStr}</div>
+                        <div class="sub" style="font-weight:700;margin-top:4px;">#TRX-${String(transactionNumber).padStart(4,'0')}</div>
+                    </div>
+                    ${itemsHtml}
+                    <div class="struk-row" style="border-top:1px dashed #999;padding-top:6px;margin-top:6px;">
+                        <span>Subtotal</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span>
+                    </div>
+                    ${dpHtml}
+                    <div class="struk-row total">
+                        <span>TOTAL</span><span>Rp ${finalTotal.toLocaleString('id-ID')}</span>
+                    </div>
+                    <div class="footer-struk">
+                        Terima kasih atas kunjungan Anda!<br>Barang yang sudah dibeli tidak dapat dikembalikan
+                    </div>
                 `;
             }
 
@@ -2403,46 +1745,35 @@
                 strukContent.innerHTML = generateStruk();
                 strukContainer.classList.add('show');
                 transactionNumber++;
-
-                const now = new Date();
                 const transactionData = {
                     items: cart.map(item => ({ name: item.name, price: item.price, serial: item.serial })),
                     subtotal: cart.reduce((sum, item) => sum + item.price, 0),
                     dpUsed: dpInCart,
                     total: cart.reduce((sum, item) => sum + item.price, 0) - dpInCart,
-                    date: now.toISOString(),
+                    date: new Date().toISOString(),
                     transactionNumber: transactionNumber
                 };
-                saveTransactionToFirebase(transactionData);
-
+                saveTransactionToRTDB(transactionData);
                 dpInCart = 0;
                 cart = [];
                 renderCart();
             }
 
-            function closeStruk() {
-                strukContainer.classList.remove('show');
-            }
+            function closeStruk() { strukContainer.classList.remove('show'); }
 
-            // ============ SPA NAVIGATION ============
+            // ============================================================
+            // SPA NAVIGATION & ROLE
+            // ============================================================
+
             function navigateTo(sectionId) {
                 sections.forEach(s => s.classList.remove('active'));
                 const target = document.getElementById(sectionId);
-                if (target) {
-                    target.classList.add('active');
-                }
-
+                if (target) target.classList.add('active');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.dataset.section === sectionId) {
-                        link.classList.add('active');
-                    }
+                    if (link.dataset.section === sectionId) link.classList.add('active');
                 });
-
-                if (history.pushState) {
-                    history.pushState(null, null, '#' + sectionId);
-                }
-
+                if (history.pushState) history.pushState(null, null, '#' + sectionId);
                 if (target) {
                     const navbarHeight = document.getElementById('navbar').offsetHeight + 10;
                     const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
@@ -2450,57 +1781,84 @@
                 }
             }
 
-            // ============ ROLE MANAGEMENT ============
             function applyRole(role) {
                 currentRole = role;
                 app.classList.remove('show-customer', 'show-admin');
-
                 if (role === 'customer') {
                     app.classList.add('show-customer');
                     document.getElementById('navUserName').textContent = 'Publik';
                     document.getElementById('navUserRole').textContent = 'Customer';
                     document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Admin';
-
-                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => {
-                        el.style.display = 'none';
-                    });
-                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => {
-                        el.style.display = 'flex';
-                    });
-
+                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'none');
+                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'flex');
                     const currentActive = document.querySelector('.section.active');
-                    if (currentActive) {
-                        const id = currentActive.id;
-                        if (id === 'section-kasir' || id === 'section-admin') {
-                            navigateTo('section-layanan');
-                        }
+                    if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin')) {
+                        navigateTo('section-layanan');
                     }
-
                 } else {
                     app.classList.add('show-admin');
                     document.getElementById('navUserName').textContent = 'Admin';
                     document.getElementById('navUserRole').textContent = 'Admin';
                     document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Customer';
-
-                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => {
-                        el.style.display = 'flex';
-                    });
-                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => {
-                        el.style.display = 'none';
-                    });
-
+                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'flex');
+                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'none');
                     const currentActive = document.querySelector('.section.active');
                     if (!currentActive || currentActive.id === 'section-layanan' || currentActive.id === 'section-booking') {
                         navigateTo('section-kasir');
                     }
                 }
-
-                document.querySelectorAll('.navbar-menu a[data-section="section-mekanik"]').forEach(el => {
-                    el.style.display = 'flex';
-                });
+                document.querySelectorAll('.navbar-menu a[data-section="section-mekanik"]').forEach(el => el.style.display = 'flex');
             }
 
-            // ============ EVENT LISTENERS ============
+            // ============================================================
+            // FCM / NOTIFICATION
+            // ============================================================
+
+            async function initFCM() {
+                try {
+                    const messaging = firebase.messaging.isSupported() ? firebase.messaging() : null;
+                    if (!messaging) {
+                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> FCM tidak didukung';
+                        fcmStatus.className = 'fcm-status error';
+                        return;
+                    }
+                    const permission = await Notification.requestPermission();
+                    if (permission !== 'granted') {
+                        fcmStatus.innerHTML = '<i class="fas fa-times" style="color:#dc3545;"></i> Izin ditolak';
+                        fcmStatus.className = 'fcm-status error';
+                        return;
+                    }
+                    const token = await messaging.getToken({
+                        vapidKey: 'BGUV77DEyUET8Q08c3l-ceh64Q7U6a5Czi5J_TQhSYJtKbkuKwh2RTIaP81oYnvN09ybLzj4kRLM_VJ-O0BjFUU'
+                    });
+                    if (token) {
+                        fcmStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.4rem;"></i> Notif aktif';
+                        fcmStatus.className = 'fcm-status';
+                        // Save token ke RTDB
+                        await db.ref('fcmTokens/' + token).set({
+                            token: token,
+                            createdAt: Date.now(),
+                            userAgent: navigator.userAgent
+                        });
+                    } else {
+                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#856404;"></i> Token tidak tersedia';
+                        fcmStatus.className = 'fcm-status error';
+                    }
+                    messaging.onMessage((payload) => {
+                        const title = payload.notification?.title || 'Notifikasi Baru';
+                        const body = payload.notification?.body || 'Ada notifikasi baru';
+                        showNotification(`🔔 ${title}: ${body}`, 'success');
+                    });
+                } catch (error) {
+                    console.error('FCM Error:', error);
+                    fcmStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> ${error.message}`;
+                    fcmStatus.className = 'fcm-status error';
+                }
+            }
+
+            // ============================================================
+            // EVENT LISTENERS
+            // ============================================================
 
             // Nav links
             navLinks.forEach(link => {
@@ -2514,139 +1872,83 @@
 
             // Switch role
             document.getElementById('switchNavBtn').addEventListener('click', function() {
-                if (currentRole === 'customer') {
-                    showPasswordModal();
-                } else {
-                    applyRole('customer');
-                    showNotification('👋 Kembali ke mode Customer', 'info');
-                }
+                if (currentRole === 'customer') showPasswordModal();
+                else { applyRole('customer'); showNotification('👋 Kembali ke mode Customer', 'info'); }
             });
 
             // Password modal
             document.getElementById('confirmPasswordBtn').addEventListener('click', checkPassword);
             document.getElementById('cancelPasswordBtn').addEventListener('click', closePasswordModal);
-
             document.getElementById('passwordInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    checkPassword();
-                }
-                if (e.key === 'Escape') {
-                    closePasswordModal();
-                }
+                if (e.key === 'Enter') checkPassword();
+                if (e.key === 'Escape') closePasswordModal();
             });
-
-            passwordModal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closePasswordModal();
-                }
-            });
+            passwordModal.addEventListener('click', function(e) { if (e.target === this) closePasswordModal(); });
 
             // Hash change
             window.addEventListener('hashchange', function() {
                 const hash = window.location.hash.replace('#', '');
                 if (hash && document.getElementById(hash)) {
                     const section = document.getElementById(hash);
-                    if (section.id === 'section-kasir' || section.id === 'section-admin') {
-                        if (currentRole === 'customer') {
-                            navigateTo('section-layanan');
-                            return;
-                        }
+                    if ((section.id === 'section-kasir' || section.id === 'section-admin') && currentRole === 'customer') {
+                        navigateTo('section-layanan'); return;
                     }
-                    if (section.id === 'section-layanan' || section.id === 'section-booking') {
-                        if (currentRole === 'admin') {
-                            navigateTo('section-kasir');
-                            return;
-                        }
+                    if ((section.id === 'section-layanan' || section.id === 'section-booking') && currentRole === 'admin') {
+                        navigateTo('section-kasir'); return;
                     }
                     navigateTo(hash);
                 }
             });
 
-            // ============ WA BOOKING EVENTS ============
-
+            // WA Booking
             if (waDate) {
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
                 waDate.value = tomorrow.toISOString().split('T')[0];
             }
-
             [waName, waPhone, waDate, waService, waMekanik].forEach(el => {
-                if (el) {
-                    el.addEventListener('input', updateWAPreview);
-                    el.addEventListener('change', updateWAPreview);
-                }
+                if (el) { el.addEventListener('input', updateWAPreview); el.addEventListener('change', updateWAPreview); }
             });
-
             waSendBtn.addEventListener('click', sendToWA);
 
-            // ============ ADMIN: Add Product ============
+            // Add Product
             document.getElementById('addProductBtn').addEventListener('click', async function() {
                 const name = document.getElementById('prodName').value.trim();
                 const price = parseInt(document.getElementById('prodPrice').value);
                 const serial = document.getElementById('prodSerial').value.trim();
-
-                if (!name || !price || !serial) {
-                    showNotification('⚠️ Semua field harus diisi!', 'error');
-                    return;
-                }
-
+                if (!name || !price || !serial) { showNotification('⚠️ Semua field harus diisi!', 'error'); return; }
                 if (products.some(p => p.serial.toLowerCase() === serial.toLowerCase())) {
-                    showNotification('⚠️ Serial sudah terdaftar!', 'error');
-                    return;
+                    showNotification('⚠️ Serial sudah terdaftar!', 'error'); return;
                 }
-
-                const success = await addProductToFirebase(name, price, serial);
+                const success = await addProductToRTDB(name, price, serial);
                 if (success) {
                     document.getElementById('prodName').value = '';
                     document.getElementById('prodPrice').value = '';
                     document.getElementById('prodSerial').value = '';
                 }
             });
-
             document.getElementById('resetProductBtn').addEventListener('click', function() {
                 document.getElementById('prodName').value = '';
                 document.getElementById('prodPrice').value = '';
                 document.getElementById('prodSerial').value = '';
             });
 
-            // ============ KASIR ============
+            // Kasir
             document.getElementById('scanBtn').addEventListener('click', function() {
-                const input = document.getElementById('barcodeInput');
-                const val = input.value.trim();
-                if (val) {
-                    addToCartBySerial(val);
-                } else {
-                    showNotification('⚠️ Masukkan serial atau barcode', 'error');
-                }
+                const val = document.getElementById('barcodeInput').value.trim();
+                if (val) addToCartBySerial(val);
+                else showNotification('⚠️ Masukkan serial atau barcode', 'error');
             });
-
             document.getElementById('barcodeInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    document.getElementById('scanBtn').click();
-                }
+                if (e.key === 'Enter') document.getElementById('scanBtn').click();
             });
-
-            document.getElementById('scanCameraBtn').addEventListener('click', function() {
-                startScanner();
-            });
-
-            document.getElementById('closeScannerBtn').addEventListener('click', function() {
-                closeScanner();
-            });
-
-            scannerOverlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeScanner();
-                }
-            });
+            document.getElementById('scanCameraBtn').addEventListener('click', startScanner);
+            document.getElementById('closeScannerBtn').addEventListener('click', closeScanner);
+            scannerOverlay.addEventListener('click', function(e) { if (e.target === this) closeScanner(); });
 
             document.getElementById('manualAddBtn').addEventListener('click', function() {
-                if (products.length === 0) {
-                    showNotification('⚠️ Belum ada produk. Tambahkan produk dulu.', 'error');
-                    return;
-                }
-                const productList = products.map((p, i) =>
-                    `${i+1}. ${p.name} - Rp${p.price.toLocaleString('id-ID')} [${p.serial}]`).join('\n');
+                if (products.length === 0) { showNotification('⚠️ Belum ada produk. Tambahkan produk dulu.', 'error'); return; }
+                const productList = products.map((p, i) => `${i+1}. ${p.name} - Rp${p.price.toLocaleString('id-ID')} [${p.serial}]`).join('\n');
                 const choice = prompt(`Pilih produk dengan nomor:\n${productList}`);
                 if (choice) {
                     const idx = parseInt(choice) - 1;
@@ -2663,93 +1965,43 @@
 
             document.getElementById('clearCartBtn').addEventListener('click', function() {
                 if (cart.length === 0 && dpInCart === 0) return;
-                if (confirm('Kosongkan keranjang?')) {
-                    cart = [];
-                    dpInCart = 0;
-                    renderCart();
-                    showNotification('Keranjang dikosongkan', 'info');
-                }
+                if (confirm('Kosongkan keranjang?')) { cart = []; dpInCart = 0; renderCart(); showNotification('Keranjang dikosongkan', 'info'); }
             });
 
-            // ============ CHECKOUT ============
+            // Checkout
             document.getElementById('checkoutBtn').addEventListener('click', function() {
-                if (cart.length === 0) {
-                    showNotification('⚠️ Keranjang kosong!', 'error');
-                    return;
-                }
+                if (cart.length === 0) { showNotification('⚠️ Keranjang kosong!', 'error'); return; }
                 const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
                 let grandTotal = subtotal;
                 let dpText = '';
-
-                if (dpInCart > 0) {
-                    grandTotal = grandTotal - dpInCart;
-                    dpText = `\nDP Booking: -Rp ${dpInCart.toLocaleString('id-ID')}`;
-                }
-
-                if (grandTotal < 0) {
-                    showNotification('⚠️ Total pembayaran negatif. Periksa kembali!', 'error');
-                    return;
-                }
-
+                if (dpInCart > 0) { grandTotal = grandTotal - dpInCart; dpText = `\nDP Booking: -Rp ${dpInCart.toLocaleString('id-ID')}`; }
+                if (grandTotal < 0) { showNotification('⚠️ Total pembayaran negatif. Periksa kembali!', 'error'); return; }
                 if (confirm(`Total pembayaran: Rp ${grandTotal.toLocaleString('id-ID')}${dpText}\nLanjutkan checkout?`)) {
                     showStruk();
                     showNotification('✅ Transaksi berhasil! Data tersimpan di server.', 'success');
                 }
             });
 
-            // ============ STRUK CONTROLS ============
-            document.getElementById('printStrukBtn').addEventListener('click', function() {
-                window.print();
-            });
-
-            document.getElementById('closeStrukBtn').addEventListener('click', function() {
-                closeStruk();
-            });
-
-            strukContainer.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeStruk();
-                }
-            });
-
+            // Struk
+            document.getElementById('printStrukBtn').addEventListener('click', function() { window.print(); });
+            document.getElementById('closeStrukBtn').addEventListener('click', closeStruk);
+            strukContainer.addEventListener('click', function(e) { if (e.target === this) closeStruk(); });
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && strukContainer.classList.contains('show')) {
-                    closeStruk();
-                }
-                if (e.key === 'Escape' && scannerOverlay.classList.contains('show')) {
-                    closeScanner();
-                }
+                if (e.key === 'Escape' && strukContainer.classList.contains('show')) closeStruk();
+                if (e.key === 'Escape' && scannerOverlay.classList.contains('show')) closeScanner();
             });
 
-            // ============ RETRY LOAD ============
-            let loadAttempts = 0;
-            const maxLoadAttempts = 3;
+            // ============================================================
+            // INIT
+            // ============================================================
 
-            function retryLoadProducts() {
-                loadAttempts++;
-                if (loadAttempts <= maxLoadAttempts) {
-                    showNotification(`🔄 Mencoba kembali... (${loadAttempts}/${maxLoadAttempts})`, 'info');
-                    setTimeout(() => {
-                        loadProducts();
-                    }, 3000);
-                } else {
-                    showNotification('⚠️ Gagal terhubung ke server. Refresh halaman untuk mencoba lagi.', 'error');
-                    showLoading(false);
-                }
-            }
-
-            // ============ INIT ============
             renderServices();
             renderCart();
             updateWAPreview();
-
-            // Init FCM
             initFCM();
 
-            // Load data dengan retry
-            loadProducts().catch(() => {
-                retryLoadProducts();
-            });
+            // Load data dari Realtime Database
+            loadProducts();
 
             const hash = window.location.hash.replace('#', '');
             if (hash && document.getElementById(hash)) {
