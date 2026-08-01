@@ -13,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
     
     <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -502,33 +503,6 @@
         }
 
         .btn-danger:hover {
-            background: #c82333;
-        }
-
-        .btn-scan-camera {
-            background: #6c757d;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-
-        .btn-scan-camera:hover {
-            background: #5a6268;
-        }
-
-        .btn-scan-camera.scanning {
-            background: #dc3545;
-        }
-
-        .btn-scan-camera.scanning:hover {
             background: #c82333;
         }
 
@@ -1208,7 +1182,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             z-index: 99999;
             justify-content: center;
             align-items: center;
@@ -1237,6 +1211,56 @@
         .loading-overlay p {
             color: #0b1a2e;
             font-weight: 600;
+        }
+
+        .firebase-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            color: #721c24;
+            display: none;
+        }
+
+        .firebase-error.show {
+            display: block;
+        }
+
+        .firebase-error i {
+            margin-right: 10px;
+        }
+
+        .notification-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .notification-badge .badge-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #e63946;
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 40px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .fcm-status {
+            font-size: 0.7rem;
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .fcm-status.error {
+            color: #dc3545;
         }
 
         @media (max-width: 768px) {
@@ -1350,7 +1374,7 @@
     <!-- ============ LOADING OVERLAY ============ -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <p>Memuat data dari server...</p>
+        <p id="loadingText">Memuat data dari server...</p>
     </div>
 
     <!-- ============ NAVBAR ============ -->
@@ -1386,6 +1410,9 @@
                 <i class="fas fa-user-circle"></i>
                 <span class="name" id="navUserName">Publik</span>
                 <span class="role-badge" id="navUserRole">Customer</span>
+                <span class="fcm-status" id="fcmStatus">
+                    <i class="fas fa-circle" style="font-size:0.5rem;"></i> Notifikasi
+                </span>
             </div>
             <button class="btn-switch-nav" id="switchNavBtn">
                 <i class="fas fa-exchange-alt"></i> Switch ke Admin
@@ -1423,6 +1450,12 @@
 
         <!-- NOTIFICATION -->
         <div class="notification" id="notification"></div>
+
+        <!-- Firebase Error -->
+        <div class="firebase-error" id="firebaseError">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="firebaseErrorText">Gagal terhubung ke server. Periksa koneksi internet atau konfigurasi Firebase.</span>
+        </div>
 
         <!-- ======== SECTION 1: LAYANAN (Customer Only) ======== -->
         <section id="section-layanan" class="section active">
@@ -1637,8 +1670,15 @@
         };
 
         // ============ INIT FIREBASE ============
-        firebase.initializeApp(firebaseConfig);
+        try {
+            firebase.initializeApp(firebaseConfig);
+        } catch (e) {
+            console.warn('Firebase already initialized');
+        }
         const db = firebase.firestore();
+
+        // ============ FCM ============
+        const messaging = firebase.messaging.isSupported() ? firebase.messaging() : null;
 
         // ============ MAIN APP ============
         (function() {
@@ -1651,15 +1691,13 @@
                 { name: 'Rem & Kaki-kaki', price: 280000, desc: 'Cakram, kampas, & suspensi' },
             ];
 
-            // Data dari Firebase - akan diisi dari server
             let products = [];
-            let bookings = [];
-            let transactions = [];
-            
             let cart = [];
             let currentRole = 'customer';
             let transactionNumber = 1;
             let dpInCart = 0;
+            let isFirebaseReady = false;
+            let fcmToken = null;
 
             // Scanner
             let html5QrCode = null;
@@ -1677,6 +1715,10 @@
             const scannerBox = document.getElementById('scannerBox');
             const scannerStatus = document.getElementById('scannerStatus');
             const loadingOverlay = document.getElementById('loadingOverlay');
+            const loadingText = document.getElementById('loadingText');
+            const firebaseError = document.getElementById('firebaseError');
+            const firebaseErrorText = document.getElementById('firebaseErrorText');
+            const fcmStatus = document.getElementById('fcmStatus');
 
             // WA Booking Elements
             const waName = document.getElementById('waName');
@@ -1688,53 +1730,162 @@
             const waSendBtn = document.getElementById('waSendBtn');
             const waMessage = document.getElementById('waMessage');
 
+            // ============ FCM FUNCTIONS ============
+
+            async function initFCM() {
+                if (!messaging) {
+                    fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> FCM tidak didukung';
+                    fcmStatus.className = 'fcm-status error';
+                    return;
+                }
+
+                try {
+                    // Request permission
+                    const permission = await Notification.requestPermission();
+                    if (permission !== 'granted') {
+                        fcmStatus.innerHTML = '<i class="fas fa-times" style="color:#dc3545;"></i> Izin ditolak';
+                        fcmStatus.className = 'fcm-status error';
+                        return;
+                    }
+
+                    // Get FCM token
+                    const token = await messaging.getToken({
+                        vapidKey: 'BGUV77DEyUET8Q08c3l-ceh64Q7U6a5Czi5J_TQhSYJtKbkuKwh2RTIaP81oYnvN09ybLzj4kRLM_VJ-O0BjFUU'
+                    });
+
+                    if (token) {
+                        fcmToken = token;
+                        fcmStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.5rem;"></i> Notifikasi aktif';
+                        fcmStatus.className = 'fcm-status';
+                        console.log('FCM Token:', token);
+                        
+                        // Save token to Firestore
+                        try {
+                            await db.collection('fcmTokens').doc(token).set({
+                                token: token,
+                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                                userAgent: navigator.userAgent
+                            });
+                        } catch (e) {
+                            console.warn('Gagal simpan token ke Firestore:', e);
+                        }
+                    } else {
+                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#856404;"></i> Token tidak tersedia';
+                        fcmStatus.className = 'fcm-status error';
+                    }
+
+                    // Handle incoming messages
+                    messaging.onMessage((payload) => {
+                        console.log('Message received:', payload);
+                        const title = payload.notification?.title || 'Notifikasi Baru';
+                        const body = payload.notification?.body || 'Ada notifikasi baru';
+                        showNotification(`🔔 ${title}: ${body}`, 'success');
+                    });
+
+                } catch (error) {
+                    console.error('FCM Error:', error);
+                    fcmStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> ${error.message}`;
+                    fcmStatus.className = 'fcm-status error';
+                }
+            }
+
             // ============ FIREBASE FUNCTIONS ============
 
-            function showLoading(show) {
+            function showLoading(show, text = 'Memuat data dari server...') {
                 if (show) {
+                    loadingText.textContent = text;
                     loadingOverlay.classList.add('show');
                 } else {
                     loadingOverlay.classList.remove('show');
                 }
             }
 
+            function showFirebaseError(message) {
+                firebaseErrorText.textContent = message;
+                firebaseError.classList.add('show');
+                setTimeout(() => {
+                    firebaseError.classList.remove('show');
+                }, 8000);
+            }
+
+            function hideFirebaseError() {
+                firebaseError.classList.remove('show');
+            }
+
+            // Enable Firestore offline persistence
+            db.enablePersistence()
+                .catch(function(err) {
+                    if (err.code == 'failed-precondition') {
+                        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
+                    } else if (err.code == 'unimplemented') {
+                        console.warn('The current browser does not support all of the features required to enable persistence');
+                    }
+                });
+
             // Load Products from Firebase
             async function loadProducts() {
                 try {
-                    showLoading(true);
-                    const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get();
+                    showLoading(true, 'Menghubungkan ke server...');
+                    hideFirebaseError();
+
+                    const snapshot = await db.collection('products')
+                        .orderBy('createdAt', 'desc')
+                        .get();
+
                     products = [];
                     snapshot.forEach(doc => {
                         products.push({ id: doc.id, ...doc.data() });
                     });
+
+                    isFirebaseReady = true;
                     renderProductTable();
                     showLoading(false);
+                    showNotification('✅ Data produk berhasil dimuat dari server', 'success');
+
                 } catch (error) {
                     console.error('Error loading products:', error);
                     showLoading(false);
-                    showNotification('❌ Gagal memuat data produk dari server', 'error');
+
+                    if (error.code === 'permission-denied') {
+                        showFirebaseError('❌ Akses ke database ditolak. Pastikan Firestore Security Rules sudah diatur ke mode "test".');
+                    } else if (error.code === 'unavailable') {
+                        showFirebaseError('❌ Server tidak dapat dijangkau. Periksa koneksi internet Anda.');
+                    } else {
+                        showFirebaseError('❌ Gagal memuat data: ' + error.message);
+                    }
+
+                    renderProductTable();
                 }
             }
 
             // Add Product to Firebase
             async function addProductToFirebase(name, price, serial) {
                 try {
-                    showLoading(true);
+                    showLoading(true, 'Menyimpan produk ke server...');
+                    hideFirebaseError();
+
                     const docRef = await db.collection('products').add({
                         name: name,
                         price: price,
                         serial: serial,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+
                     products.push({ id: docRef.id, name, price, serial });
                     renderProductTable();
                     showLoading(false);
                     showNotification('✅ Produk berhasil disimpan ke server!', 'success');
                     return true;
+
                 } catch (error) {
                     console.error('Error adding product:', error);
                     showLoading(false);
-                    showNotification('❌ Gagal menyimpan produk ke server', 'error');
+
+                    if (error.code === 'permission-denied') {
+                        showFirebaseError('❌ Akses ditolak! Atur Security Rules Firestore ke mode "test".');
+                    } else {
+                        showFirebaseError('❌ Gagal menyimpan: ' + error.message);
+                    }
                     return false;
                 }
             }
@@ -1742,16 +1893,24 @@
             // Delete Product from Firebase
             async function deleteProductFromFirebase(productId) {
                 try {
-                    showLoading(true);
+                    showLoading(true, 'Menghapus produk...');
+                    hideFirebaseError();
+
                     await db.collection('products').doc(productId).delete();
                     products = products.filter(p => p.id !== productId);
                     renderProductTable();
                     showLoading(false);
                     showNotification('✅ Produk berhasil dihapus dari server!', 'success');
+
                 } catch (error) {
                     console.error('Error deleting product:', error);
                     showLoading(false);
-                    showNotification('❌ Gagal menghapus produk dari server', 'error');
+
+                    if (error.code === 'permission-denied') {
+                        showFirebaseError('❌ Akses ditolak! Atur Security Rules Firestore ke mode "test".');
+                    } else {
+                        showFirebaseError('❌ Gagal menghapus: ' + error.message);
+                    }
                 }
             }
 
@@ -1762,8 +1921,35 @@
                         ...transactionData,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    
+                    // Kirim notifikasi via FCM setelah transaksi
+                    sendBookingNotification('Transaksi baru', `Total: Rp ${transactionData.total.toLocaleString('id-ID')}`);
+                    
                 } catch (error) {
                     console.error('Error saving transaction:', error);
+                }
+            }
+
+            // ============ SEND FCM NOTIFICATION ============
+            function sendBookingNotification(title, body) {
+                if (!messaging || !fcmToken) {
+                    console.warn('FCM tidak aktif, tidak bisa kirim notifikasi');
+                    return;
+                }
+
+                // Kirim notifikasi melalui Firebase Cloud Messaging
+                // Note: Ini hanya akan berfungsi jika ada service worker dan FCM setup lengkap
+                // Untuk production, sebaiknya kirim via server-side menggunakan Firebase Admin SDK
+                try {
+                    // Tampilkan notifikasi lokal sebagai fallback
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification(title, {
+                            body: body,
+                            icon: 'https://firebasestorage.googleapis.com/v0/b/data-beleks-motor-service.appspot.com/o/icon.png?alt=media'
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Gagal kirim notifikasi lokal:', e);
                 }
             }
 
@@ -1785,19 +1971,20 @@
             function renderProductTable() {
                 const tbody = document.getElementById('productTableBody');
                 if (!tbody) return;
-                
+
                 if (products.length === 0) {
                     tbody.innerHTML = `
                         <tr>
                             <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
                                 <i class="fas fa-box-open" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
                                 Belum ada produk. Tambahkan produk baru di atas.
+                                ${!isFirebaseReady ? '<br><small style="color:#dc3545;">⚠️ Belum terhubung ke server</small>' : ''}
                             </td>
                         </tr>
                     `;
                     return;
                 }
-                
+
                 tbody.innerHTML = products.map(p => `
                   <tr>
                     <td><strong>${p.name}</strong></td>
@@ -1827,7 +2014,6 @@
                             document.getElementById('prodName').value = prod.name;
                             document.getElementById('prodPrice').value = prod.price;
                             document.getElementById('prodSerial').value = prod.serial;
-                            // Hapus dari lokal, nanti tambah baru saat simpan
                             products = products.filter(p => p.id !== id);
                             renderProductTable();
                             showNotification('Edit produk: isi form dan simpan', 'info');
@@ -2121,6 +2307,9 @@
                 waMessage.innerHTML =
                     `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
                 waMessage.style.color = '#155724';
+                
+                // Kirim notifikasi ke admin
+                sendBookingNotification('📅 Booking Baru!', `${name} booking ${waService.value} pada ${formatDateForWA(date)}`);
             }
 
             // ============ PASSWORD MODAL ============
@@ -2214,8 +2403,7 @@
                 strukContent.innerHTML = generateStruk();
                 strukContainer.classList.add('show');
                 transactionNumber++;
-                
-                // Simpan transaksi ke Firebase
+
                 const now = new Date();
                 const transactionData = {
                     items: cart.map(item => ({ name: item.name, price: item.price, serial: item.serial })),
@@ -2226,7 +2414,7 @@
                     transactionNumber: transactionNumber
                 };
                 saveTransactionToFirebase(transactionData);
-                
+
                 dpInCart = 0;
                 cart = [];
                 renderCart();
@@ -2533,29 +2721,50 @@
                 }
             });
 
+            // ============ RETRY LOAD ============
+            let loadAttempts = 0;
+            const maxLoadAttempts = 3;
+
+            function retryLoadProducts() {
+                loadAttempts++;
+                if (loadAttempts <= maxLoadAttempts) {
+                    showNotification(`🔄 Mencoba kembali... (${loadAttempts}/${maxLoadAttempts})`, 'info');
+                    setTimeout(() => {
+                        loadProducts();
+                    }, 3000);
+                } else {
+                    showNotification('⚠️ Gagal terhubung ke server. Refresh halaman untuk mencoba lagi.', 'error');
+                    showLoading(false);
+                }
+            }
+
             // ============ INIT ============
             renderServices();
-            
-            // Load data dari Firebase
-            loadProducts().then(() => {
-                renderCart();
-                updateWAPreview();
+            renderCart();
+            updateWAPreview();
 
-                const hash = window.location.hash.replace('#', '');
-                if (hash && document.getElementById(hash)) {
-                    const section = document.getElementById(hash);
-                    if (section.id === 'section-kasir' || section.id === 'section-admin') {
-                        applyRole('admin');
-                        navigateTo(hash);
-                    } else {
-                        applyRole('customer');
-                        navigateTo(hash);
-                    }
+            // Init FCM
+            initFCM();
+
+            // Load data dengan retry
+            loadProducts().catch(() => {
+                retryLoadProducts();
+            });
+
+            const hash = window.location.hash.replace('#', '');
+            if (hash && document.getElementById(hash)) {
+                const section = document.getElementById(hash);
+                if (section.id === 'section-kasir' || section.id === 'section-admin') {
+                    applyRole('admin');
+                    navigateTo(hash);
                 } else {
                     applyRole('customer');
-                    navigateTo('section-layanan');
+                    navigateTo(hash);
                 }
-            });
+            } else {
+                applyRole('customer');
+                navigateTo('section-layanan');
+            }
 
         })();
     </script>
