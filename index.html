@@ -571,6 +571,47 @@
         .product-table .actions .edit-btn { color: #0066cc; }
         .product-table .actions .delete-btn { color: #e63946; }
 
+        /* Settings Panel */
+        .settings-panel {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid #e2ebf5;
+            margin-top: 16px;
+        }
+        .settings-panel h4 {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .settings-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px 24px;
+        }
+        .settings-form .field { display: flex; flex-direction: column; gap: 4px; }
+        .settings-form label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2a4b6e;
+        }
+        .settings-form input, .settings-form select {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #d6e2f0;
+            background: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .settings-form input:focus, .settings-form select:focus {
+            outline: 2px solid #b4cef0;
+            border-color: transparent;
+        }
+        .settings-form .field-full { grid-column: 1 / -1; }
+
         .kasir-row {
             display: flex;
             flex-wrap: wrap;
@@ -841,8 +882,22 @@
                 justify-content: center;
                 align-items: flex-start;
             }
-            .struk-modal { box-shadow: none; max-width: 100%; padding: 10px; border-radius: 0; }
+            .struk-modal { 
+                box-shadow: none; 
+                max-width: 100%; 
+                padding: 10px; 
+                border-radius: 0;
+                margin: 0;
+                width: 100%;
+            }
             .struk-actions { display: none !important; }
+            .struk-content { font-size: 11px; }
+        }
+
+        /* Print size options in print dialog */
+        @page {
+            size: 80mm auto;
+            margin: 5mm;
         }
 
         .notification {
@@ -895,7 +950,8 @@
         .show-admin #section-booking { display: none !important; }
         .show-customer #section-kasir,
         .show-customer #section-admin,
-        .show-customer #section-manage-services { display: none !important; }
+        .show-customer #section-manage-services,
+        .show-customer #section-settings { display: none !important; }
 
         .password-modal {
             display: none;
@@ -971,6 +1027,23 @@
         }
         .password-error.show { display: block; }
 
+        /* Footer Info */
+        .footer-info {
+            margin-top: 40px;
+            border-top: 1px solid #e6eef8;
+            padding-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            color: #3e5e7a;
+            font-size: 0.8rem;
+        }
+        .footer-info .footer-address {
+            flex: 1;
+            min-width: 200px;
+        }
+
         @media (max-width: 768px) {
             .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
             .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
@@ -982,6 +1055,7 @@
             .form-wa { grid-template-columns: 1fr; }
             .product-form { grid-template-columns: 1fr; }
             .service-form { grid-template-columns: 1fr; }
+            .settings-form { grid-template-columns: 1fr; }
             .scan-area { flex-direction: column; align-items: stretch; }
             .scan-area input { width: 100%; }
             .kasir-row { flex-direction: column; }
@@ -991,6 +1065,7 @@
             .password-modal-content { padding: 24px; }
             .scanner-container { padding: 12px; }
             .scanner-container #scannerBox { aspect-ratio: 1/1; }
+            .footer-info { flex-direction: column; gap: 8px; }
         }
         @media (max-width: 480px) {
             .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
@@ -1030,6 +1105,9 @@
             </a>
             <a href="#section-manage-services" class="admin-only" data-section="section-manage-services">
                 <i class="fas fa-cog"></i> Kelola Layanan
+            </a>
+            <a href="#section-settings" class="admin-only" data-section="section-settings">
+                <i class="fas fa-sliders-h"></i> Pengaturan
             </a>
             <a href="#section-mekanik" data-section="section-mekanik">
                 <i class="fas fa-user-cog"></i> Mekanik
@@ -1079,7 +1157,7 @@
 
         <div class="notification" id="notification"></div>
 
-        <!-- ===== SECTION 1: LAYANAN (Customer) ===== -->
+        <!-- ===== SECTION 1: LAYANAN ===== -->
         <section id="section-layanan" class="section active">
             <h2 class="section-title"><i class="fas fa-list-ul"></i> Daftar Layanan & Harga</h2>
             <div class="service-grid" id="serviceGrid"></div>
@@ -1099,7 +1177,7 @@
                     <div>
                         <h3>Booking via WhatsApp</h3>
                         <div class="wa-number">
-                            <i class="fas fa-phone"></i> <span class="wa-number-display">0838-9543-3600</span>
+                            <i class="fas fa-phone"></i> <span class="wa-number-display" id="waNumberDisplay">0822-1011-7403</span>
                         </div>
                     </div>
                 </div>
@@ -1272,7 +1350,62 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 6: MEKANIK ===== -->
+        <!-- ===== SECTION 6: PENGATURAN (Admin) ===== -->
+        <section id="section-settings" class="section">
+            <h2 class="section-title"><i class="fas fa-sliders-h"></i> Pengaturan</h2>
+            <p style="color:#3c5b78;margin-bottom:16px;">Atur informasi toko dan ukuran kertas print.</p>
+
+            <div class="settings-panel">
+                <h4><i class="fas fa-store"></i> Informasi Toko</h4>
+                <div class="settings-form">
+                    <div class="field field-full">
+                        <label><i class="fas fa-map-marker-alt"></i> Alamat</label>
+                        <input type="text" id="settingAddress" placeholder="Masukkan alamat toko" />
+                    </div>
+                    <div class="field">
+                        <label><i class="fab fa-whatsapp"></i> Nomor WhatsApp</label>
+                        <input type="text" id="settingWhatsapp" placeholder="08xx-xxxx-xxxx" />
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-phone"></i> Nomor Telepon</label>
+                        <input type="text" id="settingPhone" placeholder="08xx-xxxx-xxxx" />
+                    </div>
+                    <div class="field field-full">
+                        <label><i class="fas fa-print"></i> Ukuran Kertas Print</label>
+                        <select id="settingPaperSize">
+                            <option value="80mm">Thermal 80mm (standar struk)</option>
+                            <option value="58mm">Thermal 58mm (kecil)</option>
+                            <option value="A4">A4 (kertas biasa)</option>
+                            <option value="A5">A5 (setengah A4)</option>
+                            <option value="custom">Custom (ukuran sendiri)</option>
+                        </select>
+                    </div>
+                    <div class="field" id="customPaperSizeField" style="display:none;">
+                        <label>Custom Size (mm) - Lebar x Tinggi</label>
+                        <input type="text" id="settingCustomSize" placeholder="80 x 200" />
+                    </div>
+                    <div class="field" style="display:flex;align-items:flex-end;gap:8px;grid-column:1/-1;">
+                        <button class="btn-success" id="saveSettingsBtn"><i class="fas fa-save"></i> Simpan Pengaturan</button>
+                        <button class="btn-outline" id="resetSettingsBtn">Reset ke Default</button>
+                    </div>
+                </div>
+                <div id="settingsMessage" style="margin-top:12px;font-weight:500;"></div>
+            </div>
+
+            <div style="margin-top:16px;background:#f0f6fe;border-radius:16px;padding:16px 20px;border:1px solid #dce5ef;">
+                <h4 style="font-weight:600;display:flex;gap:8px;margin-bottom:8px;">
+                    <i class="fas fa-info-circle" style="color:#1d3b5c;"></i> Informasi Saat Ini
+                </h4>
+                <div id="currentSettingsDisplay" style="font-size:0.9rem;color:#4a5f73;line-height:1.8;">
+                    <div><strong>Alamat:</strong> <span id="displayAddress">Memuat...</span></div>
+                    <div><strong>WhatsApp:</strong> <span id="displayWhatsapp">Memuat...</span></div>
+                    <div><strong>Telepon:</strong> <span id="displayPhone">Memuat...</span></div>
+                    <div><strong>Ukuran Kertas:</strong> <span id="displayPaperSize">Memuat...</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 7: MEKANIK ===== -->
         <section id="section-mekanik" class="section">
             <h2 class="section-title"><i class="fas fa-users"></i> Tim Mekanik</h2>
             <div class="mekanik-list" style="margin-top:12px;">
@@ -1291,11 +1424,20 @@
             </p>
         </section>
 
-        <!-- Footer -->
-        <div style="margin-top:40px;border-top:1px solid #e6eef8;padding-top:14px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;color:#3e5e7a;font-size:0.8rem;">
-            <span><i class="far fa-clock"></i> Buka Senin-Sabtu 08:00 - 18:00</span>
-            <span><i class="fas fa-phone-alt"></i> 0812-3456-7890</span>
-            <span><i class="fas fa-map-pin"></i> Jl. Motor No. 88, Jakarta</span>
+        <!-- ===== FOOTER ===== -->
+        <div class="footer-info" id="footerInfo">
+            <div class="footer-address">
+                <i class="fas fa-map-marker-alt" style="margin-right:6px;"></i>
+                <span id="footerAddress">Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih</span>
+            </div>
+            <div>
+                <i class="fab fa-whatsapp" style="margin-right:6px;color:#25D366;"></i>
+                <span id="footerWhatsapp">0822-1011-7403</span>
+            </div>
+            <div>
+                <i class="fas fa-phone" style="margin-right:6px;"></i>
+                <span id="footerPhone">0822-1011-7403</span>
+            </div>
         </div>
     </div>
 
@@ -1343,6 +1485,15 @@
             let transactionNumber = 1;
             let dpInCart = 0;
 
+            // Settings
+            let settings = {
+                address: 'Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih',
+                whatsapp: '082210117403',
+                phone: '082210117403',
+                paperSize: '80mm',
+                customSize: ''
+            };
+
             // Scanner
             let html5QrCode = null;
             let isScanning = false;
@@ -1371,6 +1522,27 @@
             const waPreview = document.getElementById('waPreviewMessage');
             const waSendBtn = document.getElementById('waSendBtn');
             const waMessage = document.getElementById('waMessage');
+
+            // Settings Elements
+            const settingAddress = document.getElementById('settingAddress');
+            const settingWhatsapp = document.getElementById('settingWhatsapp');
+            const settingPhone = document.getElementById('settingPhone');
+            const settingPaperSize = document.getElementById('settingPaperSize');
+            const settingCustomSize = document.getElementById('settingCustomSize');
+            const customPaperSizeField = document.getElementById('customPaperSizeField');
+            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+            const resetSettingsBtn = document.getElementById('resetSettingsBtn');
+            const settingsMessage = document.getElementById('settingsMessage');
+
+            // Display Elements
+            const displayAddress = document.getElementById('displayAddress');
+            const displayWhatsapp = document.getElementById('displayWhatsapp');
+            const displayPhone = document.getElementById('displayPhone');
+            const displayPaperSize = document.getElementById('displayPaperSize');
+            const footerAddress = document.getElementById('footerAddress');
+            const footerWhatsapp = document.getElementById('footerWhatsapp');
+            const footerPhone = document.getElementById('footerPhone');
+            const waNumberDisplay = document.getElementById('waNumberDisplay');
 
             // ============================================================
             // REALTIME DATABASE FUNCTIONS
@@ -1401,6 +1573,147 @@
                 setTimeout(() => { notification.className = 'notification'; }, 4000);
             }
 
+            // ===== LOAD SETTINGS =====
+            function loadSettings() {
+                db.ref('settings').on('value', function(snapshot) {
+                    const data = snapshot.val();
+                    if (data) {
+                        settings = { ...settings, ...data };
+                    }
+                    updateSettingsUI();
+                    updateFooterInfo();
+                    updateWaNumber();
+                    updatePaperSize();
+                }, function(error) {
+                    console.error('Error loading settings:', error);
+                });
+            }
+
+            // ===== SAVE SETTINGS =====
+            async function saveSettingsToRTDB() {
+                try {
+                    showLoading(true, 'Menyimpan pengaturan...');
+                    const newSettings = {
+                        address: settingAddress.value.trim() || settings.address,
+                        whatsapp: settingWhatsapp.value.trim() || settings.whatsapp,
+                        phone: settingPhone.value.trim() || settings.phone,
+                        paperSize: settingPaperSize.value,
+                        customSize: settingCustomSize.value.trim()
+                    };
+                    await db.ref('settings').set(newSettings);
+                    settings = newSettings;
+                    updateSettingsUI();
+                    updateFooterInfo();
+                    updateWaNumber();
+                    updatePaperSize();
+                    showLoading(false);
+                    settingsMessage.innerHTML = '✅ Pengaturan berhasil disimpan!';
+                    settingsMessage.style.color = '#155724';
+                    showNotification('✅ Pengaturan berhasil disimpan!', 'success');
+                } catch (error) {
+                    showLoading(false);
+                    settingsMessage.innerHTML = '❌ Gagal menyimpan: ' + error.message;
+                    settingsMessage.style.color = '#721c24';
+                    showNotification('❌ Gagal menyimpan pengaturan', 'error');
+                }
+            }
+
+            // ===== UPDATE SETTINGS UI =====
+            function updateSettingsUI() {
+                settingAddress.value = settings.address || '';
+                settingWhatsapp.value = settings.whatsapp || '';
+                settingPhone.value = settings.phone || '';
+                settingPaperSize.value = settings.paperSize || '80mm';
+                settingCustomSize.value = settings.customSize || '';
+
+                // Tampilkan custom field jika custom dipilih
+                if (settings.paperSize === 'custom') {
+                    customPaperSizeField.style.display = 'block';
+                } else {
+                    customPaperSizeField.style.display = 'none';
+                }
+
+                // Update display
+                displayAddress.textContent = settings.address || '-';
+                displayWhatsapp.textContent = settings.whatsapp || '-';
+                displayPhone.textContent = settings.phone || '-';
+                const paperLabels = {
+                    '80mm': 'Thermal 80mm (standar struk)',
+                    '58mm': 'Thermal 58mm (kecil)',
+                    'A4': 'A4 (kertas biasa)',
+                    'A5': 'A5 (setengah A4)',
+                    'custom': 'Custom: ' + (settings.customSize || '80 x 200')
+                };
+                displayPaperSize.textContent = paperLabels[settings.paperSize] || settings.paperSize;
+            }
+
+            // ===== UPDATE FOOTER INFO =====
+            function updateFooterInfo() {
+                footerAddress.textContent = settings.address || 'Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih';
+                footerWhatsapp.textContent = formatPhoneNumber(settings.whatsapp || '082210117403');
+                footerPhone.textContent = formatPhoneNumber(settings.phone || '082210117403');
+            }
+
+            // ===== UPDATE WA NUMBER =====
+            function updateWaNumber() {
+                const display = formatPhoneNumber(settings.whatsapp || '082210117403');
+                waNumberDisplay.textContent = display;
+            }
+
+            // ===== FORMAT PHONE NUMBER =====
+            function formatPhoneNumber(number) {
+                if (!number) return '-';
+                // Format: 08xx-xxxx-xxxx
+                const clean = number.replace(/\D/g, '');
+                if (clean.length === 11) {
+                    return clean.slice(0, 4) + '-' + clean.slice(4, 8) + '-' + clean.slice(8);
+                } else if (clean.length === 12) {
+                    return clean.slice(0, 4) + '-' + clean.slice(4, 8) + '-' + clean.slice(8);
+                }
+                return number;
+            }
+
+            // ===== UPDATE PAPER SIZE =====
+            function updatePaperSize() {
+                const size = settings.paperSize || '80mm';
+                const customSize = settings.customSize || '';
+                let pageSize = '80mm auto';
+                let pageMargin = '5mm';
+
+                switch(size) {
+                    case '58mm':
+                        pageSize = '58mm auto';
+                        break;
+                    case '80mm':
+                        pageSize = '80mm auto';
+                        break;
+                    case 'A4':
+                        pageSize = 'A4';
+                        pageMargin = '10mm';
+                        break;
+                    case 'A5':
+                        pageSize = 'A5';
+                        pageMargin = '8mm';
+                        break;
+                    case 'custom':
+                        const parts = customSize.split('x').map(s => s.trim());
+                        if (parts.length === 2 && parts[0] && parts[1]) {
+                            pageSize = `${parts[0]}mm ${parts[1]}mm`;
+                        } else {
+                            pageSize = '80mm auto';
+                        }
+                        break;
+                }
+
+                // Update @page CSS
+                const styleTag = document.createElement('style');
+                styleTag.id = 'dynamicPrintStyle';
+                const oldStyle = document.getElementById('dynamicPrintStyle');
+                if (oldStyle) oldStyle.remove();
+                styleTag.textContent = `@page { size: ${pageSize}; margin: ${pageMargin}; }`;
+                document.head.appendChild(styleTag);
+            }
+
             // ===== LOAD SERVICES =====
             function loadServices() {
                 db.ref('services').on('value', function(snapshot) {
@@ -1416,7 +1729,6 @@
                     updateServiceDropdown();
                 }, function(error) {
                     console.error('Error loading services:', error);
-                    showNotification('❌ Gagal memuat layanan: ' + error.message, 'error');
                 });
             }
 
@@ -1439,7 +1751,6 @@
                     dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#dc3545;font-size:0.4rem;"></i> RTDB Offline';
                     dbStatus.className = 'db-status offline';
                     renderProductTable();
-                    showNotification('❌ Gagal memuat produk: ' + error.message, 'error');
                 });
             }
 
@@ -1853,10 +2164,12 @@
                 if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
                 if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#721c24'; waDate.focus(); return; }
 
+                // Gunakan nomor WhatsApp dari pengaturan
+                const waNumber = settings.whatsapp.replace(/\D/g, '') || '6282210117403';
                 const serviceName = waService.value || 'Layanan';
                 const message = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${formatDateForWA(date)} untuk layanan ${serviceName} dengan mekanik ${waMekanik.value}.`;
                 const encodedMessage = encodeURIComponent(message);
-                const waUrl = `https://wa.me/6283895433600?text=${encodedMessage}`;
+                const waUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`;
                 window.open(waUrl, '_blank');
                 waMessage.innerHTML = `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
                 waMessage.style.color = '#155724';
@@ -1913,11 +2226,14 @@
                     </div>
                 `).join('');
 
+                const address = settings.address || 'Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih';
+                const phone = settings.phone || '0822-1011-7403';
+
                 return `
                     <div class="header-struk">
                         <h2>BELEKS MOTOR SERVICE</h2>
-                        <div class="sub">Jl. Motor No. 88, Jakarta</div>
-                        <div class="sub">Telp: 0812-3456-7890</div>
+                        <div class="sub">${address}</div>
+                        <div class="sub">Telp: ${formatPhoneNumber(phone)}</div>
                         <div class="sub">${dateStr} ${timeStr}</div>
                         <div class="sub" style="font-weight:700;margin-top:4px;">#TRX-${String(transactionNumber).padStart(4,'0')}</div>
                     </div>
@@ -1986,7 +2302,7 @@
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'flex');
                     const currentActive = document.querySelector('.section.active');
-                    if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin' || currentActive.id === 'section-manage-services')) {
+                    if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin' || currentActive.id === 'section-manage-services' || currentActive.id === 'section-settings')) {
                         navigateTo('section-layanan');
                     }
                 } else {
@@ -2034,7 +2350,7 @@
                 const hash = window.location.hash.replace('#', '');
                 if (hash && document.getElementById(hash)) {
                     const section = document.getElementById(hash);
-                    if ((section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services') && currentRole === 'customer') {
+                    if ((section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services' || section.id === 'section-settings') && currentRole === 'customer') {
                         navigateTo('section-layanan'); return;
                     }
                     if ((section.id === 'section-layanan' || section.id === 'section-booking') && currentRole === 'admin') {
@@ -2044,7 +2360,36 @@
                 }
             });
 
-            // WA Booking
+            // ===== SETTINGS EVENTS =====
+
+            // Tampilkan/sembunyikan custom size field
+            settingPaperSize.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customPaperSizeField.style.display = 'block';
+                } else {
+                    customPaperSizeField.style.display = 'none';
+                }
+            });
+
+            // Simpan pengaturan
+            saveSettingsBtn.addEventListener('click', saveSettingsToRTDB);
+
+            // Reset ke default
+            resetSettingsBtn.addEventListener('click', function() {
+                if (confirm('Reset semua pengaturan ke default?')) {
+                    settingAddress.value = 'Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih';
+                    settingWhatsapp.value = '082210117403';
+                    settingPhone.value = '082210117403';
+                    settingPaperSize.value = '80mm';
+                    settingCustomSize.value = '';
+                    customPaperSizeField.style.display = 'none';
+                    settingsMessage.innerHTML = '✅ Pengaturan direset ke default. Klik Simpan untuk menyimpan.';
+                    settingsMessage.style.color = '#856404';
+                }
+            });
+
+            // ===== WA BOOKING EVENTS =====
+
             if (waDate) {
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -2156,6 +2501,9 @@
             // INIT
             // ============================================================
 
+            // Load settings dulu
+            loadSettings();
+
             // Load data dari Realtime Database
             loadServices();
             loadProducts();
@@ -2165,7 +2513,7 @@
             const hash = window.location.hash.replace('#', '');
             if (hash && document.getElementById(hash)) {
                 const section = document.getElementById(hash);
-                if (section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services') {
+                if (section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services' || section.id === 'section-settings') {
                     applyRole('admin');
                     navigateTo(hash);
                 } else {
