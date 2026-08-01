@@ -53,17 +53,9 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
         }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px); }
@@ -78,6 +70,14 @@
             0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
 
         .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
         .animate-fade-in-up {
@@ -90,12 +90,39 @@
         }
         .animate-float { animation: float 3s ease-in-out infinite; }
         .animate-welcome { animation: welcomeGlow 2s ease-in-out infinite; }
+        .animate-pulse { animation: pulse 2s ease-in-out infinite; }
 
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.2s; }
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
         .delay-5 { animation-delay: 0.5s; }
+
+        /* ============================================================ */
+        /* BG PATTERN */
+        /* ============================================================ */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        /* Customer BG */
+        .show-customer .bg-pattern {
+            background: 
+                radial-gradient(ellipse at 10% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(230, 57, 70, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.03) 0%, transparent 70%);
+        }
+        /* Admin BG */
+        .show-admin .bg-pattern {
+            background: 
+                radial-gradient(ellipse at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.03) 0%, transparent 70%);
+        }
 
         /* ============================================================ */
         /* WELCOME OVERLAY */
@@ -110,14 +137,39 @@
             display: none;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        .welcome-overlay.show { display: flex; }
+        /* Customer Welcome */
+        .show-customer .welcome-overlay {
             background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            animation: fadeIn 0.5s ease;
         }
-        .welcome-overlay.show {
-            display: flex;
+        /* Admin Welcome */
+        .show-admin .welcome-overlay {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
+        .show-admin .welcome-overlay .welcome-content .icon-big {
+            color: #3b82f6;
+        }
+        .show-admin .welcome-overlay .welcome-content h2 span {
+            background: linear-gradient(135deg, #3b82f6, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .show-admin .welcome-overlay .welcome-content .welcome-btn {
+            background: #3b82f6;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+        }
+        .show-admin .welcome-overlay .welcome-content .welcome-btn:hover {
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.5);
+        }
+
         .welcome-overlay .welcome-content {
             text-align: center;
             max-width: 600px;
@@ -125,7 +177,6 @@
         }
         .welcome-overlay .welcome-content .icon-big {
             font-size: 5rem;
-            color: #e63946;
             margin-bottom: 16px;
             animation: float 2s ease-in-out infinite;
         }
@@ -148,7 +199,6 @@
             line-height: 1.6;
         }
         .welcome-overlay .welcome-content .welcome-btn {
-            background: #e63946;
             border: none;
             padding: 14px 44px;
             border-radius: 60px;
@@ -157,12 +207,10 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(230,57,70,0.3);
             font-family: 'Inter', sans-serif;
         }
         .welcome-overlay .welcome-content .welcome-btn:hover {
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(230,57,70,0.5);
         }
         .welcome-overlay .welcome-content .welcome-sub {
             margin-top: 16px;
@@ -191,158 +239,58 @@
         }
 
         /* ============================================================ */
-        /* BG PATTERN */
+        /* NAVBAR - CUSTOMER */
         /* ============================================================ */
-        .bg-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(ellipse at 10% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 80%, rgba(230, 57, 70, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.03) 0%, transparent 70%);
+        .show-customer .navbar {
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .show-customer .navbar-brand i {
+            color: #e63946;
+            background: rgba(230, 57, 70, 0.15);
+        }
+        .show-customer .navbar-brand h1 span {
+            color: #e63946;
+        }
+        .show-customer .navbar-menu a.active {
+            background: #e63946;
+            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.3);
         }
 
         /* ============================================================ */
-        /* HERO SECTION */
+        /* NAVBAR - ADMIN */
         /* ============================================================ */
-        .hero-section {
-            position: relative;
-            padding: 40px 0 60px;
-            background: linear-gradient(145deg, #0f172a 0%, #1a2744 100%);
-            border-radius: 0 0 40px 40px;
-            overflow: hidden;
-            margin-bottom: 20px;
+        .show-admin .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
         }
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(230, 57, 70, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
+        .show-admin .navbar-brand i {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.15);
         }
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
+        .show-admin .navbar-brand h1 span {
+            color: #3b82f6;
         }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 28px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px;
+        .show-admin .navbar-menu a.active {
+            background: #3b82f6;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
         }
-        .hero-text {
-            flex: 1;
-            min-width: 280px;
+        .show-admin .navbar-menu a:hover {
+            background: rgba(59, 130, 246, 0.15);
         }
-        .hero-text .badge {
-            display: inline-block;
-            background: rgba(230, 57, 70, 0.2);
-            color: #ff6b7a;
-            padding: 6px 18px;
-            border-radius: 60px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-            border: 1px solid rgba(230, 57, 70, 0.3);
+        .show-admin .btn-switch-nav {
+            border-color: rgba(59, 130, 246, 0.3);
         }
-        .hero-text h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.1;
-            margin-bottom: 12px;
-            letter-spacing: -1px;
-        }
-        .hero-text h1 span {
-            background: linear-gradient(135deg, #e63946, #ff6b7a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero-text .subtitle {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.7);
-            line-height: 1.7;
-            max-width: 500px;
-            margin-bottom: 24px;
-        }
-        .hero-text .hero-stats {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        .hero-text .hero-stats .stat {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255,255,255,0.8);
-            font-size: 0.9rem;
-        }
-        .hero-text .hero-stats .stat i {
-            color: #e63946;
-            font-size: 1.1rem;
-        }
-
-        .hero-logo {
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 30px 40px;
-            border: 1px solid rgba(255,255,255,0.08);
-            text-align: center;
-            min-width: 200px;
-            animation: float 4s ease-in-out infinite;
-        }
-        .hero-logo i {
-            font-size: 4.5rem;
-            color: #e63946;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .hero-logo .brand-name {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-        .hero-logo .brand-name span {
-            color: #e63946;
-        }
-        .hero-logo .brand-tagline {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-            margin-top: 4px;
-            letter-spacing: 2px;
+        .show-admin .btn-switch-nav:hover {
+            background: rgba(59, 130, 246, 0.15);
         }
 
         /* ============================================================ */
-        /* NAVBAR */
+        /* NAVBAR - SHARED */
         /* ============================================================ */
         .navbar {
             position: fixed;
@@ -350,17 +298,13 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.15);
             padding: 10px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
@@ -371,19 +315,15 @@
         }
         .navbar-brand i {
             font-size: 1.6rem;
-            color: #e63946;
-            background: rgba(230, 57, 70, 0.15);
             padding: 8px 12px;
             border-radius: 14px;
+            transition: all 0.3s ease;
         }
         .navbar-brand h1 {
             font-weight: 700;
             font-size: 1.2rem;
             color: #ffffff;
             letter-spacing: -0.5px;
-        }
-        .navbar-brand h1 span {
-            color: #e63946;
         }
         .navbar-brand .version {
             font-size: 0.55rem;
@@ -416,9 +356,7 @@
         .navbar-menu a i { font-size: 0.85rem; }
         .navbar-menu a:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
         .navbar-menu a.active {
-            background: #e63946;
             color: #ffffff;
-            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.3);
         }
         .navbar-menu a.hidden-link { display: none !important; }
 
@@ -461,13 +399,198 @@
             font-size: 0.7rem;
             color: rgba(255,255,255,0.7);
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
             white-space: nowrap;
             font-family: 'Inter', sans-serif;
         }
         .btn-switch-nav:hover {
             background: rgba(255,255,255,0.15);
             color: #ffffff;
+        }
+
+        /* ============================================================ */
+        /* HERO SECTION - CUSTOMER */
+        /* ============================================================ */
+        .show-customer .hero-section {
+            background: linear-gradient(145deg, #0f172a 0%, #1a2744 100%);
+        }
+        .show-customer .hero-section::before {
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.15) 0%, transparent 70%);
+        }
+        .show-customer .hero-section::after {
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
+        }
+        .show-customer .hero-text .badge {
+            background: rgba(230, 57, 70, 0.2);
+            color: #ff6b7a;
+            border-color: rgba(230, 57, 70, 0.3);
+        }
+        .show-customer .hero-text h1 span {
+            background: linear-gradient(135deg, #e63946, #ff6b7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .show-customer .hero-text .hero-stats .stat i {
+            color: #e63946;
+        }
+        .show-customer .hero-logo .brand-name span {
+            color: #e63946;
+        }
+
+        /* ============================================================ */
+        /* HERO SECTION - ADMIN */
+        /* ============================================================ */
+        .show-admin .hero-section {
+            background: linear-gradient(145deg, #0f172a 0%, #1a2744 100%);
+            opacity: 0.7;
+        }
+        .show-admin .hero-section::before {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+        }
+        .show-admin .hero-section::after {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+        }
+        .show-admin .hero-text .badge {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93bbfc;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .show-admin .hero-text h1 span {
+            background: linear-gradient(135deg, #3b82f6, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .show-admin .hero-text .hero-stats .stat i {
+            color: #3b82f6;
+        }
+        .show-admin .hero-logo .brand-name span {
+            color: #3b82f6;
+        }
+
+        /* ============================================================ */
+        /* HERO SECTION - SHARED */
+        /* ============================================================ */
+        .hero-section {
+            position: relative;
+            padding: 40px 0 60px;
+            border-radius: 0 0 40px 40px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: all 0.5s ease;
+        }
+        .hero-section::before,
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+        .hero-section::before {
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+        }
+        .hero-section::after {
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .hero-text {
+            flex: 1;
+            min-width: 280px;
+        }
+        .hero-text .badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border: 1px solid;
+        }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .hero-text .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            max-width: 500px;
+            margin-bottom: 24px;
+        }
+        .hero-text .hero-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .hero-text .hero-stats .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+        .hero-text .hero-stats .stat i {
+            font-size: 1.1rem;
+        }
+
+        .hero-logo {
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            min-width: 200px;
+            animation: float 4s ease-in-out infinite;
+        }
+        .hero-logo i {
+            font-size: 4.5rem;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        .show-customer .hero-logo i { color: #e63946; }
+        .show-admin .hero-logo i { color: #3b82f6; }
+
+        .hero-logo .brand-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .hero-logo .brand-tagline {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+            letter-spacing: 2px;
         }
 
         /* ============================================================ */
@@ -500,20 +623,31 @@
             color: #0f172a;
         }
         .section-title i {
-            color: #e63946;
-            background: rgba(230, 57, 70, 0.1);
             padding: 12px;
             border-radius: 16px;
             font-size: 1.4rem;
+            transition: all 0.3s ease;
+        }
+        .show-customer .section-title i {
+            color: #e63946;
+            background: rgba(230, 57, 70, 0.1);
+        }
+        .show-admin .section-title i {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
         }
         .section-title .title-line {
             flex: 1;
             height: 2px;
             background: linear-gradient(to right, #e63946, transparent);
+            transition: all 0.3s ease;
+        }
+        .show-admin .section-title .title-line {
+            background: linear-gradient(to right, #3b82f6, transparent);
         }
 
         /* ============================================================ */
-        /* SERVICE CARDS - TANPA HARGA */
+        /* SERVICE CARDS */
         /* ============================================================ */
         .service-grid {
             display: grid;
@@ -539,9 +673,14 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #e63946, #ff6b7a);
             opacity: 0;
             transition: opacity 0.4s ease;
+        }
+        .show-customer .service-card::before {
+            background: linear-gradient(90deg, #e63946, #ff6b7a);
+        }
+        .show-admin .service-card::before {
+            background: linear-gradient(90deg, #3b82f6, #818cf8);
         }
         .service-card:hover {
             transform: translateY(-6px);
@@ -553,24 +692,31 @@
             width: 52px;
             height: 52px;
             border-radius: 16px;
-            background: rgba(230, 57, 70, 0.08);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 14px;
             transition: 0.3s;
         }
+        .show-customer .service-card .icon-wrapper {
+            background: rgba(230, 57, 70, 0.08);
+        }
+        .show-admin .service-card .icon-wrapper {
+            background: rgba(59, 130, 246, 0.08);
+        }
         .service-card:hover .icon-wrapper {
             background: #e63946;
         }
+        .show-admin .service-card:hover .icon-wrapper {
+            background: #3b82f6;
+        }
         .service-card .icon-wrapper i {
             font-size: 1.4rem;
-            color: #e63946;
             transition: 0.3s;
         }
-        .service-card:hover .icon-wrapper i {
-            color: #ffffff;
-        }
+        .show-customer .service-card .icon-wrapper i { color: #e63946; }
+        .show-admin .service-card .icon-wrapper i { color: #3b82f6; }
+        .service-card:hover .icon-wrapper i { color: #ffffff; }
         .service-card h4 {
             font-weight: 600;
             font-size: 1.1rem;
@@ -595,6 +741,238 @@
             display: inline-block;
             margin-top: 8px;
         }
+
+        /* ============================================================ */
+        /* ADMIN PANELS */
+        /* ============================================================ */
+        .admin-panel, .service-admin-panel, .settings-panel {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid #e2e8f0;
+            margin-top: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: border-color 0.3s ease;
+        }
+        .show-admin .admin-panel,
+        .show-admin .service-admin-panel,
+        .show-admin .settings-panel {
+            border-color: rgba(59, 130, 246, 0.15);
+        }
+        .admin-panel h4, .service-admin-panel h4, .settings-panel h4 {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+        .show-customer .admin-panel h4 i,
+        .show-customer .service-admin-panel h4 i,
+        .show-customer .settings-panel h4 i { color: #e63946; }
+        .show-admin .admin-panel h4 i,
+        .show-admin .service-admin-panel h4 i,
+        .show-admin .settings-panel h4 i { color: #3b82f6; }
+
+        .product-form, .service-form, .settings-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .product-form .field, .service-form .field, .settings-form .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .product-form label, .service-form label, .settings-form label {
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #475569;
+            letter-spacing: 0.3px;
+        }
+        .product-form input, .service-form input, .settings-form input, .settings-form select {
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            font-weight: 500;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+        }
+        .product-form input:focus, .service-form input:focus, .settings-form input:focus, .settings-form select:focus {
+            outline: none;
+            border-color: #e63946;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.06);
+        }
+        .show-admin .product-form input:focus,
+        .show-admin .service-form input:focus,
+        .show-admin .settings-form input:focus,
+        .show-admin .settings-form select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.06);
+        }
+        .settings-form .field-full { grid-column: 1 / -1; }
+
+        .product-table, .service-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+        .product-table th, .service-table th {
+            text-align: left;
+            padding: 10px 8px;
+            background: #f8fafc;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .product-table td, .service-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .product-table .actions, .service-table .actions {
+            display: flex;
+            gap: 6px;
+        }
+        .product-table .actions button, .service-table .actions button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .product-table .actions button:hover, .service-table .actions button:hover {
+            background: #f1f5f9;
+        }
+        .product-table .actions .edit-btn { color: #3b82f6; }
+        .product-table .actions .delete-btn { color: #ef4444; }
+        .service-table .actions .edit-btn { color: #3b82f6; }
+        .service-table .actions .delete-btn { color: #ef4444; }
+
+        /* ============================================================ */
+        /* BUTTONS - CUSTOMER */
+        /* ============================================================ */
+        .show-customer .btn-primary {
+            background: #0f172a;
+        }
+        .show-customer .btn-primary:hover {
+            background: #1e293b;
+        }
+        .show-customer .btn-success {
+            background: #e63946;
+            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.25);
+        }
+        .show-customer .btn-success:hover {
+            background: #c62834;
+            box-shadow: 0 8px 30px rgba(230, 57, 70, 0.35);
+        }
+
+        /* ============================================================ */
+        /* BUTTONS - ADMIN */
+        /* ============================================================ */
+        .show-admin .btn-primary {
+            background: #3b82f6;
+        }
+        .show-admin .btn-primary:hover {
+            background: #2563eb;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+        .show-admin .btn-success {
+            background: #3b82f6;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25);
+        }
+        .show-admin .btn-success:hover {
+            background: #2563eb;
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.35);
+        }
+
+        /* ============================================================ */
+        /* BUTTONS - SHARED */
+        /* ============================================================ */
+        .btn-primary {
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            padding: 10px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        /* ============================================================ */
+        /* FOOTER */
+        /* ============================================================ */
+        .footer-info {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+        .footer-info .footer-address {
+            flex: 1;
+            min-width: 200px;
+        }
+        .show-customer .footer-info i { color: #e63946; }
+        .show-admin .footer-info i { color: #3b82f6; }
 
         /* ============================================================ */
         /* BOOKING WA */
@@ -676,6 +1054,11 @@
             background: #ffffff;
             box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.08);
         }
+        .show-admin .form-wa input:focus,
+        .show-admin .form-wa select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+        }
 
         .btn-wa-send {
             background: #25D366;
@@ -728,69 +1111,6 @@
         }
 
         /* ============================================================ */
-        /* BUTTONS */
-        /* ============================================================ */
-        .btn-primary {
-            background: #0f172a;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 60px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-primary:hover {
-            background: #1e293b;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
-        }
-
-        .btn-success {
-            background: #e63946;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 60px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
-            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.25);
-        }
-        .btn-success:hover {
-            background: #c62834;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(230, 57, 70, 0.35);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #e2e8f0;
-            padding: 10px 22px;
-            border-radius: 60px;
-            font-weight: 600;
-            color: #475569;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.85rem;
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-outline:hover {
-            background: #f1f5f9;
-            border-color: #94a3b8;
-        }
-
-        /* ============================================================ */
         /* MEKANIK */
         /* ============================================================ */
         .mekanik-list {
@@ -809,7 +1129,8 @@
             border: 1px solid #e2e8f0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
-        .mekanik-item i { color: #e63946; font-size: 1.1rem; }
+        .show-customer .mekanik-item i { color: #e63946; }
+        .show-admin .mekanik-item i { color: #3b82f6; }
         .mekanik-item .schedule {
             background: #f1f5f9;
             padding: 2px 14px;
@@ -828,172 +1149,7 @@
         .mekanik-item .status.busy { background: #f87171; }
 
         /* ============================================================ */
-        /* FOOTER */
-        /* ============================================================ */
-        .footer-info {
-            margin-top: 40px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            color: #64748b;
-            font-size: 0.85rem;
-        }
-        .footer-info .footer-address {
-            flex: 1;
-            min-width: 200px;
-        }
-        .footer-info i {
-            color: #e63946;
-            width: 20px;
-        }
-
-        /* ============================================================ */
-        /* RESPONSIVE */
-        /* ============================================================ */
-        @media (max-width: 992px) {
-            .hero-text h1 { font-size: 2.4rem; }
-            .hero-logo { padding: 24px 30px; }
-            .hero-logo i { font-size: 3.5rem; }
-        }
-        @media (max-width: 768px) {
-            .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-            .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
-            .navbar-menu a { padding: 6px 12px; font-size: 0.7rem; }
-            .main-content { padding-top: 120px; padding-left: 16px; padding-right: 16px; }
-            .hero-section { padding: 20px 0 40px; border-radius: 0 0 24px 24px; }
-            .hero-content { flex-direction: column; text-align: center; }
-            .hero-text .subtitle { max-width: 100%; }
-            .hero-text .hero-stats { justify-content: center; }
-            .hero-logo { width: 100%; max-width: 280px; margin: 0 auto; }
-            .hero-text h1 { font-size: 2rem; }
-            .form-wa { grid-template-columns: 1fr; }
-            .booking-wa-container { padding: 20px; }
-            .section-title { font-size: 1.4rem; }
-            .footer-info { flex-direction: column; gap: 8px; text-align: center; }
-            .service-grid { grid-template-columns: 1fr; }
-            .welcome-overlay .welcome-content h2 { font-size: 1.8rem; }
-            .welcome-overlay .welcome-content .icon-big { font-size: 3.5rem; }
-        }
-        @media (max-width: 480px) {
-            .hero-text h1 { font-size: 1.6rem; }
-            .hero-logo { padding: 20px; }
-            .hero-logo i { font-size: 2.8rem; }
-            .hero-logo .brand-name { font-size: 1.2rem; }
-            .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
-            .navbar-brand h1 { font-size: 1rem; }
-            .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
-            .welcome-overlay .welcome-content h2 { font-size: 1.4rem; }
-            .welcome-overlay .welcome-content .icon-big { font-size: 2.8rem; }
-            .welcome-overlay .welcome-content p { font-size: 0.9rem; }
-        }
-
-        /* ============================================================ */
-        /* ADMIN PANELS */
-        /* ============================================================ */
-        .admin-panel, .service-admin-panel, .settings-panel {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 24px 28px;
-            border: 1px solid #e2e8f0;
-            margin-top: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-        .admin-panel h4, .service-admin-panel h4, .settings-panel h4 {
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #0f172a;
-        }
-        .admin-panel h4 i, .service-admin-panel h4 i, .settings-panel h4 i {
-            color: #e63946;
-        }
-
-        .product-form, .service-form, .settings-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-        .product-form .field, .service-form .field, .settings-form .field {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .product-form label, .service-form label, .settings-form label {
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #475569;
-            letter-spacing: 0.3px;
-        }
-        .product-form input, .service-form input, .settings-form input, .settings-form select {
-            padding: 10px 14px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
-            background: #f8fafc;
-            font-weight: 500;
-            font-size: 0.85rem;
-            font-family: 'Inter', sans-serif;
-            transition: 0.2s;
-        }
-        .product-form input:focus, .service-form input:focus, .settings-form input:focus, .settings-form select:focus {
-            outline: none;
-            border-color: #e63946;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.06);
-        }
-        .settings-form .field-full { grid-column: 1 / -1; }
-
-        .product-table, .service-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin-top: 12px;
-        }
-        .product-table th, .service-table th {
-            text-align: left;
-            padding: 10px 8px;
-            background: #f8fafc;
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            color: #475569;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .product-table td, .service-table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .product-table .actions, .service-table .actions {
-            display: flex;
-            gap: 6px;
-        }
-        .product-table .actions button, .service-table .actions button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            transition: 0.2s;
-        }
-        .product-table .actions button:hover, .service-table .actions button:hover {
-            background: #f1f5f9;
-        }
-        .product-table .actions .edit-btn { color: #3b82f6; }
-        .product-table .actions .delete-btn { color: #ef4444; }
-        .service-table .actions .edit-btn { color: #3b82f6; }
-        .service-table .actions .delete-btn { color: #ef4444; }
-
-        /* ============================================================ */
-        /* KASIR */
+        /* KASIR - SCAN AREA */
         /* ============================================================ */
         .scan-area {
             background: #f8fafc;
@@ -1005,6 +1161,10 @@
             margin-bottom: 16px;
             border: 2px dashed #e2e8f0;
             flex-wrap: wrap;
+            transition: border-color 0.3s ease;
+        }
+        .show-admin .scan-area {
+            border-color: rgba(59, 130, 246, 0.3);
         }
         .scan-area input {
             flex: 1;
@@ -1019,7 +1179,6 @@
         }
         .scan-area input::placeholder { color: #94a3b8; }
         .scan-area .scan-btn {
-            background: #0f172a;
             color: white;
             border: none;
             padding: 8px 20px;
@@ -1033,7 +1192,9 @@
             transition: 0.2s;
             font-family: 'Inter', sans-serif;
         }
-        .scan-area .scan-btn:hover { background: #1e293b; }
+        .show-customer .scan-area .scan-btn { background: #0f172a; }
+        .show-admin .scan-area .scan-btn { background: #3b82f6; }
+        .scan-area .scan-btn:hover { opacity: 0.9; }
 
         .kasir-row {
             display: flex;
@@ -1052,7 +1213,9 @@
             align-items: center;
         }
         .cart-item .item-name { font-weight: 500; color: #0f172a; }
-        .cart-item .item-price { font-weight: 700; color: #e63946; }
+        .cart-item .item-price { font-weight: 700; }
+        .show-customer .cart-item .item-price { color: #e63946; }
+        .show-admin .cart-item .item-price { color: #3b82f6; }
         .cart-item .item-serial { font-size: 0.7rem; color: #94a3b8; font-weight: 400; }
 
         .total-box {
@@ -1068,7 +1231,11 @@
             font-size: 1.1rem;
             padding: 4px 0;
         }
-        .total-box .total-line span:last-child { color: #e63946; font-size: 1.4rem; }
+        .total-box .total-line span:last-child {
+            font-size: 1.4rem;
+        }
+        .show-customer .total-box .total-line span:last-child { color: #e63946; }
+        .show-admin .total-box .total-line span:last-child { color: #3b82f6; }
         .total-box .total-line.dp-line {
             color: #856404;
             font-size: 0.95rem;
@@ -1138,6 +1305,7 @@
             font-family: 'Inter', sans-serif;
         }
         .password-modal-content input:focus { border-color: #e63946; box-shadow: 0 0 0 4px rgba(230,57,70,0.06); }
+        .show-admin .password-modal-content input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.06); }
         .password-modal-content .password-actions {
             display: flex;
             gap: 10px;
@@ -1354,6 +1522,9 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
+        .show-admin .loading-overlay .spinner {
+            border-top-color: #3b82f6;
+        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -1377,7 +1548,7 @@
         .show-customer #section-settings { display: none !important; }
 
         .show-customer .hero-section { display: block; }
-        .show-admin .hero-section { display: none; }
+        .show-admin .hero-section { display: block; }
 
         /* ============================================================ */
         /* WA NUMBER DISPLAY */
@@ -1391,6 +1562,46 @@
             border-radius: 40px;
             display: inline-block;
         }
+
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
+        @media (max-width: 992px) {
+            .hero-text h1 { font-size: 2.4rem; }
+            .hero-logo { padding: 24px 30px; }
+            .hero-logo i { font-size: 3.5rem; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+            .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
+            .navbar-menu a { padding: 6px 12px; font-size: 0.7rem; }
+            .main-content { padding-top: 120px; padding-left: 16px; padding-right: 16px; }
+            .hero-section { padding: 20px 0 40px; border-radius: 0 0 24px 24px; }
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-text .subtitle { max-width: 100%; }
+            .hero-text .hero-stats { justify-content: center; }
+            .hero-logo { width: 100%; max-width: 280px; margin: 0 auto; }
+            .hero-text h1 { font-size: 2rem; }
+            .form-wa { grid-template-columns: 1fr; }
+            .booking-wa-container { padding: 20px; }
+            .section-title { font-size: 1.4rem; }
+            .footer-info { flex-direction: column; gap: 8px; text-align: center; }
+            .service-grid { grid-template-columns: 1fr; }
+            .welcome-overlay .welcome-content h2 { font-size: 1.8rem; }
+            .welcome-overlay .welcome-content .icon-big { font-size: 3.5rem; }
+        }
+        @media (max-width: 480px) {
+            .hero-text h1 { font-size: 1.6rem; }
+            .hero-logo { padding: 20px; }
+            .hero-logo i { font-size: 2.8rem; }
+            .hero-logo .brand-name { font-size: 1.2rem; }
+            .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
+            .navbar-brand h1 { font-size: 1rem; }
+            .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
+            .welcome-overlay .welcome-content h2 { font-size: 1.4rem; }
+            .welcome-overlay .welcome-content .icon-big { font-size: 2.8rem; }
+            .welcome-overlay .welcome-content p { font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
@@ -1401,7 +1612,7 @@
     <!-- ===== WELCOME OVERLAY ===== -->
     <div class="welcome-overlay" id="welcomeOverlay">
         <div class="welcome-content">
-            <div class="icon-big"><i class="fas fa-motorcycle"></i></div>
+            <div class="icon-big" id="welcomeIcon"><i class="fas fa-motorcycle"></i></div>
             <h2 id="welcomeTitle">Selamat Datang di <span>BELEKS MOTOR SERVICE</span></h2>
             <p id="welcomeSub">Kami siap memberikan servis motor terbaik untuk Anda</p>
             <button class="welcome-btn" id="welcomeBtn"><i class="fas fa-arrow-right"></i> Mulai Sekarang</button>
@@ -1427,12 +1638,14 @@
         </a>
 
         <div class="navbar-menu" id="navMenu">
+            <!-- Customer Menu -->
             <a href="#section-layanan" class="active customer-only-nav" data-section="section-layanan">
                 <i class="fas fa-tools"></i> Layanan
             </a>
             <a href="#section-booking" class="customer-only-nav" data-section="section-booking">
                 <i class="fas fa-calendar-check"></i> Booking
             </a>
+            <!-- Admin Menu -->
             <a href="#section-kasir" class="admin-only" data-section="section-kasir">
                 <i class="fas fa-cash-register"></i> Kasir
             </a>
@@ -1445,6 +1658,7 @@
             <a href="#section-settings" class="admin-only" data-section="section-settings">
                 <i class="fas fa-sliders-h"></i> Pengaturan
             </a>
+            <!-- Shared -->
             <a href="#section-mekanik" data-section="section-mekanik">
                 <i class="fas fa-user-cog"></i> Mekanik
             </a>
@@ -1495,14 +1709,14 @@
         <div class="notification" id="notification"></div>
 
         <!-- ========================================================== -->
-        <!-- HERO SECTION (Customer Only) -->
+        <!-- HERO SECTION -->
         <!-- ========================================================== -->
-        <div class="hero-section customer-only" id="heroSection">
+        <div class="hero-section" id="heroSection">
             <div class="hero-content">
                 <div class="hero-text animate-fade-in-up delay-1">
-                    <div class="badge"><i class="fas fa-star"></i> Profesional & Terpercaya</div>
-                    <h1>Servis Motor <span>Berkualitas</span> & Terjangkau</h1>
-                    <p class="subtitle">
+                    <div class="badge" id="heroBadge"><i class="fas fa-star"></i> Profesional & Terpercaya</div>
+                    <h1 id="heroTitle">Servis Motor <span>Berkualitas</span> & Terjangkau</h1>
+                    <p class="subtitle" id="heroSubtitle">
                         Kami menyediakan layanan servis motor terbaik dengan mekanik berpengalaman. 
                         Booking mudah, harga transparan, dan garansi kepuasan.
                     </p>
@@ -1513,8 +1727,8 @@
                     </div>
                 </div>
                 <div class="hero-logo animate-fade-in-up delay-2">
-                    <i class="fas fa-motorcycle"></i>
-                    <div class="brand-name">BELEKS <span>MOTOR</span></div>
+                    <i class="fas fa-motorcycle" id="heroLogoIcon"></i>
+                    <div class="brand-name">BELEKS <span id="heroBrandSpan">MOTOR</span></div>
                     <div class="brand-tagline">SERVICE</div>
                     <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.7rem;color:rgba(255,255,255,0.3);">
                         <i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,0.2);"></i> Sindang Panon Regency
@@ -1632,10 +1846,10 @@
                 <i class="fas fa-barcode" style="font-size:1.4rem;color:#0f172a;"></i>
                 <input type="text" id="barcodeInput" placeholder="Scan barcode atau input serial produk..." />
                 <button class="scan-btn" id="scanBtn"><i class="fas fa-search"></i> Cari</button>
-                <button class="scan-btn" style="background:#e63946;" id="scanCameraBtn">
+                <button class="scan-btn" id="scanCameraBtn" style="background:#28a745;">
                     <i class="fas fa-camera"></i> Scan Kamera
                 </button>
-                <button class="scan-btn" style="background:#3b82f6;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
+                <button class="scan-btn" id="manualAddBtn" style="background:#2c6b9e;"><i class="fas fa-plus"></i> Tambah Manual</button>
             </div>
 
             <div class="kasir-row">
@@ -1701,7 +1915,7 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) - TANPA HARGA ===== -->
+        <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) ===== -->
         <section id="section-manage-services" class="section">
             <div class="section-title">
                 <i class="fas fa-cog"></i>
@@ -1832,7 +2046,7 @@
                 <span id="footerWhatsapp">0822-1011-7403</span>
             </div>
             <div>
-                <i class="fas fa-phone" style="color:#e63946;"></i>
+                <i class="fas fa-phone"></i>
                 <span id="footerPhone">0822-1011-7403</span>
             </div>
         </div>
@@ -1915,7 +2129,15 @@
             const welcomeSub = document.getElementById('welcomeSub');
             const welcomeRole = document.getElementById('welcomeRole');
             const welcomeBtn = document.getElementById('welcomeBtn');
+            const welcomeIcon = document.getElementById('welcomeIcon');
             const confettiContainer = document.getElementById('confettiContainer');
+
+            // Hero Elements
+            const heroBadge = document.getElementById('heroBadge');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            const heroLogoIcon = document.getElementById('heroLogoIcon');
+            const heroBrandSpan = document.getElementById('heroBrandSpan');
 
             // WA Booking
             const waName = document.getElementById('waName');
@@ -1978,11 +2200,13 @@
                     welcomeTitle.innerHTML = '👋 Selamat Datang <span>Admin</span>';
                     welcomeSub.textContent = 'Anda memiliki akses penuh ke kasir, produk, dan pengaturan.';
                     welcomeRole.textContent = 'Mode: Admin';
+                    welcomeIcon.innerHTML = '<i class="fas fa-user-shield"></i>';
                     createConfetti();
                 } else {
                     welcomeTitle.innerHTML = 'Selamat Datang di <span>BELEKS MOTOR SERVICE</span>';
                     welcomeSub.textContent = 'Kami siap memberikan servis motor terbaik untuk Anda';
                     welcomeRole.textContent = 'Mode: Customer';
+                    welcomeIcon.innerHTML = '<i class="fas fa-motorcycle"></i>';
                 }
                 welcomeOverlay.classList.add('show');
                 
@@ -1996,6 +2220,32 @@
             }
 
             welcomeBtn.addEventListener('click', closeWelcome);
+
+            // ============================================================
+            // UPDATE HERO BY ROLE
+            // ============================================================
+            function updateHeroByRole(role) {
+                if (role === 'admin') {
+                    heroBadge.innerHTML = '<i class="fas fa-user-shield"></i> Mode Admin';
+                    heroTitle.innerHTML = 'Panel <span>Administrasi</span>';
+                    heroSubtitle.textContent = 'Kelola produk, layanan, transaksi, dan pengaturan toko dengan mudah.';
+                    heroLogoIcon.style.color = '#3b82f6';
+                    heroBrandSpan.style.color = '#3b82f6';
+                    // Admin stats
+                    document.querySelectorAll('.hero-stats .stat')[0].innerHTML = '<i class="fas fa-boxes"></i> Manajemen Produk';
+                    document.querySelectorAll('.hero-stats .stat')[1].innerHTML = '<i class="fas fa-cash-register"></i> Transaksi';
+                    document.querySelectorAll('.hero-stats .stat')[2].innerHTML = '<i class="fas fa-cog"></i> Pengaturan';
+                } else {
+                    heroBadge.innerHTML = '<i class="fas fa-star"></i> Profesional & Terpercaya';
+                    heroTitle.innerHTML = 'Servis Motor <span>Berkualitas</span> & Terjangkau';
+                    heroSubtitle.textContent = 'Kami menyediakan layanan servis motor terbaik dengan mekanik berpengalaman. Booking mudah, harga transparan, dan garansi kepuasan.';
+                    heroLogoIcon.style.color = '#e63946';
+                    heroBrandSpan.style.color = '#e63946';
+                    document.querySelectorAll('.hero-stats .stat')[0].innerHTML = '<i class="fas fa-check-circle"></i> 100% Kepuasan';
+                    document.querySelectorAll('.hero-stats .stat')[1].innerHTML = '<i class="fas fa-user-cog"></i> Mekanik Profesional';
+                    document.querySelectorAll('.hero-stats .stat')[2].innerHTML = '<i class="fas fa-clock"></i> Servis Cepat';
+                }
+            }
 
             // ============================================================
             // REALTIME DATABASE FUNCTIONS
@@ -2734,6 +2984,7 @@
             function applyRole(role) {
                 currentRole = role;
                 app.classList.remove('show-customer', 'show-admin');
+                
                 if (role === 'customer') {
                     app.classList.add('show-customer');
                     document.getElementById('navUserName').textContent = 'Publik';
@@ -2741,7 +2992,10 @@
                     document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Admin';
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'flex');
-                    document.getElementById('heroSection').style.display = 'block';
+                    
+                    // Update password modal icon
+                    document.querySelector('.password-modal-content h3 i').style.color = '#e63946';
+                    
                     const currentActive = document.querySelector('.section.active');
                     if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin' || currentActive.id === 'section-manage-services' || currentActive.id === 'section-settings')) {
                         navigateTo('section-layanan');
@@ -2753,13 +3007,19 @@
                     document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Customer';
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'flex');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'none');
-                    document.getElementById('heroSection').style.display = 'none';
+                    
+                    // Update password modal icon
+                    document.querySelector('.password-modal-content h3 i').style.color = '#3b82f6';
+                    
                     const currentActive = document.querySelector('.section.active');
                     if (!currentActive || currentActive.id === 'section-layanan' || currentActive.id === 'section-booking') {
                         navigateTo('section-kasir');
                     }
                 }
                 document.querySelectorAll('.navbar-menu a[data-section="section-mekanik"]').forEach(el => el.style.display = 'flex');
+                
+                // Update hero
+                updateHeroByRole(role);
             }
 
             // ============================================================
