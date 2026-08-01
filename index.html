@@ -1340,7 +1340,7 @@
 
                 <h4 style="margin-top:20px;"><i class="fas fa-list"></i> Daftar Layanan</h4>
                 <div style="overflow-x:auto;">
-                    <table class="service-table">
+                    <table class="service-table" id="serviceTable">
                         <thead>
                             <tr><th>Nama</th><th>Harga</th><th>Deskripsi</th><th>Aksi</th></tr>
                         </thead>
@@ -1626,14 +1626,12 @@
                 settingPaperSize.value = settings.paperSize || '80mm';
                 settingCustomSize.value = settings.customSize || '';
 
-                // Tampilkan custom field jika custom dipilih
                 if (settings.paperSize === 'custom') {
                     customPaperSizeField.style.display = 'block';
                 } else {
                     customPaperSizeField.style.display = 'none';
                 }
 
-                // Update display
                 displayAddress.textContent = settings.address || '-';
                 displayWhatsapp.textContent = settings.whatsapp || '-';
                 displayPhone.textContent = settings.phone || '-';
@@ -1663,7 +1661,6 @@
             // ===== FORMAT PHONE NUMBER =====
             function formatPhoneNumber(number) {
                 if (!number) return '-';
-                // Format: 08xx-xxxx-xxxx
                 const clean = number.replace(/\D/g, '');
                 if (clean.length === 11) {
                     return clean.slice(0, 4) + '-' + clean.slice(4, 8) + '-' + clean.slice(8);
@@ -1705,7 +1702,6 @@
                         break;
                 }
 
-                // Update @page CSS
                 const styleTag = document.createElement('style');
                 styleTag.id = 'dynamicPrintStyle';
                 const oldStyle = document.getElementById('dynamicPrintStyle');
@@ -1726,6 +1722,7 @@
                         services.reverse();
                     }
                     renderServices();
+                    renderServiceTable(); // <-- HARUS DIPANGGIL!
                     updateServiceDropdown();
                 }, function(error) {
                     console.error('Error loading services:', error);
@@ -1762,7 +1759,7 @@
                     await newRef.set({
                         name: name,
                         price: price,
-                        desc: desc,
+                        desc: desc || '',
                         createdAt: Date.now()
                     });
                     showLoading(false);
@@ -2164,7 +2161,6 @@
                 if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
                 if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#721c24'; waDate.focus(); return; }
 
-                // Gunakan nomor WhatsApp dari pengaturan
                 const waNumber = settings.whatsapp.replace(/\D/g, '') || '6282210117403';
                 const serviceName = waService.value || 'Layanan';
                 const message = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${formatDateForWA(date)} untuk layanan ${serviceName} dengan mekanik ${waMekanik.value}.`;
@@ -2362,7 +2358,6 @@
 
             // ===== SETTINGS EVENTS =====
 
-            // Tampilkan/sembunyikan custom size field
             settingPaperSize.addEventListener('change', function() {
                 if (this.value === 'custom') {
                     customPaperSizeField.style.display = 'block';
@@ -2371,10 +2366,8 @@
                 }
             });
 
-            // Simpan pengaturan
             saveSettingsBtn.addEventListener('click', saveSettingsToRTDB);
 
-            // Reset ke default
             resetSettingsBtn.addEventListener('click', function() {
                 if (confirm('Reset semua pengaturan ke default?')) {
                     settingAddress.value = 'Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih';
@@ -2411,6 +2404,7 @@
                     document.getElementById('serviceName').value = '';
                     document.getElementById('servicePrice').value = '';
                     document.getElementById('serviceDesc').value = '';
+                    // Data otomatis update via listener
                 }
             });
             document.getElementById('resetServiceBtn').addEventListener('click', function() {
