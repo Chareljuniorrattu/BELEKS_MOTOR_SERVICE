@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BELEKS MOTOR SERVICE · SPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <!-- QR Scanner -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4fa;
+            color: #0b1a2e;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            padding: 12px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            font-size: 1.6rem;
+            color: #e63946;
+            background: #ffe9ea;
+            padding: 8px 12px;
+            border-radius: 14px;
+        }
+
+        .navbar-brand h1 {
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(145deg, #0b1a2e, #1d3b5c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .navbar-brand span {
+            font-weight: 500;
+            color: #4a5f73;
+            font-size: 0.7rem;
+            background: #eef2f6;
+            padding: 2px 10px;
+            border-radius: 40px;
+            -webkit-text-fill-color: #1d3b5c;
+        }
+
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .navbar-menu a {
+            text-decoration: none;
+            color: #4a5f73;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .navbar-menu a i {
+            font-size: 0.9rem;
+        }
+
+        .navbar-menu a:hover {
+            background: #e4ebf3;
+            color: #0b1a2e;
+        }
+
+        .navbar-menu a.active {
+            background: #0b1a2e;
+            color: white;
+            box-shadow: 0 4px 14px rgba(11, 26, 46, 0.2);
+        }
+
+        .navbar-menu a.hidden-link {
+            display: none !important;
+        }
+
+        .user-badge-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0f4fa;
+            padding: 4px 14px 4px 10px;
+            border-radius: 60px;
+            font-size: 0.8rem;
+        }
+
+        .user-badge-nav i {
+            color: #1d3b5c;
+        }
+
+        .user-badge-nav .role-badge {
+            background: #d4e0ed;
+            padding: 1px 10px;
+            border-radius: 40px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .btn-switch-nav {
+            background: transparent;
+            border: 2px solid #d4e0ed;
+            padding: 5px 14px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #1d3b5c;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-switch-nav:hover {
+            background: #e4ebf3;
+            border-color: #b0c8e0;
+        }
+
+        .main-content {
+            padding-top: 85px;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding-left: 28px;
+            padding-right: 28px;
+            padding-bottom: 30px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeSlide 0.4s ease;
+            padding: 20px 0 40px;
+            min-height: 70vh;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #0b1a2e;
+        }
+
+        .section-title i {
+            color: #1d3b5c;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin: 16px 0 20px;
+        }
+
+        .service-card {
+            background: #f9fbfd;
+            border-radius: 20px;
+            padding: 18px 16px;
+            transition: 0.2s;
+            border: 1px solid #eef3f8;
+        }
+
+        .service-card:hover {
+            background: white;
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.08);
+            border-color: #d0ddee;
+        }
+
+        .service-card h4 {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .service-card .price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #e63946;
+            margin: 6px 0 4px;
+        }
+
+        .service-card .desc {
+            color: #4f657b;
+            font-size: 0.8rem;
+            border-top: 1px dashed #dce5ef;
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .badge-mekanik {
+            background: #d2e5ff;
+            color: #004080;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .booking-wa-container {
+            background: #f2f7fe;
+            border-radius: 24px;
+            padding: 28px 30px;
+            margin: 16px 0;
+            border: 1px solid #e2ebf5;
+        }
+
+        .booking-wa-container .wa-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .booking-wa-container .wa-header i {
+            font-size: 2.4rem;
+            color: #25D366;
+            background: #e8f5e9;
+            padding: 14px;
+            border-radius: 16px;
+        }
+
+        .booking-wa-container .wa-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0b1a2e;
+        }
+
+        .booking-wa-container .wa-header .wa-number {
+            font-size: 1.1rem;
+            color: #25D366;
+            font-weight: 600;
+        }
+
+        .form-wa {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .form-wa .field-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-wa .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-wa label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2a4b6e;
+        }
+
+        .form-wa input,
+        .form-wa select {
+            padding: 12px 16px;
+            border-radius: 40px;
+            border: 1px solid #d6e2f0;
+            background: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .form-wa input:focus,
+        .form-wa select:focus {
+            outline: 2px solid #b4cef0;
+            border-color: transparent;
+        }
+
+        .form-wa input:disabled {
+            background: #f0f4fa;
+            color: #6a7f94;
+        }
+
+        .btn-wa-send {
+            background: #25D366;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+            margin-top: 8px;
+        }
+
+        .btn-wa-send:hover {
+            background: #20b85a;
+            transform: scale(0.97);
+        }
+
+        .btn-wa-send i {
+            font-size: 1.2rem;
+        }
+
+        .btn-wa-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wa-preview {
+            background: #f8faff;
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            border: 1px solid #dce5ef;
+        }
+
+        .wa-preview .preview-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6a7f94;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .wa-preview .preview-message {
+            background: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: #0b1a2e;
+            border-left: 4px solid #25D366;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 60px;
+        }
+
+        .info-booking-wa {
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1e7e34;
+        }
+
+        .info-booking-wa i {
+            font-size: 1.2rem;
+        }
+
+        .btn-primary {
+            background: #0b1a2e;
+            border: none;
+            padding: 11px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(11, 26, 46, 0.15);
+        }
+
+        .btn-primary:hover {
+            background: #1d3b5c;
+            transform: scale(0.97);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-success {
+            background: #28a745;
+            border: none;
+            padding: 11px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 14px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #b8cee8;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #1d3b5c;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-outline:hover {
+            background: #e9f0fa;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-scan-camera {
+            background: #6c757d;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .btn-scan-camera:hover {
+            background: #5a6268;
+        }
+
+        .btn-scan-camera.scanning {
+            background: #dc3545;
+        }
+
+        .btn-scan-camera.scanning:hover {
+            background: #c82333;
+        }
+
+        .mekanik-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin: 16px 0;
+        }
+
+        .mekanik-item {
+            background: white;
+            border-radius: 60px;
+            padding: 8px 18px 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #e2ebf5;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .mekanik-item i {
+            color: #2c6b9e;
+            font-size: 1.1rem;
+        }
+
+        .mekanik-item .schedule {
+            background: #e1edfb;
+            padding: 2px 12px;
+            border-radius: 60px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #00427a;
+        }
+
+        .mekanik-item .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 10px;
+            background: #34a853;
+            display: inline-block;
+        }
+
+        .mekanik-item .status.busy {
+            background: #e63946;
+        }
+
+        .admin-panel {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 20px 24px;
+            border: 1px solid #e2ebf5;
+            margin-top: 16px;
+        }
+
+        .product-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .product-form .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .product-form label {
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #2a4b6e;
+        }
+
+        .product-form input {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #d6e2f0;
+            background: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .product-form input:focus {
+            outline: 2px solid #b4cef0;
+            border-color: transparent;
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        .product-table th {
+            text-align: left;
+            padding: 10px 8px;
+            background: #eef3f8;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .product-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef3f8;
+        }
+
+        .product-table .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .product-table .actions button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+
+        .product-table .actions .edit-btn {
+            color: #0066cc;
+        }
+        .product-table .actions .delete-btn {
+            color: #e63946;
+        }
+
+        .kasir-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .kasir-col {
+            flex: 2;
+            min-width: 280px;
+        }
+
+        .kasir-col:last-child {
+            flex: 1.2;
+            min-width: 220px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ecf2f9;
+            align-items: center;
+        }
+
+        .cart-item .item-name {
+            font-weight: 500;
+        }
+
+        .cart-item .item-price {
+            font-weight: 700;
+        }
+
+        .cart-item .item-serial {
+            font-size: 0.7rem;
+            color: #6a7f94;
+            font-weight: 400;
+        }
+
+        .total-box {
+            background: #f0f6fe;
+            padding: 18px 22px;
+            border-radius: 20px;
+            margin-top: 16px;
+        }
+
+        .total-box .total-line {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .total-box .total-line span:last-child {
+            color: #e63946;
+            font-size: 1.4rem;
+        }
+
+        .total-box .total-line.dp-line {
+            color: #856404;
+            font-size: 0.95rem;
+        }
+
+        .total-box .total-line.dp-line span:last-child {
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .separator {
+            height: 2px;
+            background: linear-gradient(to right, #d3e2f5, transparent);
+            margin: 14px 0;
+        }
+
+        .scan-area {
+            background: #f0f4fa;
+            border-radius: 60px;
+            padding: 8px 16px 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            border: 2px dashed #b8cee8;
+            flex-wrap: wrap;
+        }
+
+        .scan-area input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 150px;
+        }
+
+        .scan-area input::placeholder {
+            color: #8aa0b8;
+        }
+
+        .scan-area .scan-btn {
+            background: #0b1a2e;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .scan-area .scan-btn:hover {
+            background: #1d3b5c;
+        }
+
+        .scanner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .scanner-overlay.show {
+            display: flex;
+        }
+
+        .scanner-container {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+            position: relative;
+        }
+
+        .scanner-container #scannerBox {
+            width: 100%;
+            aspect-ratio: 1/0.8;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scanner-container #scannerBox video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-container .scanner-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            justify-content: center;
+        }
+
+        .scanner-container .scanner-actions button {
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .scanner-container .scanner-actions .btn-close-scanner {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .scanner-container .scanner-actions .btn-close-scanner:hover {
+            background: #dde0e3;
+        }
+
+        .scanner-container .scanner-status {
+            text-align: center;
+            padding: 8px;
+            font-size: 0.85rem;
+            color: #28a745;
+            margin-top: 8px;
+        }
+
+        .scanner-container .scanner-status.error {
+            color: #dc3545;
+        }
+
+        .struk-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .struk-container.show {
+            display: flex;
+        }
+
+        .struk-modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px 28px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .struk-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #000;
+            padding: 8px 0;
+        }
+
+        .struk-content .header-struk {
+            text-align: center;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .struk-content .header-struk h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .struk-content .header-struk .sub {
+            font-size: 10px;
+            color: #555;
+        }
+
+        .struk-content .struk-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+
+        .struk-content .struk-row.total {
+            font-weight: 700;
+            font-size: 14px;
+            border-top: 2px solid #000;
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+
+        .struk-content .struk-row.dp-row {
+            color: #28a745;
+            border-top: 1px dashed #28a745;
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+
+        .struk-content .item-detail {
+            padding: 3px 0;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .struk-content .item-detail .item-name {
+            font-weight: 600;
+        }
+
+        .struk-content .item-detail .item-serial {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .struk-content .footer-struk {
+            text-align: center;
+            border-top: 2px dashed #000;
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 10px;
+            color: #555;
+        }
+
+        .struk-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .struk-actions button {
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .struk-actions .btn-print {
+            background: #0b1a2e;
+            color: white;
+        }
+
+        .struk-actions .btn-print:hover {
+            background: #1d3b5c;
+        }
+
+        .struk-actions .btn-close-struk {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .struk-actions .btn-close-struk:hover {
+            background: #dde0e3;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .struk-container,
+            .struk-container * {
+                visibility: visible;
+            }
+            .struk-container {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: white;
+                padding: 20px;
+                display: flex !important;
+                justify-content: center;
+                align-items: flex-start;
+            }
+            .struk-modal {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 10px;
+                border-radius: 0;
+            }
+            .struk-actions {
+                display: none !important;
+            }
+        }
+
+        .notification {
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin: 10px 0;
+            background: #d4edda;
+            color: #155724;
+            font-weight: 500;
+            display: none;
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .admin-only {
+            display: none !important;
+        }
+
+        .customer-only {
+            display: block;
+        }
+
+        .show-admin .admin-only {
+            display: flex !important;
+        }
+
+        .show-admin .customer-only-nav {
+            display: none !important;
+        }
+
+        .show-customer .admin-only {
+            display: none !important;
+        }
+
+        .show-customer .customer-only-nav {
+            display: flex !important;
+        }
+
+        .show-admin #section-layanan,
+        .show-admin #section-booking {
+            display: none !important;
+        }
+
+        .show-customer #section-kasir,
+        .show-customer #section-admin {
+            display: none !important;
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .password-modal.show {
+            display: flex;
+        }
+
+        .password-modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        .password-modal-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .password-modal-content p {
+            color: #4a5f73;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .password-modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 40px;
+            border: 2px solid #d6e2f0;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .password-modal-content input:focus {
+            border-color: #0b1a2e;
+        }
+
+        .password-modal-content .password-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .password-modal-content .password-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .password-modal-content .password-actions .btn-confirm-pass {
+            background: #0b1a2e;
+            color: white;
+        }
+
+        .password-modal-content .password-actions .btn-confirm-pass:hover {
+            background: #1d3b5c;
+        }
+
+        .password-modal-content .password-actions .btn-cancel-pass {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .password-modal-content .password-actions .btn-cancel-pass:hover {
+            background: #dde0e3;
+        }
+
+        .password-error {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .password-error.show {
+            display: block;
+        }
+
+        .wa-number-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #25D366;
+            background: #e8f5e9;
+            padding: 4px 16px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-overlay .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e2ebf5;
+            border-top: 4px solid #0b1a2e;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-overlay p {
+            color: #0b1a2e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .navbar-menu {
+                justify-content: center;
+                gap: 4px;
+                flex-wrap: wrap;
+            }
+
+            .navbar-menu a {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+
+            .navbar-menu a i {
+                font-size: 0.75rem;
+            }
+
+            .main-content {
+                padding-top: 120px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .section {
+                padding: 12px 0 30px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .form-wa {
+                grid-template-columns: 1fr;
+            }
+
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+
+            .scan-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .scan-area input {
+                width: 100%;
+            }
+
+            .kasir-row {
+                flex-direction: column;
+            }
+
+            .struk-modal {
+                padding: 16px;
+                margin: 10px;
+            }
+
+            .user-badge-nav .name {
+                display: none;
+            }
+
+            .booking-wa-container {
+                padding: 20px;
+            }
+
+            .password-modal-content {
+                padding: 24px;
+            }
+
+            .scanner-container {
+                padding: 12px;
+            }
+
+            .scanner-container #scannerBox {
+                aspect-ratio: 1/1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-menu a {
+                font-size: 0.6rem;
+                padding: 4px 10px;
+            }
+
+            .navbar-brand h1 {
+                font-size: 1rem;
+            }
+
+            .navbar-brand i {
+                font-size: 1.2rem;
+                padding: 6px 10px;
+            }
+
+            .booking-wa-container .wa-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============ LOADING OVERLAY ============ -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Memuat data dari server...</p>
+    </div>
+
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar" id="navbar">
+        <a href="#section-layanan" class="navbar-brand">
+            <i class="fas fa-motorcycle"></i>
+            <h1>BELEKS <span>MOTOR SERVICE</span></h1>
+        </a>
+
+        <div class="navbar-menu" id="navMenu">
+            <!-- Customer Menu -->
+            <a href="#section-layanan" class="active customer-only-nav" data-section="section-layanan">
+                <i class="fas fa-tools"></i> Layanan
+            </a>
+            <a href="#section-booking" class="customer-only-nav" data-section="section-booking">
+                <i class="fas fa-calendar-check"></i> Booking
+            </a>
+
+            <!-- Admin Menu -->
+            <a href="#section-kasir" class="admin-only" data-section="section-kasir">
+                <i class="fas fa-cash-register"></i> Kasir
+            </a>
+            <a href="#section-admin" class="admin-only" data-section="section-admin">
+                <i class="fas fa-boxes"></i> Produk
+            </a>
+
+            <!-- Shared Menu -->
+            <a href="#section-mekanik" data-section="section-mekanik">
+                <i class="fas fa-user-cog"></i> Mekanik
+            </a>
+
+            <div class="user-badge-nav">
+                <i class="fas fa-user-circle"></i>
+                <span class="name" id="navUserName">Publik</span>
+                <span class="role-badge" id="navUserRole">Customer</span>
+            </div>
+            <button class="btn-switch-nav" id="switchNavBtn">
+                <i class="fas fa-exchange-alt"></i> Switch ke Admin
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============ PASSWORD MODAL ============ -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <h3><i class="fas fa-lock" style="color:#0b1a2e;"></i> Admin Access</h3>
+            <p>Masukkan password admin untuk mengakses fitur kasir dan manajemen produk.</p>
+            <input type="password" id="passwordInput" placeholder="Masukkan password..." />
+            <div class="password-error" id="passwordError">❌ Password salah! Coba lagi.</div>
+            <div class="password-actions">
+                <button class="btn-confirm-pass" id="confirmPasswordBtn"><i class="fas fa-check"></i> Masuk</button>
+                <button class="btn-cancel-pass" id="cancelPasswordBtn"><i class="fas fa-times"></i> Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ SCANNER OVERLAY ============ -->
+    <div class="scanner-overlay" id="scannerOverlay">
+        <div class="scanner-container">
+            <div id="scannerBox"></div>
+            <div class="scanner-status" id="scannerStatus">📷 Arahkan kamera ke barcode produk</div>
+            <div class="scanner-actions">
+                <button class="btn-close-scanner" id="closeScannerBtn"><i class="fas fa-times"></i> Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MAIN CONTENT ============ -->
+    <div class="main-content">
+
+        <!-- NOTIFICATION -->
+        <div class="notification" id="notification"></div>
+
+        <!-- ======== SECTION 1: LAYANAN (Customer Only) ======== -->
+        <section id="section-layanan" class="section active">
+            <h2 class="section-title"><i class="fas fa-list-ul"></i> Daftar Layanan & Harga</h2>
+            <div class="service-grid" id="serviceGrid"></div>
+            <div style="margin: 8px 0 0; background: #f4f9ff; padding: 10px 16px; border-radius: 60px; display: inline-block; font-size:0.9rem;">
+                <i class="fas fa-wrench" style="margin-right: 8px;"></i> Semua layanan didukung mekanik bersertifikat
+            </div>
+        </section>
+
+        <!-- ======== SECTION 2: BOOKING VIA WA (Customer Only) ======== -->
+        <section id="section-booking" class="section">
+            <h2 class="section-title"><i class="fas fa-calendar-check"></i> Booking Service</h2>
+            <p style="color: #3c5b78; margin-bottom: 16px;">Booking via WhatsApp dengan mengisi form di bawah ini. Pesan akan otomatis terkirim ke admin.</p>
+
+            <div class="booking-wa-container">
+                <div class="wa-header">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <h3>Booking via WhatsApp</h3>
+                        <div class="wa-number">
+                            <i class="fas fa-phone"></i> <span class="wa-number-display">0838-9543-3600</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-booking-wa">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Isi data diri Anda, pilih layanan dan tanggal. Pesan akan otomatis terkirim ke WhatsApp admin.</span>
+                </div>
+
+                <div class="form-wa" id="waForm">
+                    <div class="field field-full">
+                        <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                        <input type="text" id="waName" placeholder="Masukkan nama lengkap Anda" required />
+                    </div>
+                    <div class="field">
+                        <label><i class="fab fa-whatsapp"></i> Nomor WhatsApp Aktif</label>
+                        <input type="tel" id="waPhone" placeholder="08xx-xxxx-xxxx" required />
+                    </div>
+                    <div class="field">
+                        <label><i class="fas fa-calendar-day"></i> Tanggal Booking</label>
+                        <input type="date" id="waDate" />
+                    </div>
+                    <div class="field field-full">
+                        <label><i class="fas fa-motorcycle"></i> Pilih Layanan</label>
+                        <select id="waService">
+                            <option value="Servis Rutin">Servis Rutin</option>
+                            <option value="Ganti Oli + Filter">Ganti Oli + Filter</option>
+                            <option value="Turun Mesin">Turun Mesin</option>
+                            <option value="Korek & Tune Up">Korek & Tune Up</option>
+                            <option value="Rem & Kaki-kaki">Rem & Kaki-kaki</option>
+                        </select>
+                    </div>
+                    <div class="field field-full">
+                        <label><i class="fas fa-user-cog"></i> Mekanik</label>
+                        <select id="waMekanik">
+                            <option value="Elan Herlani">Elan Herlani</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Preview Pesan -->
+                <div class="wa-preview">
+                    <div class="preview-label"><i class="fas fa-eye"></i> Preview Pesan WhatsApp</div>
+                    <div class="preview-message" id="waPreviewMessage">
+                        Halo, saya atas nama [Nama Anda] ingin mengajukan booking pada [Tanggal] untuk layanan [Layanan] dengan mekanik Elan Herlani.
+                    </div>
+                </div>
+
+                <button class="btn-wa-send" id="waSendBtn">
+                    <i class="fab fa-whatsapp"></i> Kirim ke WhatsApp
+                </button>
+                <div id="waMessage" style="margin-top: 12px; font-weight: 500;"></div>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <h4 style="font-weight: 600; display: flex; gap: 8px;"><i class="fas fa-clock"></i> Jadwal Mekanik</h4>
+                <div class="mekanik-list">
+                    <div class="mekanik-item"><i class="fas fa-user-md"></i> Elan Herlani <span class="schedule">Sen-Sab 08:00-17:00</span> <span class="status"></span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== SECTION 3: KASIR (Admin Only) ======== -->
+        <section id="section-kasir" class="section">
+            <h2 class="section-title"><i class="fas fa-shopping-cart"></i> Kasir / Transaksi</h2>
+
+            <div class="scan-area">
+                <i class="fas fa-barcode" style="font-size: 1.4rem; color: #1d3b5c;"></i>
+                <input type="text" id="barcodeInput" placeholder="Scan barcode atau input serial produk..." />
+                <button class="scan-btn" id="scanBtn"><i class="fas fa-search"></i> Cari</button>
+                <button class="scan-btn" style="background: #28a745;" id="scanCameraBtn">
+                    <i class="fas fa-camera"></i> Scan Kamera
+                </button>
+                <button class="scan-btn" style="background: #2c6b9e;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
+            </div>
+
+            <div class="kasir-row">
+                <div class="kasir-col">
+                    <div id="cartItems"></div>
+                    <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="btn-outline" id="clearCartBtn"><i class="fas fa-trash-alt"></i> Kosongkan</button>
+                    </div>
+                </div>
+                <div class="kasir-col">
+                    <div class="total-box">
+                        <div class="total-line"><span>Subtotal</span><span id="subtotalDisplay">Rp 0</span></div>
+                        <div class="total-line dp-line" id="dpDisplayLine" style="display:none;">
+                            <span>DP Booking <i class="fas fa-info-circle" style="font-size:0.7rem;color:#856404;"></i></span>
+                            <span id="dpDisplay">Rp 0</span>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="total-line"><span>Total</span><span id="totalDisplay">Rp 0</span></div>
+                        <button class="btn-success" style="width:100%; justify-content:center; margin-top: 16px;" id="checkoutBtn"><i class="fas fa-credit-card"></i> Bayar Sekarang</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== SECTION 4: MANAJEMEN PRODUK (Admin Only) ======== -->
+        <section id="section-admin" class="section">
+            <h2 class="section-title"><i class="fas fa-boxes"></i> Manajemen Produk & Stok</h2>
+
+            <div class="admin-panel">
+                <h4><i class="fas fa-plus-circle"></i> Tambah Produk Baru</h4>
+                <div class="product-form">
+                    <div class="field">
+                        <label>Nama Produk</label>
+                        <input type="text" id="prodName" placeholder="Contoh: Oli Mesin 10W-40" />
+                    </div>
+                    <div class="field">
+                        <label>Harga Jual</label>
+                        <input type="number" id="prodPrice" placeholder="150000" />
+                    </div>
+                    <div class="field">
+                        <label>Serial / Barcode</label>
+                        <input type="text" id="prodSerial" placeholder="Scan atau ketik barcode" />
+                    </div>
+                    <div class="field" style="display: flex; align-items: flex-end; gap: 8px;">
+                        <button class="btn-primary" id="addProductBtn"><i class="fas fa-save"></i> Simpan</button>
+                        <button class="btn-outline" id="resetProductBtn">Reset</button>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 20px;"><i class="fas fa-list"></i> Daftar Produk</h4>
+                <div style="overflow-x: auto;">
+                    <table class="product-table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Harga</th>
+                                <th>Serial / Barcode</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======== SECTION 5: MEKANIK (Shared) ======== -->
+        <section id="section-mekanik" class="section">
+            <h2 class="section-title"><i class="fas fa-users"></i> Tim Mekanik</h2>
+
+            <div class="mekanik-list" style="margin-top: 12px;">
+                <div class="mekanik-item" style="flex:1; min-width:180px;">
+                    <i class="fas fa-user-tie"></i>
+                    <div>
+                        <strong>Elan Herlani</strong>
+                        <div style="font-size:0.75rem;color:#4a5f73;">Senior Mekanik</div>
+                    </div>
+                    <span class="schedule">Sen-Sab 08:00-17:00</span>
+                    <span class="status"></span>
+                </div>
+            </div>
+            <p style="margin-top: 16px; background: #eaf1fb; padding: 10px 18px; border-radius: 60px; font-size:0.9rem;">
+                <i class="fas fa-info-circle"></i> Mekanik spesialis mesin & kelistrikan. Booking via WhatsApp.
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <div style="margin-top: 40px; border-top: 1px solid #e6eef8; padding-top: 14px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; color: #3e5e7a; font-size:0.8rem;">
+            <span><i class="far fa-clock"></i> Buka Senin-Sabtu 08:00 - 18:00</span>
+            <span><i class="fas fa-phone-alt"></i> 0812-3456-7890</span>
+            <span><i class="fas fa-map-pin"></i> Jl. Motor No. 88, Jakarta</span>
+        </div>
+    </div>
+
+    <!-- ========== STRUK MODAL ========== -->
+    <div class="struk-container" id="strukContainer">
+        <div class="struk-modal">
+            <div class="struk-content" id="strukContent"></div>
+            <div class="struk-actions">
+                <button class="btn-print" id="printStrukBtn"><i class="fas fa-print"></i> Print / Cetak</button>
+                <button class="btn-close-struk" id="closeStrukBtn"><i class="fas fa-times"></i> Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ FIREBASE CONFIG ============
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx4g5iVPxIP8e16TDh_K-1kN8qOl7fLng",
+            authDomain: "data-beleks-motor-service.firebaseapp.com",
+            projectId: "data-beleks-motor-service",
+            storageBucket: "data-beleks-motor-service.firebasestorage.app",
+            messagingSenderId: "271147805985",
+            appId: "1:271147805985:web:52d779ce38b3ae407da260",
+            measurementId: "G-YKK2GHBX9N"
+        };
+
+        // ============ INIT FIREBASE ============
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ============ MAIN APP ============
+        (function() {
+            // ============ DATA ============
+            const services = [
+                { name: 'Servis Rutin', price: 150000, desc: 'Cek mesin, kelistrikan, & pelumas' },
+                { name: 'Ganti Oli + Filter', price: 220000, desc: 'Oli sintetik + filter original' },
+                { name: 'Turun Mesin', price: 650000, desc: 'Overhaul & perbaikan total' },
+                { name: 'Korek & Tune Up', price: 380000, desc: 'Setting karburator/injector & timing' },
+                { name: 'Rem & Kaki-kaki', price: 280000, desc: 'Cakram, kampas, & suspensi' },
+            ];
+
+            // Data dari Firebase - akan diisi dari server
+            let products = [];
+            let bookings = [];
+            let transactions = [];
+            
+            let cart = [];
+            let currentRole = 'customer';
+            let transactionNumber = 1;
+            let dpInCart = 0;
+
+            // Scanner
+            let html5QrCode = null;
+            let isScanning = false;
+
+            // ============ DOM REFS ============
+            const app = document.body;
+            const notification = document.getElementById('notification');
+            const strukContainer = document.getElementById('strukContainer');
+            const strukContent = document.getElementById('strukContent');
+            const navLinks = document.querySelectorAll('.navbar-menu a[data-section]');
+            const sections = document.querySelectorAll('.section');
+            const passwordModal = document.getElementById('passwordModal');
+            const scannerOverlay = document.getElementById('scannerOverlay');
+            const scannerBox = document.getElementById('scannerBox');
+            const scannerStatus = document.getElementById('scannerStatus');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+
+            // WA Booking Elements
+            const waName = document.getElementById('waName');
+            const waPhone = document.getElementById('waPhone');
+            const waDate = document.getElementById('waDate');
+            const waService = document.getElementById('waService');
+            const waMekanik = document.getElementById('waMekanik');
+            const waPreview = document.getElementById('waPreviewMessage');
+            const waSendBtn = document.getElementById('waSendBtn');
+            const waMessage = document.getElementById('waMessage');
+
+            // ============ FIREBASE FUNCTIONS ============
+
+            function showLoading(show) {
+                if (show) {
+                    loadingOverlay.classList.add('show');
+                } else {
+                    loadingOverlay.classList.remove('show');
+                }
+            }
+
+            // Load Products from Firebase
+            async function loadProducts() {
+                try {
+                    showLoading(true);
+                    const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get();
+                    products = [];
+                    snapshot.forEach(doc => {
+                        products.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderProductTable();
+                    showLoading(false);
+                } catch (error) {
+                    console.error('Error loading products:', error);
+                    showLoading(false);
+                    showNotification('❌ Gagal memuat data produk dari server', 'error');
+                }
+            }
+
+            // Add Product to Firebase
+            async function addProductToFirebase(name, price, serial) {
+                try {
+                    showLoading(true);
+                    const docRef = await db.collection('products').add({
+                        name: name,
+                        price: price,
+                        serial: serial,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    products.push({ id: docRef.id, name, price, serial });
+                    renderProductTable();
+                    showLoading(false);
+                    showNotification('✅ Produk berhasil disimpan ke server!', 'success');
+                    return true;
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    showLoading(false);
+                    showNotification('❌ Gagal menyimpan produk ke server', 'error');
+                    return false;
+                }
+            }
+
+            // Delete Product from Firebase
+            async function deleteProductFromFirebase(productId) {
+                try {
+                    showLoading(true);
+                    await db.collection('products').doc(productId).delete();
+                    products = products.filter(p => p.id !== productId);
+                    renderProductTable();
+                    showLoading(false);
+                    showNotification('✅ Produk berhasil dihapus dari server!', 'success');
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    showLoading(false);
+                    showNotification('❌ Gagal menghapus produk dari server', 'error');
+                }
+            }
+
+            // Save Transaction to Firebase
+            async function saveTransactionToFirebase(transactionData) {
+                try {
+                    await db.collection('transactions').add({
+                        ...transactionData,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (error) {
+                    console.error('Error saving transaction:', error);
+                }
+            }
+
+            // ============ RENDER FUNCTIONS ============
+
+            function renderServices() {
+                const grid = document.getElementById('serviceGrid');
+                if (!grid) return;
+                grid.innerHTML = services.map(s => `
+                  <div class="service-card">
+                    <h4>${s.name}</h4>
+                    <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
+                    <div class="desc">${s.desc}</div>
+                    <span class="badge-mekanik"><i class="fas fa-user-cog"></i> mekanik tersedia</span>
+                  </div>
+                `).join('');
+            }
+
+            function renderProductTable() {
+                const tbody = document.getElementById('productTableBody');
+                if (!tbody) return;
+                
+                if (products.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
+                                <i class="fas fa-box-open" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                                Belum ada produk. Tambahkan produk baru di atas.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                tbody.innerHTML = products.map(p => `
+                  <tr>
+                    <td><strong>${p.name}</strong></td>
+                    <td>Rp ${p.price.toLocaleString('id-ID')}</td>
+                    <td><code style="background:#eef3f8;padding:2px 10px;border-radius:20px;font-size:0.8rem;">${p.serial}</code></td>
+                    <td class="actions">
+                      <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
+                      <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                  </tr>
+                `).join('');
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        if (confirm('Hapus produk ini dari server?')) {
+                            deleteProductFromFirebase(id);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const prod = products.find(p => p.id === id);
+                        if (prod) {
+                            document.getElementById('prodName').value = prod.name;
+                            document.getElementById('prodPrice').value = prod.price;
+                            document.getElementById('prodSerial').value = prod.serial;
+                            // Hapus dari lokal, nanti tambah baru saat simpan
+                            products = products.filter(p => p.id !== id);
+                            renderProductTable();
+                            showNotification('Edit produk: isi form dan simpan', 'info');
+                        }
+                    });
+                });
+            }
+
+            function renderCart() {
+                const container = document.getElementById('cartItems');
+                if (!container) return;
+                if (cart.length === 0 && dpInCart === 0) {
+                    container.innerHTML =
+                        `<div style="padding:20px;text-align:center;color:#8aa0b8;"><i class="fas fa-shopping-bag"></i> Keranjang kosong</div>`;
+                } else {
+                    let html = '';
+                    cart.forEach((item, idx) => {
+                        html += `
+                      <div class="cart-item">
+                        <div>
+                          <div class="item-name">${item.name}</div>
+                          <div class="item-serial"><i class="fas fa-barcode"></i> ${item.serial || 'N/A'}</div>
+                        </div>
+                        <div>
+                          <span class="item-price">Rp ${item.price.toLocaleString('id-ID')}</span>
+                          <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;" data-index="${idx}"><i class="fas fa-times"></i></button>
+                        </div>
+                      </div>
+                    `;
+                    });
+
+                    if (dpInCart > 0) {
+                        html += `
+                      <div class="cart-item" style="background:#f8fff8;border-radius:12px;padding:12px 16px;border:1px solid #28a745;">
+                        <div>
+                          <div class="item-name" style="color:#28a745;">
+                            <i class="fas fa-money-bill-wave"></i> DP Booking
+                          </div>
+                          <div class="item-serial">Jaminan booking</div>
+                        </div>
+                        <div>
+                          <span class="item-price" style="color:#28a745;">Rp ${dpInCart.toLocaleString('id-ID')}</span>
+                          <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#dc3545;color:#dc3545;" id="removeDpBtn"><i class="fas fa-times"></i></button>
+                        </div>
+                      </div>
+                    `;
+                    }
+
+                    container.innerHTML = html;
+
+                    document.querySelectorAll('.cart-item .btn-outline').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const idx = parseInt(this.dataset.index);
+                            if (!isNaN(idx)) {
+                                cart.splice(idx, 1);
+                                renderCart();
+                                updateTotal();
+                            }
+                        });
+                    });
+
+                    const removeDpBtn = document.getElementById('removeDpBtn');
+                    if (removeDpBtn) {
+                        removeDpBtn.addEventListener('click', function() {
+                            if (confirm('Hapus DP Booking dari keranjang?')) {
+                                dpInCart = 0;
+                                renderCart();
+                                updateTotal();
+                                showNotification('DP Booking dihapus dari keranjang', 'info');
+                            }
+                        });
+                    }
+                }
+                updateTotal();
+            }
+
+            function updateTotal() {
+                const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+
+                const subtotalDisplay = document.getElementById('subtotalDisplay');
+                const totalDisplay = document.getElementById('totalDisplay');
+                const dpDisplayLine = document.getElementById('dpDisplayLine');
+                const dpDisplay = document.getElementById('dpDisplay');
+
+                if (subtotalDisplay) subtotalDisplay.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+
+                if (dpInCart > 0) {
+                    dpDisplayLine.style.display = 'flex';
+                    dpDisplay.textContent = `Rp ${dpInCart.toLocaleString('id-ID')}`;
+                    const grandTotal = subtotal - dpInCart;
+                    if (totalDisplay) totalDisplay.textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+                } else {
+                    dpDisplayLine.style.display = 'none';
+                    if (totalDisplay) totalDisplay.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+                }
+            }
+
+            function addToCartBySerial(serial) {
+                const product = products.find(p => p.serial.toLowerCase() === serial.toLowerCase());
+                if (product) {
+                    cart.push({ ...product });
+                    renderCart();
+                    showNotification(`✅ ${product.name} ditambahkan ke keranjang`, 'success');
+                    document.getElementById('barcodeInput').value = '';
+                    return true;
+                } else {
+                    showNotification('❌ Produk dengan serial tersebut tidak ditemukan', 'error');
+                    return false;
+                }
+            }
+
+            function showNotification(message, type = 'info') {
+                notification.textContent = message;
+                notification.className = 'notification show';
+                if (type === 'success') {
+                    notification.style.background = '#d4edda';
+                    notification.style.color = '#155724';
+                } else if (type === 'error') {
+                    notification.style.background = '#f8d7da';
+                    notification.style.color = '#721c24';
+                } else {
+                    notification.style.background = '#cce5ff';
+                    notification.style.color = '#004085';
+                }
+                setTimeout(() => {
+                    notification.className = 'notification';
+                }, 4000);
+            }
+
+            // ============ SCANNER FUNCTIONS ============
+
+            async function startScanner() {
+                if (isScanning) return;
+
+                try {
+                    scannerOverlay.classList.add('show');
+                    scannerStatus.textContent = '📷 Mengakses kamera...';
+                    scannerStatus.className = 'scanner-status';
+
+                    html5QrCode = new Html5Qrcode("scannerBox");
+
+                    const config = {
+                        fps: 15,
+                        qrbox: { width: 250, height: 200 },
+                        aspectRatio: 1.0
+                    };
+
+                    await html5QrCode.start({ facingMode: "environment" },
+                        config,
+                        onScanSuccess,
+                        onScanError
+                    );
+
+                    isScanning = true;
+                    scannerStatus.textContent = '📷 Arahkan kamera ke barcode produk';
+                    scannerStatus.className = 'scanner-status';
+
+                } catch (err) {
+                    console.error(err);
+                    scannerStatus.textContent = '❌ Gagal mengakses kamera: ' + err.message;
+                    scannerStatus.className = 'scanner-status error';
+                    setTimeout(() => {
+                        closeScanner();
+                    }, 3000);
+                }
+            }
+
+            function onScanSuccess(decodedText, decodedResult) {
+                stopScanner();
+                const success = addToCartBySerial(decodedText);
+                if (success) {
+                    scannerStatus.textContent = '✅ Barcode berhasil di-scan!';
+                    scannerStatus.className = 'scanner-status';
+                } else {
+                    scannerStatus.textContent = '❌ Produk tidak ditemukan!';
+                    scannerStatus.className = 'scanner-status error';
+                }
+                setTimeout(() => {
+                    closeScanner();
+                }, 1500);
+            }
+
+            function onScanError(errorMessage) {
+                // Ignore
+            }
+
+            async function stopScanner() {
+                if (html5QrCode && isScanning) {
+                    try {
+                        await html5QrCode.stop();
+                        await html5QrCode.clear();
+                    } catch (err) {
+                        console.error(err);
+                    }
+                    isScanning = false;
+                }
+            }
+
+            function closeScanner() {
+                stopScanner();
+                scannerOverlay.classList.remove('show');
+                if (html5QrCode) {
+                    html5QrCode = null;
+                }
+                isScanning = false;
+            }
+
+            // ============ WA BOOKING FUNCTIONS ============
+
+            function formatDateForWA(dateStr) {
+                if (!dateStr) return '[Tanggal belum dipilih]';
+                const parts = dateStr.split('-');
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober',
+                    'November', 'Desember'
+                ];
+                return `${parseInt(parts[2])} ${months[parseInt(parts[1])-1]} ${parts[0]}`;
+            }
+
+            function updateWAPreview() {
+                const name = waName.value.trim() || '[Nama Anda]';
+                const date = waDate.value ? formatDateForWA(waDate.value) : '[Tanggal belum dipilih]';
+                const service = waService.value || '[Layanan]';
+                const mekanik = waMekanik.value || 'Elan Herlani';
+
+                const message =
+                    `Halo, saya atas nama ${name} ingin mengajukan booking pada ${date} untuk layanan ${service} dengan mekanik ${mekanik}.`;
+                waPreview.textContent = message;
+            }
+
+            function generateWAMessage() {
+                const name = waName.value.trim();
+                const phone = waPhone.value.trim();
+                const date = waDate.value ? formatDateForWA(waDate.value) : '[Tanggal belum dipilih]';
+                const service = waService.value || '[Layanan]';
+                const mekanik = waMekanik.value || 'Elan Herlani';
+
+                if (!name || !phone || !waDate.value) {
+                    return null;
+                }
+
+                return `Halo, saya atas nama ${name} ingin mengajukan booking pada ${date} untuk layanan ${service} dengan mekanik ${mekanik}.`;
+            }
+
+            function sendToWA() {
+                const name = waName.value.trim();
+                const phone = waPhone.value.trim();
+                const date = waDate.value;
+
+                if (!name) {
+                    waMessage.innerHTML = '⚠️ Silakan isi nama lengkap Anda.';
+                    waMessage.style.color = '#721c24';
+                    waName.focus();
+                    return;
+                }
+
+                if (!phone) {
+                    waMessage.innerHTML = '⚠️ Silakan isi nomor WhatsApp aktif.';
+                    waMessage.style.color = '#721c24';
+                    waPhone.focus();
+                    return;
+                }
+
+                const phoneClean = phone.replace(/\D/g, '');
+                if (phoneClean.length < 10) {
+                    waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).';
+                    waMessage.style.color = '#721c24';
+                    waPhone.focus();
+                    return;
+                }
+
+                if (!date) {
+                    waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.';
+                    waMessage.style.color = '#721c24';
+                    waDate.focus();
+                    return;
+                }
+
+                const message = generateWAMessage();
+                if (!message) {
+                    waMessage.innerHTML = '⚠️ Data tidak lengkap.';
+                    waMessage.style.color = '#721c24';
+                    return;
+                }
+
+                const encodedMessage = encodeURIComponent(message);
+                const waNumber = '6283895433600';
+                const waUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`;
+
+                window.open(waUrl, '_blank');
+
+                waMessage.innerHTML =
+                    `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
+                waMessage.style.color = '#155724';
+            }
+
+            // ============ PASSWORD MODAL ============
+            function showPasswordModal() {
+                passwordModal.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordError').classList.remove('show');
+                document.getElementById('passwordInput').focus();
+            }
+
+            function closePasswordModal() {
+                passwordModal.classList.remove('show');
+            }
+
+            function checkPassword() {
+                const input = document.getElementById('passwordInput');
+                const error = document.getElementById('passwordError');
+                const password = input.value.trim();
+
+                if (password === '123456789') {
+                    closePasswordModal();
+                    applyRole('admin');
+                    showNotification('✅ Selamat datang Admin!', 'success');
+                } else {
+                    error.classList.add('show');
+                    input.value = '';
+                    input.focus();
+                }
+            }
+
+            // ============ STRUK ============
+            function generateStruk() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+                let total = subtotal;
+
+                let itemsHtml = cart.map(item => `
+                  <div class="item-detail">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-serial">Serial: ${item.serial || '-'}</div>
+                    <div class="struk-row">
+                      <span>${item.price.toLocaleString('id-ID')}</span>
+                      <span>Rp ${item.price.toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                `).join('');
+
+                let dpHtml = '';
+                let finalTotal = total;
+                if (dpInCart > 0) {
+                    dpHtml = `
+                    <div class="struk-row dp-row">
+                      <span>DP Booking (potongan)</span>
+                      <span>-Rp ${dpInCart.toLocaleString('id-ID')}</span>
+                    </div>
+                  `;
+                    finalTotal = total - dpInCart;
+                }
+
+                return `
+                  <div class="header-struk">
+                    <h2>BELEKS MOTOR SERVICE</h2>
+                    <div class="sub">Jl. Motor No. 88, Jakarta</div>
+                    <div class="sub">Telp: 0812-3456-7890</div>
+                    <div class="sub">${dateStr} ${timeStr}</div>
+                    <div class="sub" style="font-weight:700;margin-top:4px;">#TRX-${String(transactionNumber).padStart(4,'0')}</div>
+                  </div>
+
+                  ${itemsHtml}
+
+                  <div class="struk-row" style="border-top:1px dashed #999;padding-top:6px;margin-top:6px;">
+                    <span>Subtotal</span>
+                    <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
+                  </div>
+                  ${dpHtml}
+                  <div class="struk-row total">
+                    <span>TOTAL</span>
+                    <span>Rp ${finalTotal.toLocaleString('id-ID')}</span>
+                  </div>
+
+                  <div class="footer-struk">
+                    Terima kasih atas kunjungan Anda!<br>
+                    Barang yang sudah dibeli tidak dapat dikembalikan
+                  </div>
+                `;
+            }
+
+            function showStruk() {
+                strukContent.innerHTML = generateStruk();
+                strukContainer.classList.add('show');
+                transactionNumber++;
+                
+                // Simpan transaksi ke Firebase
+                const now = new Date();
+                const transactionData = {
+                    items: cart.map(item => ({ name: item.name, price: item.price, serial: item.serial })),
+                    subtotal: cart.reduce((sum, item) => sum + item.price, 0),
+                    dpUsed: dpInCart,
+                    total: cart.reduce((sum, item) => sum + item.price, 0) - dpInCart,
+                    date: now.toISOString(),
+                    transactionNumber: transactionNumber
+                };
+                saveTransactionToFirebase(transactionData);
+                
+                dpInCart = 0;
+                cart = [];
+                renderCart();
+            }
+
+            function closeStruk() {
+                strukContainer.classList.remove('show');
+            }
+
+            // ============ SPA NAVIGATION ============
+            function navigateTo(sectionId) {
+                sections.forEach(s => s.classList.remove('active'));
+                const target = document.getElementById(sectionId);
+                if (target) {
+                    target.classList.add('active');
+                }
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.section === sectionId) {
+                        link.classList.add('active');
+                    }
+                });
+
+                if (history.pushState) {
+                    history.pushState(null, null, '#' + sectionId);
+                }
+
+                if (target) {
+                    const navbarHeight = document.getElementById('navbar').offsetHeight + 10;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+            }
+
+            // ============ ROLE MANAGEMENT ============
+            function applyRole(role) {
+                currentRole = role;
+                app.classList.remove('show-customer', 'show-admin');
+
+                if (role === 'customer') {
+                    app.classList.add('show-customer');
+                    document.getElementById('navUserName').textContent = 'Publik';
+                    document.getElementById('navUserRole').textContent = 'Customer';
+                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Admin';
+
+                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => {
+                        el.style.display = 'flex';
+                    });
+
+                    const currentActive = document.querySelector('.section.active');
+                    if (currentActive) {
+                        const id = currentActive.id;
+                        if (id === 'section-kasir' || id === 'section-admin') {
+                            navigateTo('section-layanan');
+                        }
+                    }
+
+                } else {
+                    app.classList.add('show-admin');
+                    document.getElementById('navUserName').textContent = 'Admin';
+                    document.getElementById('navUserRole').textContent = 'Admin';
+                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Customer';
+
+                    document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => {
+                        el.style.display = 'flex';
+                    });
+                    document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => {
+                        el.style.display = 'none';
+                    });
+
+                    const currentActive = document.querySelector('.section.active');
+                    if (!currentActive || currentActive.id === 'section-layanan' || currentActive.id === 'section-booking') {
+                        navigateTo('section-kasir');
+                    }
+                }
+
+                document.querySelectorAll('.navbar-menu a[data-section="section-mekanik"]').forEach(el => {
+                    el.style.display = 'flex';
+                });
+            }
+
+            // ============ EVENT LISTENERS ============
+
+            // Nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    if (this.style.display === 'none') return;
+                    navigateTo(sectionId);
+                });
+            });
+
+            // Switch role
+            document.getElementById('switchNavBtn').addEventListener('click', function() {
+                if (currentRole === 'customer') {
+                    showPasswordModal();
+                } else {
+                    applyRole('customer');
+                    showNotification('👋 Kembali ke mode Customer', 'info');
+                }
+            });
+
+            // Password modal
+            document.getElementById('confirmPasswordBtn').addEventListener('click', checkPassword);
+            document.getElementById('cancelPasswordBtn').addEventListener('click', closePasswordModal);
+
+            document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+                if (e.key === 'Escape') {
+                    closePasswordModal();
+                }
+            });
+
+            passwordModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePasswordModal();
+                }
+            });
+
+            // Hash change
+            window.addEventListener('hashchange', function() {
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.getElementById(hash)) {
+                    const section = document.getElementById(hash);
+                    if (section.id === 'section-kasir' || section.id === 'section-admin') {
+                        if (currentRole === 'customer') {
+                            navigateTo('section-layanan');
+                            return;
+                        }
+                    }
+                    if (section.id === 'section-layanan' || section.id === 'section-booking') {
+                        if (currentRole === 'admin') {
+                            navigateTo('section-kasir');
+                            return;
+                        }
+                    }
+                    navigateTo(hash);
+                }
+            });
+
+            // ============ WA BOOKING EVENTS ============
+
+            if (waDate) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                waDate.value = tomorrow.toISOString().split('T')[0];
+            }
+
+            [waName, waPhone, waDate, waService, waMekanik].forEach(el => {
+                if (el) {
+                    el.addEventListener('input', updateWAPreview);
+                    el.addEventListener('change', updateWAPreview);
+                }
+            });
+
+            waSendBtn.addEventListener('click', sendToWA);
+
+            // ============ ADMIN: Add Product ============
+            document.getElementById('addProductBtn').addEventListener('click', async function() {
+                const name = document.getElementById('prodName').value.trim();
+                const price = parseInt(document.getElementById('prodPrice').value);
+                const serial = document.getElementById('prodSerial').value.trim();
+
+                if (!name || !price || !serial) {
+                    showNotification('⚠️ Semua field harus diisi!', 'error');
+                    return;
+                }
+
+                if (products.some(p => p.serial.toLowerCase() === serial.toLowerCase())) {
+                    showNotification('⚠️ Serial sudah terdaftar!', 'error');
+                    return;
+                }
+
+                const success = await addProductToFirebase(name, price, serial);
+                if (success) {
+                    document.getElementById('prodName').value = '';
+                    document.getElementById('prodPrice').value = '';
+                    document.getElementById('prodSerial').value = '';
+                }
+            });
+
+            document.getElementById('resetProductBtn').addEventListener('click', function() {
+                document.getElementById('prodName').value = '';
+                document.getElementById('prodPrice').value = '';
+                document.getElementById('prodSerial').value = '';
+            });
+
+            // ============ KASIR ============
+            document.getElementById('scanBtn').addEventListener('click', function() {
+                const input = document.getElementById('barcodeInput');
+                const val = input.value.trim();
+                if (val) {
+                    addToCartBySerial(val);
+                } else {
+                    showNotification('⚠️ Masukkan serial atau barcode', 'error');
+                }
+            });
+
+            document.getElementById('barcodeInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('scanBtn').click();
+                }
+            });
+
+            document.getElementById('scanCameraBtn').addEventListener('click', function() {
+                startScanner();
+            });
+
+            document.getElementById('closeScannerBtn').addEventListener('click', function() {
+                closeScanner();
+            });
+
+            scannerOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeScanner();
+                }
+            });
+
+            document.getElementById('manualAddBtn').addEventListener('click', function() {
+                if (products.length === 0) {
+                    showNotification('⚠️ Belum ada produk. Tambahkan produk dulu.', 'error');
+                    return;
+                }
+                const productList = products.map((p, i) =>
+                    `${i+1}. ${p.name} - Rp${p.price.toLocaleString('id-ID')} [${p.serial}]`).join('\n');
+                const choice = prompt(`Pilih produk dengan nomor:\n${productList}`);
+                if (choice) {
+                    const idx = parseInt(choice) - 1;
+                    if (idx >= 0 && idx < products.length) {
+                        const prod = products[idx];
+                        cart.push({ ...prod });
+                        renderCart();
+                        showNotification(`✅ ${prod.name} ditambahkan ke keranjang`, 'success');
+                    } else {
+                        showNotification('❌ Nomor tidak valid', 'error');
+                    }
+                }
+            });
+
+            document.getElementById('clearCartBtn').addEventListener('click', function() {
+                if (cart.length === 0 && dpInCart === 0) return;
+                if (confirm('Kosongkan keranjang?')) {
+                    cart = [];
+                    dpInCart = 0;
+                    renderCart();
+                    showNotification('Keranjang dikosongkan', 'info');
+                }
+            });
+
+            // ============ CHECKOUT ============
+            document.getElementById('checkoutBtn').addEventListener('click', function() {
+                if (cart.length === 0) {
+                    showNotification('⚠️ Keranjang kosong!', 'error');
+                    return;
+                }
+                const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+                let grandTotal = subtotal;
+                let dpText = '';
+
+                if (dpInCart > 0) {
+                    grandTotal = grandTotal - dpInCart;
+                    dpText = `\nDP Booking: -Rp ${dpInCart.toLocaleString('id-ID')}`;
+                }
+
+                if (grandTotal < 0) {
+                    showNotification('⚠️ Total pembayaran negatif. Periksa kembali!', 'error');
+                    return;
+                }
+
+                if (confirm(`Total pembayaran: Rp ${grandTotal.toLocaleString('id-ID')}${dpText}\nLanjutkan checkout?`)) {
+                    showStruk();
+                    showNotification('✅ Transaksi berhasil! Data tersimpan di server.', 'success');
+                }
+            });
+
+            // ============ STRUK CONTROLS ============
+            document.getElementById('printStrukBtn').addEventListener('click', function() {
+                window.print();
+            });
+
+            document.getElementById('closeStrukBtn').addEventListener('click', function() {
+                closeStruk();
+            });
+
+            strukContainer.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeStruk();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && strukContainer.classList.contains('show')) {
+                    closeStruk();
+                }
+                if (e.key === 'Escape' && scannerOverlay.classList.contains('show')) {
+                    closeScanner();
+                }
+            });
+
+            // ============ INIT ============
+            renderServices();
+            
+            // Load data dari Firebase
+            loadProducts().then(() => {
+                renderCart();
+                updateWAPreview();
+
+                const hash = window.location.hash.replace('#', '');
+                if (hash && document.getElementById(hash)) {
+                    const section = document.getElementById(hash);
+                    if (section.id === 'section-kasir' || section.id === 'section-admin') {
+                        applyRole('admin');
+                        navigateTo(hash);
+                    } else {
+                        applyRole('customer');
+                        navigateTo(hash);
+                    }
+                } else {
+                    applyRole('customer');
+                    navigateTo('section-layanan');
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
