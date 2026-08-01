@@ -513,7 +513,7 @@
         }
 
         /* ============================================================ */
-        /* SERVICE CARDS */
+        /* SERVICE CARDS - TANPA HARGA */
         /* ============================================================ */
         .service-grid {
             display: grid;
@@ -574,14 +574,8 @@
         .service-card h4 {
             font-weight: 600;
             font-size: 1.1rem;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             color: #0f172a;
-        }
-        .service-card .price {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: #e63946;
-            margin: 6px 0 6px;
         }
         .service-card .desc {
             color: #64748b;
@@ -589,7 +583,7 @@
             line-height: 1.6;
             border-top: 1px solid #f1f5f9;
             padding-top: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .service-card .badge-mekanik {
             background: #f1f5f9;
@@ -1533,7 +1527,7 @@
         <section id="section-layanan" class="section active">
             <div class="section-title">
                 <i class="fas fa-list-ul"></i>
-                Daftar Layanan & Harga
+                Daftar Layanan
                 <span class="title-line"></span>
             </div>
             <div class="service-grid" id="serviceGrid"></div>
@@ -1707,7 +1701,7 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) ===== -->
+        <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) - TANPA HARGA ===== -->
         <section id="section-manage-services" class="section">
             <div class="section-title">
                 <i class="fas fa-cog"></i>
@@ -1724,10 +1718,6 @@
                         <input type="text" id="serviceName" placeholder="Contoh: Servis Rutin" />
                     </div>
                     <div class="field">
-                        <label>Harga</label>
-                        <input type="number" id="servicePrice" placeholder="150000" />
-                    </div>
-                    <div class="field">
                         <label>Deskripsi</label>
                         <input type="text" id="serviceDesc" placeholder="Deskripsi singkat..." />
                     </div>
@@ -1741,7 +1731,7 @@
                 <div style="overflow-x:auto;">
                     <table class="service-table" id="serviceTable">
                         <thead>
-                            <tr><th>Nama</th><th>Harga</th><th>Deskripsi</th><th>Aksi</th></tr>
+                            <tr><th>Nama Layanan</th><th>Deskripsi</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="serviceTableBody"></tbody>
                     </table>
@@ -1988,7 +1978,6 @@
                     welcomeTitle.innerHTML = '👋 Selamat Datang <span>Admin</span>';
                     welcomeSub.textContent = 'Anda memiliki akses penuh ke kasir, produk, dan pengaturan.';
                     welcomeRole.textContent = 'Mode: Admin';
-                    // Admin welcome dengan efek berbeda
                     createConfetti();
                 } else {
                     welcomeTitle.innerHTML = 'Selamat Datang di <span>BELEKS MOTOR SERVICE</span>';
@@ -1997,7 +1986,6 @@
                 }
                 welcomeOverlay.classList.add('show');
                 
-                // Auto close setelah 3 detik
                 setTimeout(() => {
                     closeWelcome();
                 }, 3000);
@@ -2207,13 +2195,12 @@
             }
 
             // ===== ADD SERVICE =====
-            async function addServiceToRTDB(name, price, desc) {
+            async function addServiceToRTDB(name, desc) {
                 try {
                     showLoading(true, 'Menyimpan layanan...');
                     const newRef = db.ref('services').push();
                     await newRef.set({
                         name: name,
-                        price: price,
                         desc: desc || '',
                         createdAt: Date.now()
                     });
@@ -2313,7 +2300,6 @@
                             <i class="fas ${icons[idx % icons.length]}"></i>
                         </div>
                         <h4>${s.name}</h4>
-                        <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
                         <div class="desc">${s.desc || 'Layanan servis motor'}</div>
                         <span class="badge-mekanik"><i class="fas fa-user-cog"></i> mekanik tersedia</span>
                     </div>
@@ -2327,7 +2313,7 @@
                 if (services.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align:center;padding:30px;color:#94a3b8;">
+                            <td colspan="3" style="text-align:center;padding:30px;color:#94a3b8;">
                                 <i class="fas fa-info-circle" style="font-size:1.2rem;display:block;margin-bottom:6px;"></i>
                                 Belum ada layanan. Tambahkan layanan di atas.
                             </td>
@@ -2339,7 +2325,6 @@
                 tbody.innerHTML = services.map(s => `
                     <tr>
                         <td><strong>${s.name}</strong></td>
-                        <td>Rp ${s.price.toLocaleString('id-ID')}</td>
                         <td>${s.desc || '-'}</td>
                         <td class="actions">
                             <button class="edit-btn" data-id="${s.id}"><i class="fas fa-edit"></i></button>
@@ -2363,7 +2348,6 @@
                         const svc = services.find(s => s.id === id);
                         if (svc) {
                             document.getElementById('serviceName').value = svc.name;
-                            document.getElementById('servicePrice').value = svc.price;
                             document.getElementById('serviceDesc').value = svc.desc || '';
                             deleteServiceFromRTDB(id);
                         }
@@ -2878,19 +2862,16 @@
             // ===== ADD SERVICE =====
             document.getElementById('addServiceBtn').addEventListener('click', async function() {
                 const name = document.getElementById('serviceName').value.trim();
-                const price = parseInt(document.getElementById('servicePrice').value);
                 const desc = document.getElementById('serviceDesc').value.trim();
-                if (!name || !price) { showNotification('⚠️ Nama dan harga harus diisi!', 'error'); return; }
-                const success = await addServiceToRTDB(name, price, desc);
+                if (!name) { showNotification('⚠️ Nama layanan harus diisi!', 'error'); return; }
+                const success = await addServiceToRTDB(name, desc);
                 if (success) {
                     document.getElementById('serviceName').value = '';
-                    document.getElementById('servicePrice').value = '';
                     document.getElementById('serviceDesc').value = '';
                 }
             });
             document.getElementById('resetServiceBtn').addEventListener('click', function() {
                 document.getElementById('serviceName').value = '';
-                document.getElementById('servicePrice').value = '';
                 document.getElementById('serviceDesc').value = '';
             });
 
@@ -2997,7 +2978,6 @@
                 navigateTo('section-layanan');
             }
 
-            // Tampilkan welcome setelah data siap
             setTimeout(() => {
                 showWelcome('customer');
             }, 500);
