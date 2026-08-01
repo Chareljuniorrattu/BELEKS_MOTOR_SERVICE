@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BELEKS MOTOR SERVICE · SPA</title>
+    <title>BELEKS MOTOR SERVICE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     
     <!-- Firebase SDK -->
@@ -18,31 +18,250 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     
     <style>
+        /* ============================================================ */
+        /* ROOT & RESET */
+        /* ============================================================ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #f0f4fa;
-            color: #0b1a2e;
+            background: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
         }
 
+        /* ============================================================ */
+        /* SCROLLBAR */
+        /* ============================================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #e63946; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c62834; }
+
+        /* ============================================================ */
+        /* ANIMATIONS */
+        /* ============================================================ */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        .animate-fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .animate-slide-up {
+            opacity: 0;
+            animation: slideUp 0.6s ease forwards;
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* ============================================================ */
+        /* GLASS MORPHISM BACKGROUND */
+        /* ============================================================ */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 10% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(230, 57, 70, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.03) 0%, transparent 70%);
+        }
+
+        /* ============================================================ */
+        /* HERO SECTION (CUSTOMER) */
+        /* ============================================================ */
+        .hero-section {
+            position: relative;
+            padding: 40px 0 60px;
+            background: linear-gradient(145deg, #0f172a 0%, #1a2744 100%);
+            border-radius: 0 0 40px 40px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(230, 57, 70, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .hero-text {
+            flex: 1;
+            min-width: 280px;
+        }
+        .hero-text .badge {
+            display: inline-block;
+            background: rgba(230, 57, 70, 0.2);
+            color: #ff6b7a;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            border: 1px solid rgba(230, 57, 70, 0.3);
+        }
+        .hero-text h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .hero-text h1 span {
+            background: linear-gradient(135deg, #e63946, #ff6b7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-text .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            max-width: 500px;
+            margin-bottom: 24px;
+        }
+        .hero-text .hero-stats {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .hero-text .hero-stats .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+        .hero-text .hero-stats .stat i {
+            color: #e63946;
+            font-size: 1.1rem;
+        }
+
+        .hero-logo {
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px 40px;
+            border: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+            min-width: 200px;
+            animation: float 4s ease-in-out infinite;
+        }
+        .hero-logo i {
+            font-size: 4.5rem;
+            color: #e63946;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .hero-logo .brand-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .hero-logo .brand-name span {
+            color: #e63946;
+        }
+        .hero-logo .brand-tagline {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+
+        /* ============================================================ */
+        /* NAVBAR */
+        /* ============================================================ */
         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.06);
-            padding: 12px 28px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+            padding: 10px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
         .navbar-brand {
@@ -54,102 +273,109 @@
         .navbar-brand i {
             font-size: 1.6rem;
             color: #e63946;
-            background: #ffe9ea;
+            background: rgba(230, 57, 70, 0.15);
             padding: 8px 12px;
             border-radius: 14px;
         }
         .navbar-brand h1 {
             font-weight: 700;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
+            color: #ffffff;
             letter-spacing: -0.5px;
-            background: linear-gradient(145deg, #0b1a2e, #1d3b5c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
-        .navbar-brand span {
+        .navbar-brand h1 span {
+            color: #e63946;
+        }
+        .navbar-brand .version {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.3);
             font-weight: 500;
-            color: #4a5f73;
-            font-size: 0.7rem;
-            background: #eef2f6;
-            padding: 2px 10px;
+            padding: 2px 8px;
+            background: rgba(255,255,255,0.06);
             border-radius: 40px;
-            -webkit-text-fill-color: #1d3b5c;
         }
 
         .navbar-menu {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
         }
         .navbar-menu a {
             text-decoration: none;
-            color: #4a5f73;
-            padding: 8px 18px;
+            color: rgba(255,255,255,0.7);
+            padding: 8px 16px;
             border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            transition: all 0.25s ease;
+            font-weight: 500;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 6px;
             white-space: nowrap;
         }
-        .navbar-menu a i { font-size: 0.9rem; }
-        .navbar-menu a:hover { background: #e4ebf3; color: #0b1a2e; }
+        .navbar-menu a i { font-size: 0.85rem; }
+        .navbar-menu a:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
         .navbar-menu a.active {
-            background: #0b1a2e;
-            color: white;
-            box-shadow: 0 4px 14px rgba(11,26,46,0.2);
+            background: #e63946;
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.3);
         }
         .navbar-menu a.hidden-link { display: none !important; }
 
         .user-badge-nav {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #f0f4fa;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
             padding: 4px 14px 4px 10px;
             border-radius: 60px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
         }
-        .user-badge-nav i { color: #1d3b5c; }
+        .user-badge-nav i { color: rgba(255,255,255,0.4); }
         .user-badge-nav .role-badge {
-            background: #d4e0ed;
+            background: rgba(255,255,255,0.08);
             padding: 1px 10px;
             border-radius: 40px;
-            font-size: 0.6rem;
-            font-weight: 700;
+            font-size: 0.55rem;
+            font-weight: 600;
             text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
         }
+        .db-status {
+            font-size: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255,255,255,0.4);
+        }
+        .db-status.online { color: #4ade80; }
+        .db-status.offline { color: #f87171; }
 
         .btn-switch-nav {
-            background: transparent;
-            border: 2px solid #d4e0ed;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
             padding: 5px 14px;
             border-radius: 60px;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 0.7rem;
-            color: #1d3b5c;
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
             transition: 0.2s;
             white-space: nowrap;
         }
-        .btn-switch-nav:hover { background: #e4ebf3; border-color: #b0c8e0; }
-
-        .db-status {
-            font-size: 0.65rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .btn-switch-nav:hover {
+            background: rgba(255,255,255,0.15);
+            color: #ffffff;
         }
-        .db-status.online { color: #28a745; }
-        .db-status.offline { color: #dc3545; }
 
+        /* ============================================================ */
+        /* MAIN CONTENT */
+        /* ============================================================ */
         .main-content {
-            padding-top: 85px;
-            max-width: 1440px;
+            padding-top: 75px;
+            max-width: 1200px;
             margin: 0 auto;
             padding-left: 28px;
             padding-right: 28px;
@@ -158,161 +384,171 @@
 
         .section {
             display: none;
-            animation: fadeSlide 0.4s ease;
+            animation: fadeIn 0.5s ease;
             padding: 20px 0 40px;
-            min-height: 70vh;
+            min-height: 60vh;
         }
         .section.active { display: block; }
 
-        @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
         .section-title {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #0b1a2e;
+            gap: 14px;
+            color: #0f172a;
         }
-        .section-title i { color: #1d3b5c; }
+        .section-title i {
+            color: #e63946;
+            background: rgba(230, 57, 70, 0.1);
+            padding: 12px;
+            border-radius: 16px;
+            font-size: 1.4rem;
+        }
+        .section-title .title-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, #e63946, transparent);
+        }
 
+        /* ============================================================ */
+        /* SERVICE CARDS - Premium Design */
+        /* ============================================================ */
         .service-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
             margin: 16px 0 20px;
         }
         .service-card {
-            background: #f9fbfd;
-            border-radius: 20px;
-            padding: 18px 16px;
-            transition: 0.2s;
-            border: 1px solid #eef3f8;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 22px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e63946, #ff6b7a);
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
         .service-card:hover {
-            background: white;
-            box-shadow: 0 8px 20px -8px rgba(0,0,0,0.08);
-            border-color: #d0ddee;
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+            border-color: rgba(230, 57, 70, 0.1);
         }
-        .service-card h4 { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+        .service-card:hover::before { opacity: 1; }
+        .service-card .icon-wrapper {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: rgba(230, 57, 70, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            transition: 0.3s;
+        }
+        .service-card:hover .icon-wrapper {
+            background: #e63946;
+        }
+        .service-card .icon-wrapper i {
+            font-size: 1.4rem;
+            color: #e63946;
+            transition: 0.3s;
+        }
+        .service-card:hover .icon-wrapper i {
+            color: #ffffff;
+        }
+        .service-card h4 {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+            color: #0f172a;
+        }
         .service-card .price {
             font-weight: 700;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: #e63946;
-            margin: 6px 0 4px;
+            margin: 6px 0 6px;
         }
         .service-card .desc {
-            color: #4f657b;
-            font-size: 0.8rem;
-            border-top: 1px dashed #dce5ef;
-            padding-top: 8px;
-            margin-top: 8px;
+            color: #64748b;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+            margin-top: 10px;
         }
-        .badge-mekanik {
-            background: #d2e5ff;
-            color: #004080;
+        .service-card .badge-mekanik {
+            background: #f1f5f9;
+            color: #475569;
             font-size: 0.65rem;
             font-weight: 600;
-            padding: 2px 12px;
+            padding: 3px 14px;
             border-radius: 30px;
             display: inline-block;
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
-        .service-admin-panel {
-            background: #f8faff;
-            border-radius: 24px;
-            padding: 20px 24px;
-            border: 1px solid #e2ebf5;
-            margin-top: 16px;
-        }
-        .service-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-        .service-form .field { display: flex; flex-direction: column; gap: 4px; }
-        .service-form label {
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #2a4b6e;
-        }
-        .service-form input {
-            padding: 10px 14px;
-            border-radius: 40px;
-            border: 1px solid #d6e2f0;
-            background: white;
-            font-weight: 500;
-            font-size: 0.85rem;
-        }
-        .service-form input:focus {
-            outline: 2px solid #b4cef0;
-            border-color: transparent;
-        }
-
-        .service-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            margin-top: 12px;
-        }
-        .service-table th {
-            text-align: left;
-            padding: 10px 8px;
-            background: #eef3f8;
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .service-table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #eef3f8;
-        }
-        .service-table .actions { display: flex; gap: 6px; }
-        .service-table .actions button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-        }
-        .service-table .actions .edit-btn { color: #0066cc; }
-        .service-table .actions .delete-btn { color: #e63946; }
-
+        /* ============================================================ */
+        /* BOOKING WA - Premium */
+        /* ============================================================ */
         .booking-wa-container {
-            background: #f2f7fe;
-            border-radius: 24px;
-            padding: 28px 30px;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 32px 34px;
             margin: 16px 0;
-            border: 1px solid #e2ebf5;
+            border: 1px solid rgba(0,0,0,0.04);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
         }
         .booking-wa-container .wa-header {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 20px;
+            gap: 18px;
+            margin-bottom: 24px;
         }
         .booking-wa-container .wa-header i {
-            font-size: 2.4rem;
+            font-size: 2.8rem;
             color: #25D366;
-            background: #e8f5e9;
-            padding: 14px;
-            border-radius: 16px;
+            background: rgba(37, 211, 102, 0.1);
+            padding: 16px;
+            border-radius: 20px;
         }
-        .booking-wa-container .wa-header h3 { font-size: 1.3rem; font-weight: 700; color: #0b1a2e; }
+        .booking-wa-container .wa-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
         .booking-wa-container .wa-header .wa-number {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #25D366;
             font-weight: 600;
         }
+
+        .info-booking-wa {
+            background: rgba(37, 211, 102, 0.06);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin: 12px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1a7a3a;
+            border: 1px solid rgba(37, 211, 102, 0.1);
+        }
+        .info-booking-wa i { font-size: 1.2rem; }
 
         .form-wa {
             display: grid;
@@ -324,30 +560,33 @@
         .form-wa .field { display: flex; flex-direction: column; gap: 4px; }
         .form-wa label {
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #2a4b6e;
+            color: #475569;
         }
         .form-wa input, .form-wa select {
             padding: 12px 16px;
-            border-radius: 40px;
-            border: 1px solid #d6e2f0;
-            background: white;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
             font-weight: 500;
             font-size: 0.9rem;
             transition: 0.2s;
             width: 100%;
+            font-family: 'Inter', sans-serif;
         }
         .form-wa input:focus, .form-wa select:focus {
-            outline: 2px solid #b4cef0;
-            border-color: transparent;
+            outline: none;
+            border-color: #e63946;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.08);
         }
 
         .btn-wa-send {
             background: #25D366;
             border: none;
-            padding: 14px 40px;
+            padding: 16px 44px;
             border-radius: 60px;
             color: white;
             font-weight: 700;
@@ -356,25 +595,28 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.3);
             margin-top: 8px;
+            font-family: 'Inter', sans-serif;
         }
-        .btn-wa-send:hover { background: #20b85a; transform: scale(0.97); }
+        .btn-wa-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(37, 211, 102, 0.4);
+        }
         .btn-wa-send i { font-size: 1.2rem; }
-        .btn-wa-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .wa-preview {
-            background: #f8faff;
+            background: #f8fafc;
             border-radius: 16px;
             padding: 16px 20px;
             margin: 16px 0;
-            border: 1px solid #dce5ef;
+            border: 1px solid #e2e8f0;
         }
         .wa-preview .preview-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: #6a7f94;
+            color: #94a3b8;
             font-weight: 600;
             letter-spacing: 0.5px;
             margin-bottom: 6px;
@@ -384,82 +626,75 @@
             padding: 14px 18px;
             border-radius: 12px;
             font-size: 0.9rem;
-            color: #0b1a2e;
+            color: #0f172a;
             border-left: 4px solid #25D366;
             white-space: pre-wrap;
             word-break: break-word;
-            min-height: 60px;
+            min-height: 50px;
         }
 
-        .info-booking-wa {
-            background: #e8f5e9;
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin: 12px 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #1e7e34;
-        }
-        .info-booking-wa i { font-size: 1.2rem; }
-
-        .wa-number-display {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #25D366;
-            background: #e8f5e9;
-            padding: 4px 16px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-
+        /* ============================================================ */
+        /* BUTTONS */
+        /* ============================================================ */
         .btn-primary {
-            background: #0b1a2e;
+            background: #0f172a;
             border: none;
-            padding: 11px 32px;
+            padding: 12px 32px;
             border-radius: 60px;
             color: white;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(11,26,46,0.15);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
-        .btn-primary:hover { background: #1d3b5c; transform: scale(0.97); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
+        }
 
         .btn-success {
-            background: #28a745;
+            background: #e63946;
             border: none;
-            padding: 11px 32px;
+            padding: 12px 32px;
             border-radius: 60px;
             color: white;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 6px 14px rgba(40,167,69,0.3);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.25);
         }
-        .btn-success:hover { background: #218838; transform: scale(0.97); }
+        .btn-success:hover {
+            background: #c62834;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(230, 57, 70, 0.35);
+        }
 
         .btn-outline {
             background: transparent;
-            border: 1px solid #b8cee8;
-            padding: 8px 20px;
+            border: 2px solid #e2e8f0;
+            padding: 10px 22px;
             border-radius: 60px;
             font-weight: 600;
-            color: #1d3b5c;
+            color: #475569;
             cursor: pointer;
             transition: 0.2s;
             font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
         }
-        .btn-outline:hover { background: #e9f0fa; }
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
 
         .btn-danger {
             background: #dc3545;
@@ -470,147 +705,249 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            font-family: 'Inter', sans-serif;
         }
         .btn-danger:hover { background: #c82333; }
 
+        /* ============================================================ */
+        /* MEKANIK */
+        /* ============================================================ */
         .mekanik-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
+            gap: 16px;
             margin: 16px 0;
         }
         .mekanik-item {
-            background: white;
+            background: #ffffff;
             border-radius: 60px;
-            padding: 8px 18px 8px 14px;
+            padding: 10px 22px 10px 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border: 1px solid #e2ebf5;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
-        .mekanik-item i { color: #2c6b9e; font-size: 1.1rem; }
+        .mekanik-item i { color: #e63946; font-size: 1.1rem; }
         .mekanik-item .schedule {
-            background: #e1edfb;
-            padding: 2px 12px;
+            background: #f1f5f9;
+            padding: 2px 14px;
             border-radius: 60px;
             font-size: 0.65rem;
             font-weight: 600;
-            color: #00427a;
+            color: #475569;
         }
         .mekanik-item .status {
             width: 8px;
             height: 8px;
             border-radius: 10px;
-            background: #34a853;
+            background: #4ade80;
             display: inline-block;
         }
-        .mekanik-item .status.busy { background: #e63946; }
+        .mekanik-item .status.busy { background: #f87171; }
 
-        .admin-panel {
-            background: #f8faff;
-            border-radius: 24px;
-            padding: 20px 24px;
-            border: 1px solid #e2ebf5;
-            margin-top: 16px;
+        /* ============================================================ */
+        /* FOOTER */
+        /* ============================================================ */
+        .footer-info {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #64748b;
+            font-size: 0.85rem;
         }
-        .product-form {
+        .footer-info .footer-address {
+            flex: 1;
+            min-width: 200px;
+        }
+        .footer-info i {
+            color: #e63946;
+            width: 20px;
+        }
+
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
+        @media (max-width: 992px) {
+            .hero-text h1 { font-size: 2.4rem; }
+            .hero-logo { padding: 24px 30px; }
+            .hero-logo i { font-size: 3.5rem; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+            .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
+            .navbar-menu a { padding: 6px 12px; font-size: 0.7rem; }
+            .main-content { padding-top: 120px; padding-left: 16px; padding-right: 16px; }
+            .hero-section { padding: 20px 0 40px; border-radius: 0 0 24px 24px; }
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-text .subtitle { max-width: 100%; }
+            .hero-text .hero-stats { justify-content: center; }
+            .hero-logo { width: 100%; max-width: 280px; margin: 0 auto; }
+            .hero-text h1 { font-size: 2rem; }
+            .form-wa { grid-template-columns: 1fr; }
+            .booking-wa-container { padding: 20px; }
+            .section-title { font-size: 1.4rem; }
+            .footer-info { flex-direction: column; gap: 8px; text-align: center; }
+            .service-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero-text h1 { font-size: 1.6rem; }
+            .hero-logo { padding: 20px; }
+            .hero-logo i { font-size: 2.8rem; }
+            .hero-logo .brand-name { font-size: 1.2rem; }
+            .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
+            .navbar-brand h1 { font-size: 1rem; }
+            .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
+        }
+
+        /* ============================================================ */
+        /* ADMIN PANELS - Clean & Professional */
+        /* ============================================================ */
+        .admin-panel, .service-admin-panel, .settings-panel {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid #e2e8f0;
+            margin-top: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .admin-panel h4, .service-admin-panel h4, .settings-panel h4 {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+        .admin-panel h4 i, .service-admin-panel h4 i, .settings-panel h4 i {
+            color: #e63946;
+        }
+
+        .product-form, .service-form, .settings-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 14px;
             margin-bottom: 18px;
         }
-        .product-form .field { display: flex; flex-direction: column; gap: 4px; }
-        .product-form label {
+        .product-form .field, .service-form .field, .settings-form .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .product-form label, .service-form label, .settings-form label {
             font-weight: 600;
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: #2a4b6e;
+            color: #475569;
+            letter-spacing: 0.3px;
         }
-        .product-form input {
+        .product-form input, .service-form input, .settings-form input, .settings-form select {
             padding: 10px 14px;
-            border-radius: 40px;
-            border: 1px solid #d6e2f0;
-            background: white;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
             font-weight: 500;
             font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
         }
-        .product-form input:focus {
-            outline: 2px solid #b4cef0;
-            border-color: transparent;
+        .product-form input:focus, .service-form input:focus, .settings-form input:focus, .settings-form select:focus {
+            outline: none;
+            border-color: #e63946;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.06);
         }
+        .settings-form .field-full { grid-column: 1 / -1; }
 
-        .product-table {
+        .product-table, .service-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
             margin-top: 12px;
         }
-        .product-table th {
+        .product-table th, .service-table th {
             text-align: left;
             padding: 10px 8px;
-            background: #eef3f8;
+            background: #f8fafc;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.3px;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
         }
-        .product-table td {
+        .product-table td, .service-table td {
             padding: 10px 8px;
-            border-bottom: 1px solid #eef3f8;
+            border-bottom: 1px solid #f1f5f9;
         }
-        .product-table .actions { display: flex; gap: 6px; }
-        .product-table .actions button {
+        .product-table .actions, .service-table .actions {
+            display: flex;
+            gap: 6px;
+        }
+        .product-table .actions button, .service-table .actions button {
             background: transparent;
             border: none;
             cursor: pointer;
             padding: 4px 8px;
-            border-radius: 30px;
+            border-radius: 8px;
             font-size: 0.8rem;
+            transition: 0.2s;
         }
-        .product-table .actions .edit-btn { color: #0066cc; }
-        .product-table .actions .delete-btn { color: #e63946; }
+        .product-table .actions button:hover, .service-table .actions button:hover {
+            background: #f1f5f9;
+        }
+        .product-table .actions .edit-btn { color: #3b82f6; }
+        .product-table .actions .delete-btn { color: #ef4444; }
+        .service-table .actions .edit-btn { color: #3b82f6; }
+        .service-table .actions .delete-btn { color: #ef4444; }
 
-        /* Settings Panel */
-        .settings-panel {
-            background: #f8faff;
-            border-radius: 24px;
-            padding: 24px 28px;
-            border: 1px solid #e2ebf5;
-            margin-top: 16px;
-        }
-        .settings-panel h4 {
-            margin-bottom: 16px;
+        /* ============================================================ */
+        /* KASIR */
+        /* ============================================================ */
+        .scan-area {
+            background: #f8fafc;
+            border-radius: 60px;
+            padding: 8px 16px 8px 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 16px;
+            border: 2px dashed #e2e8f0;
+            flex-wrap: wrap;
         }
-        .settings-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px 24px;
-        }
-        .settings-form .field { display: flex; flex-direction: column; gap: 4px; }
-        .settings-form label {
-            font-weight: 600;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #2a4b6e;
-        }
-        .settings-form input, .settings-form select {
-            padding: 10px 14px;
-            border-radius: 40px;
-            border: 1px solid #d6e2f0;
-            background: white;
+        .scan-area input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 0;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 150px;
+            font-family: 'Inter', sans-serif;
         }
-        .settings-form input:focus, .settings-form select:focus {
-            outline: 2px solid #b4cef0;
-            border-color: transparent;
+        .scan-area input::placeholder { color: #94a3b8; }
+        .scan-area .scan-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
         }
-        .settings-form .field-full { grid-column: 1 / -1; }
+        .scan-area .scan-btn:hover { background: #1e293b; }
 
         .kasir-row {
             display: flex;
@@ -625,15 +962,15 @@
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #ecf2f9;
+            border-bottom: 1px solid #f1f5f9;
             align-items: center;
         }
-        .cart-item .item-name { font-weight: 500; }
-        .cart-item .item-price { font-weight: 700; }
-        .cart-item .item-serial { font-size: 0.7rem; color: #6a7f94; font-weight: 400; }
+        .cart-item .item-name { font-weight: 500; color: #0f172a; }
+        .cart-item .item-price { font-weight: 700; color: #e63946; }
+        .cart-item .item-serial { font-size: 0.7rem; color: #94a3b8; font-weight: 400; }
 
         .total-box {
-            background: #f0f6fe;
+            background: #f8fafc;
             padding: 18px 22px;
             border-radius: 20px;
             margin-top: 16px;
@@ -643,86 +980,111 @@
             justify-content: space-between;
             font-weight: 600;
             font-size: 1.1rem;
+            padding: 4px 0;
         }
-        .total-box .total-line span:last-child {
-            color: #e63946;
-            font-size: 1.4rem;
-        }
+        .total-box .total-line span:last-child { color: #e63946; font-size: 1.4rem; }
         .total-box .total-line.dp-line {
             color: #856404;
             font-size: 0.95rem;
         }
-        .total-box .total-line.dp-line span:last-child {
-            color: #28a745;
-            font-size: 1.1rem;
-        }
+        .total-box .total-line.dp-line span:last-child { color: #22c55e; font-size: 1.1rem; }
         .separator {
             height: 2px;
-            background: linear-gradient(to right, #d3e2f5, transparent);
+            background: linear-gradient(to right, #e2e8f0, transparent);
             margin: 14px 0;
         }
 
-        .scan-area {
-            background: #f0f4fa;
-            border-radius: 60px;
-            padding: 8px 16px 8px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            border: 2px dashed #b8cee8;
-            flex-wrap: wrap;
-        }
-        .scan-area input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 10px 0;
-            font-weight: 500;
-            font-size: 0.9rem;
-            outline: none;
-            min-width: 150px;
-        }
-        .scan-area input::placeholder { color: #8aa0b8; }
-        .scan-area .scan-btn {
-            background: #0b1a2e;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-        .scan-area .scan-btn:hover { background: #1d3b5c; }
-
-        .scanner-overlay {
+        /* ============================================================ */
+        /* MODALS */
+        /* ============================================================ */
+        .password-modal, .scanner-overlay, .struk-container {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 10001;
+            z-index: 9999;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             padding: 20px;
         }
-        .scanner-overlay.show { display: flex; }
-        .scanner-container {
+        .password-modal.show, .scanner-overlay.show, .struk-container.show { display: flex; }
+
+        .password-modal { background: rgba(0,0,0,0.6); z-index: 10000; }
+        .scanner-overlay { background: rgba(0,0,0,0.85); z-index: 10001; flex-direction: column; }
+        .struk-container { background: rgba(0,0,0,0.5); z-index: 9999; }
+
+        .password-modal-content, .scanner-container, .struk-modal {
             background: white;
-            border-radius: 20px;
-            max-width: 500px;
+            border-radius: 24px;
+            max-width: 420px;
             width: 100%;
-            padding: 20px;
-            position: relative;
+            padding: 32px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease;
         }
+        .scanner-container { max-width: 500px; padding: 20px; }
+        .struk-modal { max-width: 420px; max-height: 90vh; overflow-y: auto; padding: 24px 28px; }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .password-modal-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .password-modal-content p { color: #64748b; font-size: 0.9rem; margin-bottom: 16px; }
+        .password-modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .password-modal-content input:focus { border-color: #e63946; box-shadow: 0 0 0 4px rgba(230,57,70,0.06); }
+        .password-modal-content .password-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .password-modal-content .password-actions button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        .password-modal-content .password-actions .btn-confirm-pass {
+            background: #0f172a;
+            color: white;
+        }
+        .password-modal-content .password-actions .btn-confirm-pass:hover { background: #1e293b; }
+        .password-modal-content .password-actions .btn-cancel-pass {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .password-modal-content .password-actions .btn-cancel-pass:hover { background: #e2e8f0; }
+        .password-error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+        .password-error.show { display: block; }
+
         .scanner-container #scannerBox {
             width: 100%;
             aspect-ratio: 1/0.8;
@@ -750,50 +1112,25 @@
             cursor: pointer;
             font-size: 0.85rem;
             transition: 0.2s;
+            font-family: 'Inter', sans-serif;
         }
         .scanner-container .scanner-actions .btn-close-scanner {
-            background: #e9ecef;
-            color: #333;
+            background: #f1f5f9;
+            color: #475569;
         }
-        .scanner-container .scanner-actions .btn-close-scanner:hover { background: #dde0e3; }
+        .scanner-container .scanner-actions .btn-close-scanner:hover { background: #e2e8f0; }
         .scanner-container .scanner-status {
             text-align: center;
             padding: 8px;
             font-size: 0.85rem;
-            color: #28a745;
+            color: #22c55e;
             margin-top: 8px;
         }
-        .scanner-container .scanner-status.error { color: #dc3545; }
+        .scanner-container .scanner-status.error { color: #ef4444; }
 
-        .struk-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .struk-container.show { display: flex; }
-        .struk-modal {
-            background: white;
-            border-radius: 20px;
-            max-width: 420px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 24px 28px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        /* ============================================================ */
+        /* STRUK */
+        /* ============================================================ */
         .struk-content {
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -827,8 +1164,8 @@
             margin-top: 8px;
         }
         .struk-content .struk-row.dp-row {
-            color: #28a745;
-            border-top: 1px dashed #28a745;
+            color: #22c55e;
+            border-top: 1px dashed #22c55e;
             padding-top: 6px;
             margin-top: 4px;
         }
@@ -861,11 +1198,12 @@
             cursor: pointer;
             font-size: 0.85rem;
             transition: 0.2s;
+            font-family: 'Inter', sans-serif;
         }
-        .struk-actions .btn-print { background: #0b1a2e; color: white; }
-        .struk-actions .btn-print:hover { background: #1d3b5c; }
-        .struk-actions .btn-close-struk { background: #e9ecef; color: #333; }
-        .struk-actions .btn-close-struk:hover { background: #dde0e3; }
+        .struk-actions .btn-print { background: #0f172a; color: white; }
+        .struk-actions .btn-print:hover { background: #1e293b; }
+        .struk-actions .btn-close-struk { background: #f1f5f9; color: #475569; }
+        .struk-actions .btn-close-struk:hover { background: #e2e8f0; }
 
         @media print {
             body * { visibility: hidden; }
@@ -882,32 +1220,28 @@
                 justify-content: center;
                 align-items: flex-start;
             }
-            .struk-modal { 
-                box-shadow: none; 
-                max-width: 100%; 
-                padding: 10px; 
-                border-radius: 0;
-                margin: 0;
-                width: 100%;
-            }
+            .struk-modal { box-shadow: none; max-width: 100%; padding: 10px; border-radius: 0; margin: 0; width: 100%; }
             .struk-actions { display: none !important; }
             .struk-content { font-size: 11px; }
         }
 
-        /* Print size options in print dialog */
         @page {
             size: 80mm auto;
             margin: 5mm;
         }
 
+        /* ============================================================ */
+        /* NOTIFICATION & LOADING */
+        /* ============================================================ */
         .notification {
-            padding: 12px 18px;
-            border-radius: 12px;
+            padding: 14px 20px;
+            border-radius: 16px;
             margin: 10px 0;
             background: #d4edda;
             color: #155724;
             font-weight: 500;
             display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
         .notification.show { display: block; }
 
@@ -929,8 +1263,8 @@
         .loading-overlay .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid #e2ebf5;
-            border-top: 4px solid #0b1a2e;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #e63946;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -938,8 +1272,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .loading-overlay p { color: #0b1a2e; font-weight: 600; }
+        .loading-overlay p { color: #0f172a; font-weight: 600; }
 
+        /* ============================================================ */
+        /* ROLE VISIBILITY */
+        /* ============================================================ */
         .admin-only { display: none !important; }
         .customer-only { display: block; }
         .show-admin .admin-only { display: flex !important; }
@@ -953,129 +1290,30 @@
         .show-customer #section-manage-services,
         .show-customer #section-settings { display: none !important; }
 
-        .password-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .password-modal.show { display: flex; }
-        .password-modal-content {
-            background: white;
-            border-radius: 24px;
-            max-width: 400px;
-            width: 100%;
-            padding: 32px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-        }
-        .password-modal-content h3 {
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .password-modal-content p { color: #4a5f73; font-size: 0.9rem; margin-bottom: 16px; }
-        .password-modal-content input {
-            width: 100%;
-            padding: 12px 16px;
+        /* ============================================================ */
+        /* CUSTOMER ONLY HERO */
+        /* ============================================================ */
+        .show-customer .hero-section { display: block; }
+        .show-admin .hero-section { display: none; }
+
+        /* ============================================================ */
+        /* WA NUMBER DISPLAY */
+        /* ============================================================ */
+        .wa-number-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #25D366;
+            background: rgba(37, 211, 102, 0.08);
+            padding: 4px 16px;
             border-radius: 40px;
-            border: 2px solid #d6e2f0;
-            font-size: 1rem;
-            font-weight: 500;
-            outline: none;
-            transition: 0.2s;
-        }
-        .password-modal-content input:focus { border-color: #0b1a2e; }
-        .password-modal-content .password-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
-        .password-modal-content .password-actions button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 60px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .password-modal-content .password-actions .btn-confirm-pass {
-            background: #0b1a2e;
-            color: white;
-        }
-        .password-modal-content .password-actions .btn-confirm-pass:hover { background: #1d3b5c; }
-        .password-modal-content .password-actions .btn-cancel-pass {
-            background: #e9ecef;
-            color: #333;
-        }
-        .password-modal-content .password-actions .btn-cancel-pass:hover { background: #dde0e3; }
-        .password-error {
-            color: #dc3545;
-            font-size: 0.85rem;
-            margin-top: 8px;
-            display: none;
-        }
-        .password-error.show { display: block; }
-
-        /* Footer Info */
-        .footer-info {
-            margin-top: 40px;
-            border-top: 1px solid #e6eef8;
-            padding-top: 14px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 6px;
-            color: #3e5e7a;
-            font-size: 0.8rem;
-        }
-        .footer-info .footer-address {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        @media (max-width: 768px) {
-            .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-            .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
-            .navbar-menu a { padding: 6px 12px; font-size: 0.7rem; }
-            .navbar-menu a i { font-size: 0.75rem; }
-            .main-content { padding-top: 120px; padding-left: 16px; padding-right: 16px; }
-            .section { padding: 12px 0 30px; }
-            .section-title { font-size: 1.2rem; }
-            .form-wa { grid-template-columns: 1fr; }
-            .product-form { grid-template-columns: 1fr; }
-            .service-form { grid-template-columns: 1fr; }
-            .settings-form { grid-template-columns: 1fr; }
-            .scan-area { flex-direction: column; align-items: stretch; }
-            .scan-area input { width: 100%; }
-            .kasir-row { flex-direction: column; }
-            .struk-modal { padding: 16px; margin: 10px; }
-            .user-badge-nav .name { display: none; }
-            .booking-wa-container { padding: 20px; }
-            .password-modal-content { padding: 24px; }
-            .scanner-container { padding: 12px; }
-            .scanner-container #scannerBox { aspect-ratio: 1/1; }
-            .footer-info { flex-direction: column; gap: 8px; }
-        }
-        @media (max-width: 480px) {
-            .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
-            .navbar-brand h1 { font-size: 1rem; }
-            .navbar-brand i { font-size: 1.2rem; padding: 6px 10px; }
-            .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
+            display: inline-block;
         }
     </style>
 </head>
 <body>
+
+    <!-- ===== BACKGROUND PATTERN ===== -->
+    <div class="bg-pattern"></div>
 
     <!-- ===== LOADING OVERLAY ===== -->
     <div class="loading-overlay" id="loadingOverlay">
@@ -1087,7 +1325,8 @@
     <nav class="navbar" id="navbar">
         <a href="#section-layanan" class="navbar-brand">
             <i class="fas fa-motorcycle"></i>
-            <h1>BELEKS <span>MOTOR SERVICE</span></h1>
+            <h1>BELEKS <span>MOTOR</span></h1>
+            <span class="version">v2.0</span>
         </a>
 
         <div class="navbar-menu" id="navMenu">
@@ -1122,7 +1361,7 @@
                 </span>
             </div>
             <button class="btn-switch-nav" id="switchNavBtn">
-                <i class="fas fa-exchange-alt"></i> Switch ke Admin
+                <i class="fas fa-exchange-alt"></i> Admin
             </button>
         </div>
     </nav>
@@ -1130,8 +1369,8 @@
     <!-- ===== PASSWORD MODAL ===== -->
     <div class="password-modal" id="passwordModal">
         <div class="password-modal-content">
-            <h3><i class="fas fa-lock" style="color:#0b1a2e;"></i> Admin Access</h3>
-            <p>Masukkan password admin untuk mengakses fitur kasir dan manajemen produk.</p>
+            <h3><i class="fas fa-lock" style="color:#e63946;"></i> Admin Access</h3>
+            <p>Masukkan password admin untuk mengakses fitur kasir dan manajemen.</p>
             <input type="password" id="passwordInput" placeholder="Masukkan password..." />
             <div class="password-error" id="passwordError">❌ Password salah! Coba lagi.</div>
             <div class="password-actions">
@@ -1155,21 +1394,59 @@
     <!-- ===== MAIN CONTENT ===== -->
     <div class="main-content">
 
+        <!-- ===== NOTIFICATION ===== -->
         <div class="notification" id="notification"></div>
+
+        <!-- ========================================================== -->
+        <!-- HERO SECTION (Customer Only) -->
+        <!-- ========================================================== -->
+        <div class="hero-section customer-only" id="heroSection">
+            <div class="hero-content">
+                <div class="hero-text animate-fade-in-up delay-1">
+                    <div class="badge"><i class="fas fa-star"></i> Profesional & Terpercaya</div>
+                    <h1>Servis Motor <span>Berkualitas</span> & Terjangkau</h1>
+                    <p class="subtitle">
+                        Kami menyediakan layanan servis motor terbaik dengan mekanik berpengalaman. 
+                        Booking mudah, harga transparan, dan garansi kepuasan.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat"><i class="fas fa-check-circle"></i> 100% Kepuasan</div>
+                        <div class="stat"><i class="fas fa-user-cog"></i> Mekanik Profesional</div>
+                        <div class="stat"><i class="fas fa-clock"></i> Servis Cepat</div>
+                    </div>
+                </div>
+                <div class="hero-logo animate-fade-in-up delay-2">
+                    <i class="fas fa-motorcycle"></i>
+                    <div class="brand-name">BELEKS <span>MOTOR</span></div>
+                    <div class="brand-tagline">SERVICE</div>
+                    <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);font-size:0.7rem;color:rgba(255,255,255,0.3);">
+                        <i class="fas fa-map-marker-alt" style="color:rgba(255,255,255,0.2);"></i> Sindang Panon Regency
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- ===== SECTION 1: LAYANAN ===== -->
         <section id="section-layanan" class="section active">
-            <h2 class="section-title"><i class="fas fa-list-ul"></i> Daftar Layanan & Harga</h2>
+            <div class="section-title">
+                <i class="fas fa-list-ul"></i>
+                Daftar Layanan & Harga
+                <span class="title-line"></span>
+            </div>
             <div class="service-grid" id="serviceGrid"></div>
-            <div style="margin:8px 0 0;background:#f4f9ff;padding:10px 16px;border-radius:60px;display:inline-block;font-size:0.9rem;">
-                <i class="fas fa-wrench" style="margin-right:8px;"></i> Semua layanan didukung mekanik bersertifikat
+            <div style="margin:8px 0 0;background:#f1f5f9;padding:12px 20px;border-radius:60px;display:inline-block;font-size:0.85rem;color:#475569;">
+                <i class="fas fa-wrench" style="margin-right:8px;color:#e63946;"></i> Semua layanan didukung mekanik bersertifikat
             </div>
         </section>
 
         <!-- ===== SECTION 2: BOOKING ===== -->
         <section id="section-booking" class="section">
-            <h2 class="section-title"><i class="fas fa-calendar-check"></i> Booking Service</h2>
-            <p style="color:#3c5b78;margin-bottom:16px;">Booking via WhatsApp dengan mengisi form di bawah ini.</p>
+            <div class="section-title">
+                <i class="fas fa-calendar-check"></i>
+                Booking Service
+                <span class="title-line"></span>
+            </div>
+            <p style="color:#64748b;margin-bottom:16px;">Booking via WhatsApp dengan mengisi form di bawah ini.</p>
 
             <div class="booking-wa-container">
                 <div class="wa-header">
@@ -1232,25 +1509,36 @@
             </div>
 
             <div style="margin-top:24px;">
-                <h4 style="font-weight:600;display:flex;gap:8px;"><i class="fas fa-clock"></i> Jadwal Mekanik</h4>
+                <h4 style="font-weight:600;display:flex;gap:8px;color:#0f172a;">
+                    <i class="fas fa-clock" style="color:#e63946;"></i> Jadwal Mekanik
+                </h4>
                 <div class="mekanik-list">
-                    <div class="mekanik-item"><i class="fas fa-user-md"></i> Elan Herlani <span class="schedule">Sen-Sab 08:00-17:00</span> <span class="status"></span></div>
+                    <div class="mekanik-item">
+                        <i class="fas fa-user-md"></i> 
+                        <span style="font-weight:500;">Elan Herlani</span>
+                        <span class="schedule">Sen-Sab 08:00-17:00</span>
+                        <span class="status"></span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- ===== SECTION 3: KASIR (Admin) ===== -->
         <section id="section-kasir" class="section">
-            <h2 class="section-title"><i class="fas fa-shopping-cart"></i> Kasir / Transaksi</h2>
+            <div class="section-title">
+                <i class="fas fa-shopping-cart"></i>
+                Kasir / Transaksi
+                <span class="title-line"></span>
+            </div>
 
             <div class="scan-area">
-                <i class="fas fa-barcode" style="font-size:1.4rem;color:#1d3b5c;"></i>
+                <i class="fas fa-barcode" style="font-size:1.4rem;color:#0f172a;"></i>
                 <input type="text" id="barcodeInput" placeholder="Scan barcode atau input serial produk..." />
                 <button class="scan-btn" id="scanBtn"><i class="fas fa-search"></i> Cari</button>
-                <button class="scan-btn" style="background:#28a745;" id="scanCameraBtn">
+                <button class="scan-btn" style="background:#e63946;" id="scanCameraBtn">
                     <i class="fas fa-camera"></i> Scan Kamera
                 </button>
-                <button class="scan-btn" style="background:#2c6b9e;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
+                <button class="scan-btn" style="background:#3b82f6;" id="manualAddBtn"><i class="fas fa-plus"></i> Tambah Manual</button>
             </div>
 
             <div class="kasir-row">
@@ -1277,7 +1565,11 @@
 
         <!-- ===== SECTION 4: MANAJEMEN PRODUK (Admin) ===== -->
         <section id="section-admin" class="section">
-            <h2 class="section-title"><i class="fas fa-boxes"></i> Manajemen Produk & Stok</h2>
+            <div class="section-title">
+                <i class="fas fa-boxes"></i>
+                Manajemen Produk & Stok
+                <span class="title-line"></span>
+            </div>
 
             <div class="admin-panel">
                 <h4><i class="fas fa-plus-circle"></i> Tambah Produk Baru</h4>
@@ -1314,8 +1606,12 @@
 
         <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) ===== -->
         <section id="section-manage-services" class="section">
-            <h2 class="section-title"><i class="fas fa-cog"></i> Kelola Layanan</h2>
-            <p style="color:#3c5b78;margin-bottom:16px;">Tambah, edit, atau hapus layanan yang tampil di halaman customer.</p>
+            <div class="section-title">
+                <i class="fas fa-cog"></i>
+                Kelola Layanan
+                <span class="title-line"></span>
+            </div>
+            <p style="color:#64748b;margin-bottom:16px;">Tambah, edit, atau hapus layanan yang tampil di halaman customer.</p>
 
             <div class="service-admin-panel">
                 <h4><i class="fas fa-plus-circle"></i> Tambah Layanan Baru</h4>
@@ -1352,8 +1648,12 @@
 
         <!-- ===== SECTION 6: PENGATURAN (Admin) ===== -->
         <section id="section-settings" class="section">
-            <h2 class="section-title"><i class="fas fa-sliders-h"></i> Pengaturan</h2>
-            <p style="color:#3c5b78;margin-bottom:16px;">Atur informasi toko dan ukuran kertas print.</p>
+            <div class="section-title">
+                <i class="fas fa-sliders-h"></i>
+                Pengaturan
+                <span class="title-line"></span>
+            </div>
+            <p style="color:#64748b;margin-bottom:16px;">Atur informasi toko dan ukuran kertas print.</p>
 
             <div class="settings-panel">
                 <h4><i class="fas fa-store"></i> Informasi Toko</h4>
@@ -1392,11 +1692,11 @@
                 <div id="settingsMessage" style="margin-top:12px;font-weight:500;"></div>
             </div>
 
-            <div style="margin-top:16px;background:#f0f6fe;border-radius:16px;padding:16px 20px;border:1px solid #dce5ef;">
-                <h4 style="font-weight:600;display:flex;gap:8px;margin-bottom:8px;">
-                    <i class="fas fa-info-circle" style="color:#1d3b5c;"></i> Informasi Saat Ini
+            <div style="margin-top:16px;background:#f8fafc;border-radius:16px;padding:16px 20px;border:1px solid #e2e8f0;">
+                <h4 style="font-weight:600;display:flex;gap:8px;margin-bottom:8px;color:#0f172a;font-size:0.95rem;">
+                    <i class="fas fa-info-circle" style="color:#e63946;"></i> Informasi Saat Ini
                 </h4>
-                <div id="currentSettingsDisplay" style="font-size:0.9rem;color:#4a5f73;line-height:1.8;">
+                <div id="currentSettingsDisplay" style="font-size:0.85rem;color:#64748b;line-height:1.8;">
                     <div><strong>Alamat:</strong> <span id="displayAddress">Memuat...</span></div>
                     <div><strong>WhatsApp:</strong> <span id="displayWhatsapp">Memuat...</span></div>
                     <div><strong>Telepon:</strong> <span id="displayPhone">Memuat...</span></div>
@@ -1407,35 +1707,39 @@
 
         <!-- ===== SECTION 7: MEKANIK ===== -->
         <section id="section-mekanik" class="section">
-            <h2 class="section-title"><i class="fas fa-users"></i> Tim Mekanik</h2>
+            <div class="section-title">
+                <i class="fas fa-users"></i>
+                Tim Mekanik
+                <span class="title-line"></span>
+            </div>
             <div class="mekanik-list" style="margin-top:12px;">
-                <div class="mekanik-item" style="flex:1;min-width:180px;">
-                    <i class="fas fa-user-tie"></i>
+                <div class="mekanik-item" style="flex:1;min-width:200px;padding:14px 24px 14px 18px;border-radius:24px;">
+                    <i class="fas fa-user-tie" style="font-size:1.4rem;"></i>
                     <div>
-                        <strong>Elan Herlani</strong>
-                        <div style="font-size:0.75rem;color:#4a5f73;">Senior Mekanik</div>
+                        <strong style="font-size:1.05rem;">Elan Herlani</strong>
+                        <div style="font-size:0.8rem;color:#64748b;">Senior Mekanik</div>
                     </div>
-                    <span class="schedule">Sen-Sab 08:00-17:00</span>
+                    <span class="schedule" style="margin-left:auto;">Sen-Sab 08:00-17:00</span>
                     <span class="status"></span>
                 </div>
             </div>
-            <p style="margin-top:16px;background:#eaf1fb;padding:10px 18px;border-radius:60px;font-size:0.9rem;">
-                <i class="fas fa-info-circle"></i> Mekanik spesialis mesin & kelistrikan. Booking via WhatsApp.
+            <p style="margin-top:16px;background:#f1f5f9;padding:12px 20px;border-radius:60px;font-size:0.9rem;color:#475569;">
+                <i class="fas fa-info-circle" style="color:#e63946;"></i> Mekanik spesialis mesin & kelistrikan. Booking via WhatsApp.
             </p>
         </section>
 
         <!-- ===== FOOTER ===== -->
         <div class="footer-info" id="footerInfo">
             <div class="footer-address">
-                <i class="fas fa-map-marker-alt" style="margin-right:6px;"></i>
+                <i class="fas fa-map-marker-alt"></i>
                 <span id="footerAddress">Perumahan Sindang Panon Regency Blok E2 No 35 Gang Cendrawasih</span>
             </div>
             <div>
-                <i class="fab fa-whatsapp" style="margin-right:6px;color:#25D366;"></i>
+                <i class="fab fa-whatsapp" style="color:#25D366;"></i>
                 <span id="footerWhatsapp">0822-1011-7403</span>
             </div>
             <div>
-                <i class="fas fa-phone" style="margin-right:6px;"></i>
+                <i class="fas fa-phone" style="color:#e63946;"></i>
                 <span id="footerPhone">0822-1011-7403</span>
             </div>
         </div>
@@ -1561,14 +1865,14 @@
                 notification.textContent = msg;
                 notification.className = 'notification show';
                 if (type === 'success') {
-                    notification.style.background = '#d4edda';
-                    notification.style.color = '#155724';
+                    notification.style.background = '#dcfce7';
+                    notification.style.color = '#166534';
                 } else if (type === 'error') {
-                    notification.style.background = '#f8d7da';
-                    notification.style.color = '#721c24';
+                    notification.style.background = '#fee2e2';
+                    notification.style.color = '#991b1b';
                 } else {
-                    notification.style.background = '#cce5ff';
-                    notification.style.color = '#004085';
+                    notification.style.background = '#dbeafe';
+                    notification.style.color = '#1e40af';
                 }
                 setTimeout(() => { notification.className = 'notification'; }, 4000);
             }
@@ -1608,12 +1912,12 @@
                     updatePaperSize();
                     showLoading(false);
                     settingsMessage.innerHTML = '✅ Pengaturan berhasil disimpan!';
-                    settingsMessage.style.color = '#155724';
+                    settingsMessage.style.color = '#166534';
                     showNotification('✅ Pengaturan berhasil disimpan!', 'success');
                 } catch (error) {
                     showLoading(false);
                     settingsMessage.innerHTML = '❌ Gagal menyimpan: ' + error.message;
-                    settingsMessage.style.color = '#721c24';
+                    settingsMessage.style.color = '#991b1b';
                     showNotification('❌ Gagal menyimpan pengaturan', 'error');
                 }
             }
@@ -1678,20 +1982,10 @@
                 let pageMargin = '5mm';
 
                 switch(size) {
-                    case '58mm':
-                        pageSize = '58mm auto';
-                        break;
-                    case '80mm':
-                        pageSize = '80mm auto';
-                        break;
-                    case 'A4':
-                        pageSize = 'A4';
-                        pageMargin = '10mm';
-                        break;
-                    case 'A5':
-                        pageSize = 'A5';
-                        pageMargin = '8mm';
-                        break;
+                    case '58mm': pageSize = '58mm auto'; break;
+                    case '80mm': pageSize = '80mm auto'; break;
+                    case 'A4': pageSize = 'A4'; pageMargin = '10mm'; break;
+                    case 'A5': pageSize = 'A5'; pageMargin = '8mm'; break;
                     case 'custom':
                         const parts = customSize.split('x').map(s => s.trim());
                         if (parts.length === 2 && parts[0] && parts[1]) {
@@ -1722,7 +2016,7 @@
                         services.reverse();
                     }
                     renderServices();
-                    renderServiceTable(); // <-- HARUS DIPANGGIL!
+                    renderServiceTable();
                     updateServiceDropdown();
                 }, function(error) {
                     console.error('Error loading services:', error);
@@ -1741,11 +2035,11 @@
                         products.reverse();
                     }
                     renderProductTable();
-                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.4rem;"></i> RTDB Online';
+                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#4ade80;font-size:0.4rem;"></i> RTDB Online';
                     dbStatus.className = 'db-status online';
                 }, function(error) {
                     console.error('Error loading products:', error);
-                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#dc3545;font-size:0.4rem;"></i> RTDB Offline';
+                    dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#f87171;font-size:0.4rem;"></i> RTDB Offline';
                     dbStatus.className = 'db-status offline';
                     renderProductTable();
                 });
@@ -1842,16 +2136,21 @@
 
                 if (services.length === 0) {
                     grid.innerHTML = `
-                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:#8aa0b8;">
-                            <i class="fas fa-info-circle" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
-                            Belum ada layanan. Admin akan menambahkan layanan segera.
+                        <div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:#94a3b8;background:#f8fafc;border-radius:24px;border:2px dashed #e2e8f0;">
+                            <i class="fas fa-info-circle" style="font-size:2.5rem;display:block;margin-bottom:12px;color:#e63946;"></i>
+                            <p style="font-size:1.1rem;font-weight:500;color:#475569;">Belum ada layanan</p>
+                            <p style="font-size:0.9rem;margin-top:4px;">Admin akan menambahkan layanan segera</p>
                         </div>
                     `;
                     return;
                 }
 
-                grid.innerHTML = services.map(s => `
-                    <div class="service-card">
+                const icons = ['fa-oil-can', 'fa-filter', 'fa-cogs', 'fa-bolt', 'fa-car'];
+                grid.innerHTML = services.map((s, idx) => `
+                    <div class="service-card animate-slide-up delay-${Math.min(idx % 5 + 1, 5)}">
+                        <div class="icon-wrapper">
+                            <i class="fas ${icons[idx % icons.length]}"></i>
+                        </div>
                         <h4>${s.name}</h4>
                         <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
                         <div class="desc">${s.desc || 'Layanan servis motor'}</div>
@@ -1867,8 +2166,8 @@
                 if (services.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
-                                <i class="fas fa-info-circle" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                            <td colspan="4" style="text-align:center;padding:30px;color:#94a3b8;">
+                                <i class="fas fa-info-circle" style="font-size:1.2rem;display:block;margin-bottom:6px;"></i>
                                 Belum ada layanan. Tambahkan layanan di atas.
                             </td>
                         </tr>
@@ -1938,8 +2237,8 @@
                 if (products.length === 0) {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
-                                <i class="fas fa-box-open" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                            <td colspan="4" style="text-align:center;padding:30px;color:#94a3b8;">
+                                <i class="fas fa-box-open" style="font-size:1.2rem;display:block;margin-bottom:6px;"></i>
                                 Belum ada produk. Tambahkan produk baru di atas.
                             </td>
                         </tr>
@@ -1951,7 +2250,7 @@
                     <tr>
                         <td><strong>${p.name}</strong></td>
                         <td>Rp ${p.price.toLocaleString('id-ID')}</td>
-                        <td><code style="background:#eef3f8;padding:2px 10px;border-radius:20px;font-size:0.8rem;">${p.serial}</code></td>
+                        <td><code style="background:#f1f5f9;padding:2px 12px;border-radius:20px;font-size:0.75rem;color:#475569;">${p.serial}</code></td>
                         <td class="actions">
                             <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
                             <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>
@@ -1986,7 +2285,7 @@
                 const container = document.getElementById('cartItems');
                 if (!container) return;
                 if (cart.length === 0 && dpInCart === 0) {
-                    container.innerHTML = `<div style="padding:20px;text-align:center;color:#8aa0b8;"><i class="fas fa-shopping-bag"></i> Keranjang kosong</div>`;
+                    container.innerHTML = `<div style="padding:24px;text-align:center;color:#94a3b8;"><i class="fas fa-shopping-bag" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i> Keranjang kosong</div>`;
                 } else {
                     let html = '';
                     cart.forEach((item, idx) => {
@@ -1998,7 +2297,7 @@
                                 </div>
                                 <div>
                                     <span class="item-price">Rp ${item.price.toLocaleString('id-ID')}</span>
-                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;" data-index="${idx}"><i class="fas fa-times"></i></button>
+                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#f1f5f9;" data-index="${idx}"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>
                         `;
@@ -2006,16 +2305,16 @@
 
                     if (dpInCart > 0) {
                         html += `
-                            <div class="cart-item" style="background:#f8fff8;border-radius:12px;padding:12px 16px;border:1px solid #28a745;">
+                            <div class="cart-item" style="background:#f0fdf4;border-radius:12px;padding:12px 16px;border:1px solid #bbf7d0;">
                                 <div>
-                                    <div class="item-name" style="color:#28a745;">
+                                    <div class="item-name" style="color:#16a34a;">
                                         <i class="fas fa-money-bill-wave"></i> DP Booking
                                     </div>
                                     <div class="item-serial">Jaminan booking</div>
                                 </div>
                                 <div>
-                                    <span class="item-price" style="color:#28a745;">Rp ${dpInCart.toLocaleString('id-ID')}</span>
-                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#dc3545;color:#dc3545;" id="removeDpBtn"><i class="fas fa-times"></i></button>
+                                    <span class="item-price" style="color:#16a34a;">Rp ${dpInCart.toLocaleString('id-ID')}</span>
+                                    <button class="btn-outline" style="margin-left:8px;padding:2px 10px;font-size:0.7rem;border-color:#f1f5f9;" id="removeDpBtn"><i class="fas fa-times"></i></button>
                                 </div>
                             </div>
                         `;
@@ -2155,11 +2454,11 @@
                 const phone = waPhone.value.trim();
                 const date = waDate.value;
 
-                if (!name) { waMessage.innerHTML = '⚠️ Silakan isi nama lengkap Anda.'; waMessage.style.color = '#721c24'; waName.focus(); return; }
-                if (!phone) { waMessage.innerHTML = '⚠️ Silakan isi nomor WhatsApp aktif.'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
+                if (!name) { waMessage.innerHTML = '⚠️ Silakan isi nama lengkap Anda.'; waMessage.style.color = '#991b1b'; waName.focus(); return; }
+                if (!phone) { waMessage.innerHTML = '⚠️ Silakan isi nomor WhatsApp aktif.'; waMessage.style.color = '#991b1b'; waPhone.focus(); return; }
                 const phoneClean = phone.replace(/\D/g, '');
-                if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
-                if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#721c24'; waDate.focus(); return; }
+                if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#991b1b'; waPhone.focus(); return; }
+                if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#991b1b'; waDate.focus(); return; }
 
                 const waNumber = settings.whatsapp.replace(/\D/g, '') || '6282210117403';
                 const serviceName = waService.value || 'Layanan';
@@ -2168,7 +2467,7 @@
                 const waUrl = `https://wa.me/${waNumber}?text=${encodedMessage}`;
                 window.open(waUrl, '_blank');
                 waMessage.innerHTML = `✅ Pesan berhasil dikirim! Silakan selesaikan percakapan di WhatsApp.`;
-                waMessage.style.color = '#155724';
+                waMessage.style.color = '#166534';
             }
 
             // ============================================================
@@ -2294,9 +2593,10 @@
                     app.classList.add('show-customer');
                     document.getElementById('navUserName').textContent = 'Publik';
                     document.getElementById('navUserRole').textContent = 'Customer';
-                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Admin';
+                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Admin';
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'flex');
+                    document.getElementById('heroSection').style.display = 'block';
                     const currentActive = document.querySelector('.section.active');
                     if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin' || currentActive.id === 'section-manage-services' || currentActive.id === 'section-settings')) {
                         navigateTo('section-layanan');
@@ -2305,9 +2605,10 @@
                     app.classList.add('show-admin');
                     document.getElementById('navUserName').textContent = 'Admin';
                     document.getElementById('navUserRole').textContent = 'Admin';
-                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Switch ke Customer';
+                    document.getElementById('switchNavBtn').innerHTML = '<i class="fas fa-exchange-alt"></i> Customer';
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'flex');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'none');
+                    document.getElementById('heroSection').style.display = 'none';
                     const currentActive = document.querySelector('.section.active');
                     if (!currentActive || currentActive.id === 'section-layanan' || currentActive.id === 'section-booking') {
                         navigateTo('section-kasir');
@@ -2377,7 +2678,7 @@
                     settingCustomSize.value = '';
                     customPaperSizeField.style.display = 'none';
                     settingsMessage.innerHTML = '✅ Pengaturan direset ke default. Klik Simpan untuk menyimpan.';
-                    settingsMessage.style.color = '#856404';
+                    settingsMessage.style.color = '#854d0e';
                 }
             });
 
@@ -2404,7 +2705,6 @@
                     document.getElementById('serviceName').value = '';
                     document.getElementById('servicePrice').value = '';
                     document.getElementById('serviceDesc').value = '';
-                    // Data otomatis update via listener
                 }
             });
             document.getElementById('resetServiceBtn').addEventListener('click', function() {
@@ -2495,10 +2795,7 @@
             // INIT
             // ============================================================
 
-            // Load settings dulu
             loadSettings();
-
-            // Load data dari Realtime Database
             loadServices();
             loadProducts();
             renderCart();
