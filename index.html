@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     
-    <!-- Firebase SDK (Tanpa FCM/Messaging) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
@@ -18,7 +18,6 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     
     <style>
-        /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -27,7 +26,6 @@
             color: #0b1a2e;
         }
 
-        /* ===== NAVBAR ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -149,7 +147,6 @@
         .db-status.online { color: #28a745; }
         .db-status.offline { color: #dc3545; }
 
-        /* ===== MAIN CONTENT ===== */
         .main-content {
             padding-top: 85px;
             max-width: 1440px;
@@ -183,7 +180,6 @@
         }
         .section-title i { color: #1d3b5c; }
 
-        /* ===== COMPONENTS ===== */
         .service-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -227,7 +223,70 @@
             margin-top: 6px;
         }
 
-        /* Booking WA */
+        .service-admin-panel {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 20px 24px;
+            border: 1px solid #e2ebf5;
+            margin-top: 16px;
+        }
+        .service-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+        .service-form .field { display: flex; flex-direction: column; gap: 4px; }
+        .service-form label {
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #2a4b6e;
+        }
+        .service-form input {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #d6e2f0;
+            background: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .service-form input:focus {
+            outline: 2px solid #b4cef0;
+            border-color: transparent;
+        }
+
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+        .service-table th {
+            text-align: left;
+            padding: 10px 8px;
+            background: #eef3f8;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .service-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef3f8;
+        }
+        .service-table .actions { display: flex; gap: 6px; }
+        .service-table .actions button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .service-table .actions .edit-btn { color: #0066cc; }
+        .service-table .actions .delete-btn { color: #e63946; }
+
         .booking-wa-container {
             background: #f2f7fe;
             border-radius: 24px;
@@ -354,7 +413,6 @@
             display: inline-block;
         }
 
-        /* Buttons */
         .btn-primary {
             background: #0b1a2e;
             border: none;
@@ -415,7 +473,6 @@
         }
         .btn-danger:hover { background: #c82333; }
 
-        /* Mekanik */
         .mekanik-list {
             display: flex;
             flex-wrap: wrap;
@@ -450,7 +507,6 @@
         }
         .mekanik-item .status.busy { background: #e63946; }
 
-        /* Admin Panel */
         .admin-panel {
             background: #f8faff;
             border-radius: 24px;
@@ -515,7 +571,6 @@
         .product-table .actions .edit-btn { color: #0066cc; }
         .product-table .actions .delete-btn { color: #e63946; }
 
-        /* Kasir */
         .kasir-row {
             display: flex;
             flex-wrap: wrap;
@@ -604,7 +659,6 @@
         }
         .scan-area .scan-btn:hover { background: #1d3b5c; }
 
-        /* Scanner Overlay */
         .scanner-overlay {
             display: none;
             position: fixed;
@@ -670,7 +724,6 @@
         }
         .scanner-container .scanner-status.error { color: #dc3545; }
 
-        /* Struk */
         .struk-container {
             display: none;
             position: fixed;
@@ -792,7 +845,6 @@
             .struk-actions { display: none !important; }
         }
 
-        /* Notification */
         .notification {
             padding: 12px 18px;
             border-radius: 12px;
@@ -804,7 +856,6 @@
         }
         .notification.show { display: block; }
 
-        /* Loading */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -834,7 +885,6 @@
         }
         .loading-overlay p { color: #0b1a2e; font-weight: 600; }
 
-        /* Role visibility */
         .admin-only { display: none !important; }
         .customer-only { display: block; }
         .show-admin .admin-only { display: flex !important; }
@@ -844,9 +894,9 @@
         .show-admin #section-layanan,
         .show-admin #section-booking { display: none !important; }
         .show-customer #section-kasir,
-        .show-customer #section-admin { display: none !important; }
+        .show-customer #section-admin,
+        .show-customer #section-manage-services { display: none !important; }
 
-        /* Password Modal */
         .password-modal {
             display: none;
             position: fixed;
@@ -931,6 +981,7 @@
             .section-title { font-size: 1.2rem; }
             .form-wa { grid-template-columns: 1fr; }
             .product-form { grid-template-columns: 1fr; }
+            .service-form { grid-template-columns: 1fr; }
             .scan-area { flex-direction: column; align-items: stretch; }
             .scan-area input { width: 100%; }
             .kasir-row { flex-direction: column; }
@@ -976,6 +1027,9 @@
             </a>
             <a href="#section-admin" class="admin-only" data-section="section-admin">
                 <i class="fas fa-boxes"></i> Produk
+            </a>
+            <a href="#section-manage-services" class="admin-only" data-section="section-manage-services">
+                <i class="fas fa-cog"></i> Kelola Layanan
             </a>
             <a href="#section-mekanik" data-section="section-mekanik">
                 <i class="fas fa-user-cog"></i> Mekanik
@@ -1025,7 +1079,7 @@
 
         <div class="notification" id="notification"></div>
 
-        <!-- ===== SECTION 1: LAYANAN ===== -->
+        <!-- ===== SECTION 1: LAYANAN (Customer) ===== -->
         <section id="section-layanan" class="section active">
             <h2 class="section-title"><i class="fas fa-list-ul"></i> Daftar Layanan & Harga</h2>
             <div class="service-grid" id="serviceGrid"></div>
@@ -1107,7 +1161,7 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 3: KASIR ===== -->
+        <!-- ===== SECTION 3: KASIR (Admin) ===== -->
         <section id="section-kasir" class="section">
             <h2 class="section-title"><i class="fas fa-shopping-cart"></i> Kasir / Transaksi</h2>
 
@@ -1143,7 +1197,7 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 4: MANAJEMEN PRODUK ===== -->
+        <!-- ===== SECTION 4: MANAJEMEN PRODUK (Admin) ===== -->
         <section id="section-admin" class="section">
             <h2 class="section-title"><i class="fas fa-boxes"></i> Manajemen Produk & Stok</h2>
 
@@ -1180,7 +1234,45 @@
             </div>
         </section>
 
-        <!-- ===== SECTION 5: MEKANIK ===== -->
+        <!-- ===== SECTION 5: KELOLA LAYANAN (Admin) ===== -->
+        <section id="section-manage-services" class="section">
+            <h2 class="section-title"><i class="fas fa-cog"></i> Kelola Layanan</h2>
+            <p style="color:#3c5b78;margin-bottom:16px;">Tambah, edit, atau hapus layanan yang tampil di halaman customer.</p>
+
+            <div class="service-admin-panel">
+                <h4><i class="fas fa-plus-circle"></i> Tambah Layanan Baru</h4>
+                <div class="service-form">
+                    <div class="field">
+                        <label>Nama Layanan</label>
+                        <input type="text" id="serviceName" placeholder="Contoh: Servis Rutin" />
+                    </div>
+                    <div class="field">
+                        <label>Harga</label>
+                        <input type="number" id="servicePrice" placeholder="150000" />
+                    </div>
+                    <div class="field">
+                        <label>Deskripsi</label>
+                        <input type="text" id="serviceDesc" placeholder="Deskripsi singkat..." />
+                    </div>
+                    <div class="field" style="display:flex;align-items:flex-end;gap:8px;">
+                        <button class="btn-primary" id="addServiceBtn"><i class="fas fa-save"></i> Simpan</button>
+                        <button class="btn-outline" id="resetServiceBtn">Reset</button>
+                    </div>
+                </div>
+
+                <h4 style="margin-top:20px;"><i class="fas fa-list"></i> Daftar Layanan</h4>
+                <div style="overflow-x:auto;">
+                    <table class="service-table">
+                        <thead>
+                            <tr><th>Nama</th><th>Harga</th><th>Deskripsi</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="serviceTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 6: MEKANIK ===== -->
         <section id="section-mekanik" class="section">
             <h2 class="section-title"><i class="fas fa-users"></i> Tim Mekanik</h2>
             <div class="mekanik-list" style="margin-top:12px;">
@@ -1244,14 +1336,7 @@
         // ============================================================
         (function() {
             // ===== DATA =====
-            const services = [
-                { name: 'Servis Rutin', price: 150000, desc: 'Cek mesin, kelistrikan, & pelumas' },
-                { name: 'Ganti Oli + Filter', price: 220000, desc: 'Oli sintetik + filter original' },
-                { name: 'Turun Mesin', price: 650000, desc: 'Overhaul & perbaikan total' },
-                { name: 'Korek & Tune Up', price: 380000, desc: 'Setting karburator/injector & timing' },
-                { name: 'Rem & Kaki-kaki', price: 280000, desc: 'Cakram, kampas, & suspensi' },
-            ];
-
+            let services = [];
             let products = [];
             let cart = [];
             let currentRole = 'customer';
@@ -1316,40 +1401,86 @@
                 setTimeout(() => { notification.className = 'notification'; }, 4000);
             }
 
-            // Load Products from Realtime Database
+            // ===== LOAD SERVICES =====
+            function loadServices() {
+                db.ref('services').on('value', function(snapshot) {
+                    const data = snapshot.val();
+                    services = [];
+                    if (data) {
+                        Object.keys(data).forEach(key => {
+                            services.push({ id: key, ...data[key] });
+                        });
+                        services.reverse();
+                    }
+                    renderServices();
+                    updateServiceDropdown();
+                }, function(error) {
+                    console.error('Error loading services:', error);
+                    showNotification('❌ Gagal memuat layanan: ' + error.message, 'error');
+                });
+            }
+
+            // ===== LOAD PRODUCTS =====
             function loadProducts() {
-                showLoading(true, 'Menghubungkan ke Realtime Database...');
-                
                 db.ref('products').on('value', function(snapshot) {
-                    showLoading(false);
                     const data = snapshot.val();
                     products = [];
-                    
                     if (data) {
                         Object.keys(data).forEach(key => {
                             products.push({ id: key, ...data[key] });
                         });
                         products.reverse();
                     }
-                    
                     renderProductTable();
                     dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.4rem;"></i> RTDB Online';
                     dbStatus.className = 'db-status online';
-                    showNotification('✅ Data produk berhasil dimuat dari Realtime Database', 'success');
                 }, function(error) {
-                    showLoading(false);
                     console.error('Error loading products:', error);
                     dbStatus.innerHTML = '<i class="fas fa-circle" style="color:#dc3545;font-size:0.4rem;"></i> RTDB Offline';
                     dbStatus.className = 'db-status offline';
                     renderProductTable();
-                    showNotification('❌ Gagal memuat data: ' + error.message, 'error');
+                    showNotification('❌ Gagal memuat produk: ' + error.message, 'error');
                 });
             }
 
-            // Add Product to Realtime Database
+            // ===== ADD SERVICE =====
+            async function addServiceToRTDB(name, price, desc) {
+                try {
+                    showLoading(true, 'Menyimpan layanan...');
+                    const newRef = db.ref('services').push();
+                    await newRef.set({
+                        name: name,
+                        price: price,
+                        desc: desc,
+                        createdAt: Date.now()
+                    });
+                    showLoading(false);
+                    showNotification('✅ Layanan berhasil disimpan!', 'success');
+                    return true;
+                } catch (error) {
+                    showLoading(false);
+                    showNotification('❌ Gagal menyimpan: ' + error.message, 'error');
+                    return false;
+                }
+            }
+
+            // ===== DELETE SERVICE =====
+            async function deleteServiceFromRTDB(serviceId) {
+                try {
+                    showLoading(true, 'Menghapus layanan...');
+                    await db.ref('services/' + serviceId).remove();
+                    showLoading(false);
+                    showNotification('✅ Layanan berhasil dihapus!', 'success');
+                } catch (error) {
+                    showLoading(false);
+                    showNotification('❌ Gagal menghapus: ' + error.message, 'error');
+                }
+            }
+
+            // ===== ADD PRODUCT =====
             async function addProductToRTDB(name, price, serial) {
                 try {
-                    showLoading(true, 'Menyimpan produk ke Realtime Database...');
+                    showLoading(true, 'Menyimpan produk...');
                     const newRef = db.ref('products').push();
                     await newRef.set({
                         name: name,
@@ -1358,31 +1489,29 @@
                         createdAt: Date.now()
                     });
                     showLoading(false);
-                    showNotification('✅ Produk berhasil disimpan ke Realtime Database!', 'success');
+                    showNotification('✅ Produk berhasil disimpan!', 'success');
                     return true;
                 } catch (error) {
-                    console.error('Error adding product:', error);
                     showLoading(false);
                     showNotification('❌ Gagal menyimpan: ' + error.message, 'error');
                     return false;
                 }
             }
 
-            // Delete Product from Realtime Database
+            // ===== DELETE PRODUCT =====
             async function deleteProductFromRTDB(productId) {
                 try {
                     showLoading(true, 'Menghapus produk...');
                     await db.ref('products/' + productId).remove();
                     showLoading(false);
-                    showNotification('✅ Produk berhasil dihapus dari Realtime Database!', 'success');
+                    showNotification('✅ Produk berhasil dihapus!', 'success');
                 } catch (error) {
-                    console.error('Error deleting product:', error);
                     showLoading(false);
                     showNotification('❌ Gagal menghapus: ' + error.message, 'error');
                 }
             }
 
-            // Save Transaction to Realtime Database
+            // ===== SAVE TRANSACTION =====
             async function saveTransactionToRTDB(transactionData) {
                 try {
                     const newRef = db.ref('transactions').push();
@@ -1390,7 +1519,6 @@
                         ...transactionData,
                         createdAt: Date.now()
                     });
-                    console.log('Transaction saved to RTDB');
                 } catch (error) {
                     console.error('Error saving transaction:', error);
                 }
@@ -1403,14 +1531,96 @@
             function renderServices() {
                 const grid = document.getElementById('serviceGrid');
                 if (!grid) return;
+
+                if (services.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:#8aa0b8;">
+                            <i class="fas fa-info-circle" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+                            Belum ada layanan. Admin akan menambahkan layanan segera.
+                        </div>
+                    `;
+                    return;
+                }
+
                 grid.innerHTML = services.map(s => `
                     <div class="service-card">
                         <h4>${s.name}</h4>
                         <div class="price">Rp ${s.price.toLocaleString('id-ID')}</div>
-                        <div class="desc">${s.desc}</div>
+                        <div class="desc">${s.desc || 'Layanan servis motor'}</div>
                         <span class="badge-mekanik"><i class="fas fa-user-cog"></i> mekanik tersedia</span>
                     </div>
                 `).join('');
+            }
+
+            function renderServiceTable() {
+                const tbody = document.getElementById('serviceTableBody');
+                if (!tbody) return;
+
+                if (services.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align:center;padding:30px;color:#8aa0b8;">
+                                <i class="fas fa-info-circle" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                                Belum ada layanan. Tambahkan layanan di atas.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = services.map(s => `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td>Rp ${s.price.toLocaleString('id-ID')}</td>
+                        <td>${s.desc || '-'}</td>
+                        <td class="actions">
+                            <button class="edit-btn" data-id="${s.id}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" data-id="${s.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.querySelectorAll('#serviceTableBody .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        if (confirm('Hapus layanan ini?')) {
+                            deleteServiceFromRTDB(id);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('#serviceTableBody .edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const svc = services.find(s => s.id === id);
+                        if (svc) {
+                            document.getElementById('serviceName').value = svc.name;
+                            document.getElementById('servicePrice').value = svc.price;
+                            document.getElementById('serviceDesc').value = svc.desc || '';
+                            deleteServiceFromRTDB(id);
+                        }
+                    });
+                });
+            }
+
+            function updateServiceDropdown() {
+                const select = document.getElementById('waService');
+                if (!select) return;
+                const currentVal = select.value;
+                select.innerHTML = '';
+                if (services.length === 0) {
+                    select.innerHTML = '<option value="">Belum ada layanan</option>';
+                    return;
+                }
+                services.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.name;
+                    opt.textContent = s.name;
+                    select.appendChild(opt);
+                });
+                if (currentVal && [...select.options].some(o => o.value === currentVal)) {
+                    select.value = currentVal;
+                }
             }
 
             function renderProductTable() {
@@ -1441,16 +1651,16 @@
                     </tr>
                 `).join('');
 
-                document.querySelectorAll('.delete-btn').forEach(btn => {
+                document.querySelectorAll('#productTableBody .delete-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = this.dataset.id;
-                        if (confirm('Hapus produk ini dari server?')) {
+                        if (confirm('Hapus produk ini?')) {
                             deleteProductFromRTDB(id);
                         }
                     });
                 });
 
-                document.querySelectorAll('.edit-btn').forEach(btn => {
+                document.querySelectorAll('#productTableBody .edit-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const id = this.dataset.id;
                         const prod = products.find(p => p.id === id);
@@ -1643,7 +1853,8 @@
                 if (phoneClean.length < 10) { waMessage.innerHTML = '⚠️ Nomor WhatsApp tidak valid (minimal 10 digit).'; waMessage.style.color = '#721c24'; waPhone.focus(); return; }
                 if (!date) { waMessage.innerHTML = '⚠️ Silakan pilih tanggal booking.'; waMessage.style.color = '#721c24'; waDate.focus(); return; }
 
-                const message = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${formatDateForWA(date)} untuk layanan ${waService.value} dengan mekanik ${waMekanik.value}.`;
+                const serviceName = waService.value || 'Layanan';
+                const message = `Halo, saya atas nama ${name} ingin mengajukan booking pada ${formatDateForWA(date)} untuk layanan ${serviceName} dengan mekanik ${waMekanik.value}.`;
                 const encodedMessage = encodeURIComponent(message);
                 const waUrl = `https://wa.me/6283895433600?text=${encodedMessage}`;
                 window.open(waUrl, '_blank');
@@ -1775,7 +1986,7 @@
                     document.querySelectorAll('.navbar-menu a.admin-only').forEach(el => el.style.display = 'none');
                     document.querySelectorAll('.navbar-menu a.customer-only-nav').forEach(el => el.style.display = 'flex');
                     const currentActive = document.querySelector('.section.active');
-                    if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin')) {
+                    if (currentActive && (currentActive.id === 'section-kasir' || currentActive.id === 'section-admin' || currentActive.id === 'section-manage-services')) {
                         navigateTo('section-layanan');
                     }
                 } else {
@@ -1797,7 +2008,6 @@
             // EVENT LISTENERS
             // ============================================================
 
-            // Nav links
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1807,13 +2017,11 @@
                 });
             });
 
-            // Switch role
             document.getElementById('switchNavBtn').addEventListener('click', function() {
                 if (currentRole === 'customer') showPasswordModal();
                 else { applyRole('customer'); showNotification('👋 Kembali ke mode Customer', 'info'); }
             });
 
-            // Password modal
             document.getElementById('confirmPasswordBtn').addEventListener('click', checkPassword);
             document.getElementById('cancelPasswordBtn').addEventListener('click', closePasswordModal);
             document.getElementById('passwordInput').addEventListener('keydown', function(e) {
@@ -1822,12 +2030,11 @@
             });
             passwordModal.addEventListener('click', function(e) { if (e.target === this) closePasswordModal(); });
 
-            // Hash change
             window.addEventListener('hashchange', function() {
                 const hash = window.location.hash.replace('#', '');
                 if (hash && document.getElementById(hash)) {
                     const section = document.getElementById(hash);
-                    if ((section.id === 'section-kasir' || section.id === 'section-admin') && currentRole === 'customer') {
+                    if ((section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services') && currentRole === 'customer') {
                         navigateTo('section-layanan'); return;
                     }
                     if ((section.id === 'section-layanan' || section.id === 'section-booking') && currentRole === 'admin') {
@@ -1848,7 +2055,26 @@
             });
             waSendBtn.addEventListener('click', sendToWA);
 
-            // Add Product
+            // ===== ADD SERVICE =====
+            document.getElementById('addServiceBtn').addEventListener('click', async function() {
+                const name = document.getElementById('serviceName').value.trim();
+                const price = parseInt(document.getElementById('servicePrice').value);
+                const desc = document.getElementById('serviceDesc').value.trim();
+                if (!name || !price) { showNotification('⚠️ Nama dan harga harus diisi!', 'error'); return; }
+                const success = await addServiceToRTDB(name, price, desc);
+                if (success) {
+                    document.getElementById('serviceName').value = '';
+                    document.getElementById('servicePrice').value = '';
+                    document.getElementById('serviceDesc').value = '';
+                }
+            });
+            document.getElementById('resetServiceBtn').addEventListener('click', function() {
+                document.getElementById('serviceName').value = '';
+                document.getElementById('servicePrice').value = '';
+                document.getElementById('serviceDesc').value = '';
+            });
+
+            // ===== ADD PRODUCT =====
             document.getElementById('addProductBtn').addEventListener('click', async function() {
                 const name = document.getElementById('prodName').value.trim();
                 const price = parseInt(document.getElementById('prodPrice').value);
@@ -1870,7 +2096,7 @@
                 document.getElementById('prodSerial').value = '';
             });
 
-            // Kasir
+            // ===== KASIR =====
             document.getElementById('scanBtn').addEventListener('click', function() {
                 const val = document.getElementById('barcodeInput').value.trim();
                 if (val) addToCartBySerial(val);
@@ -1905,7 +2131,6 @@
                 if (confirm('Kosongkan keranjang?')) { cart = []; dpInCart = 0; renderCart(); showNotification('Keranjang dikosongkan', 'info'); }
             });
 
-            // Checkout
             document.getElementById('checkoutBtn').addEventListener('click', function() {
                 if (cart.length === 0) { showNotification('⚠️ Keranjang kosong!', 'error'); return; }
                 const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
@@ -1919,7 +2144,6 @@
                 }
             });
 
-            // Struk
             document.getElementById('printStrukBtn').addEventListener('click', function() { window.print(); });
             document.getElementById('closeStrukBtn').addEventListener('click', closeStruk);
             strukContainer.addEventListener('click', function(e) { if (e.target === this) closeStruk(); });
@@ -1932,17 +2156,16 @@
             // INIT
             // ============================================================
 
-            renderServices();
+            // Load data dari Realtime Database
+            loadServices();
+            loadProducts();
             renderCart();
             updateWAPreview();
-
-            // Load data dari Realtime Database
-            loadProducts();
 
             const hash = window.location.hash.replace('#', '');
             if (hash && document.getElementById(hash)) {
                 const section = document.getElementById(hash);
-                if (section.id === 'section-kasir' || section.id === 'section-admin') {
+                if (section.id === 'section-kasir' || section.id === 'section-admin' || section.id === 'section-manage-services') {
                     applyRole('admin');
                     navigateTo(hash);
                 } else {
