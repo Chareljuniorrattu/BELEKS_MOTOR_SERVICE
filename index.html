@@ -9,11 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Tanpa FCM/Messaging) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
     
     <!-- QR Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -141,14 +140,14 @@
         }
         .btn-switch-nav:hover { background: #e4ebf3; border-color: #b0c8e0; }
 
-        .fcm-status {
+        .db-status {
             font-size: 0.65rem;
-            color: #28a745;
             display: flex;
             align-items: center;
             gap: 4px;
         }
-        .fcm-status.error { color: #dc3545; }
+        .db-status.online { color: #28a745; }
+        .db-status.offline { color: #dc3545; }
 
         /* ===== MAIN CONTENT ===== */
         .main-content {
@@ -922,15 +921,6 @@
         }
         .password-error.show { display: block; }
 
-        .db-status {
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .db-status.online { color: #28a745; }
-        .db-status.offline { color: #dc3545; }
-
         @media (max-width: 768px) {
             .navbar { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
             .navbar-menu { justify-content: center; gap: 4px; flex-wrap: wrap; }
@@ -997,9 +987,6 @@
                 <span class="role-badge" id="navUserRole">Customer</span>
                 <span class="db-status" id="dbStatus">
                     <i class="fas fa-circle" style="font-size:0.4rem;"></i> RTDB
-                </span>
-                <span class="fcm-status" id="fcmStatus">
-                    <i class="fas fa-circle" style="font-size:0.4rem;"></i> Notif
                 </span>
             </div>
             <button class="btn-switch-nav" id="switchNavBtn">
@@ -1289,7 +1276,6 @@
             const loadingOverlay = document.getElementById('loadingOverlay');
             const loadingText = document.getElementById('loadingText');
             const dbStatus = document.getElementById('dbStatus');
-            const fcmStatus = document.getElementById('fcmStatus');
 
             // WA Booking
             const waName = document.getElementById('waName');
@@ -1343,7 +1329,6 @@
                         Object.keys(data).forEach(key => {
                             products.push({ id: key, ...data[key] });
                         });
-                        // Sort by newest first
                         products.reverse();
                     }
                     
@@ -1365,7 +1350,6 @@
             async function addProductToRTDB(name, price, serial) {
                 try {
                     showLoading(true, 'Menyimpan produk ke Realtime Database...');
-                    
                     const newRef = db.ref('products').push();
                     await newRef.set({
                         name: name,
@@ -1373,7 +1357,6 @@
                         serial: serial,
                         createdAt: Date.now()
                     });
-                    
                     showLoading(false);
                     showNotification('✅ Produk berhasil disimpan ke Realtime Database!', 'success');
                     return true;
@@ -1811,52 +1794,6 @@
             }
 
             // ============================================================
-            // FCM / NOTIFICATION
-            // ============================================================
-
-            async function initFCM() {
-                try {
-                    const messaging = firebase.messaging.isSupported() ? firebase.messaging() : null;
-                    if (!messaging) {
-                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> FCM tidak didukung';
-                        fcmStatus.className = 'fcm-status error';
-                        return;
-                    }
-                    const permission = await Notification.requestPermission();
-                    if (permission !== 'granted') {
-                        fcmStatus.innerHTML = '<i class="fas fa-times" style="color:#dc3545;"></i> Izin ditolak';
-                        fcmStatus.className = 'fcm-status error';
-                        return;
-                    }
-                    const token = await messaging.getToken({
-                        vapidKey: 'BGUV77DEyUET8Q08c3l-ceh64Q7U6a5Czi5J_TQhSYJtKbkuKwh2RTIaP81oYnvN09ybLzj4kRLM_VJ-O0BjFUU'
-                    });
-                    if (token) {
-                        fcmStatus.innerHTML = '<i class="fas fa-circle" style="color:#28a745;font-size:0.4rem;"></i> Notif aktif';
-                        fcmStatus.className = 'fcm-status';
-                        // Save token ke RTDB
-                        await db.ref('fcmTokens/' + token).set({
-                            token: token,
-                            createdAt: Date.now(),
-                            userAgent: navigator.userAgent
-                        });
-                    } else {
-                        fcmStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#856404;"></i> Token tidak tersedia';
-                        fcmStatus.className = 'fcm-status error';
-                    }
-                    messaging.onMessage((payload) => {
-                        const title = payload.notification?.title || 'Notifikasi Baru';
-                        const body = payload.notification?.body || 'Ada notifikasi baru';
-                        showNotification(`🔔 ${title}: ${body}`, 'success');
-                    });
-                } catch (error) {
-                    console.error('FCM Error:', error);
-                    fcmStatus.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#dc3545;"></i> ${error.message}`;
-                    fcmStatus.className = 'fcm-status error';
-                }
-            }
-
-            // ============================================================
             // EVENT LISTENERS
             // ============================================================
 
@@ -1998,7 +1935,6 @@
             renderServices();
             renderCart();
             updateWAPreview();
-            initFCM();
 
             // Load data dari Realtime Database
             loadProducts();
