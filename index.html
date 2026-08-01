@@ -69,10 +69,17 @@
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease forwards;
+        @keyframes welcomeGlow {
+            0% { text-shadow: 0 0 20px rgba(230,57,70,0.3); }
+            50% { text-shadow: 0 0 40px rgba(230,57,70,0.6); }
+            100% { text-shadow: 0 0 20px rgba(230,57,70,0.3); }
         }
+        @keyframes confettiDrop {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
         .animate-fade-in-up {
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
@@ -81,9 +88,8 @@
             opacity: 0;
             animation: slideUp 0.6s ease forwards;
         }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-welcome { animation: welcomeGlow 2s ease-in-out infinite; }
 
         .delay-1 { animation-delay: 0.1s; }
         .delay-2 { animation-delay: 0.2s; }
@@ -92,7 +98,100 @@
         .delay-5 { animation-delay: 0.5s; }
 
         /* ============================================================ */
-        /* GLASS MORPHISM BACKGROUND */
+        /* WELCOME OVERLAY */
+        /* ============================================================ */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            animation: fadeIn 0.5s ease;
+        }
+        .welcome-overlay.show {
+            display: flex;
+        }
+        .welcome-overlay .welcome-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+        }
+        .welcome-overlay .welcome-content .icon-big {
+            font-size: 5rem;
+            color: #e63946;
+            margin-bottom: 16px;
+            animation: float 2s ease-in-out infinite;
+        }
+        .welcome-overlay .welcome-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        .welcome-overlay .welcome-content h2 span {
+            background: linear-gradient(135deg, #e63946, #ff6b7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .welcome-overlay .welcome-content p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .welcome-overlay .welcome-content .welcome-btn {
+            background: #e63946;
+            border: none;
+            padding: 14px 44px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(230,57,70,0.3);
+            font-family: 'Inter', sans-serif;
+        }
+        .welcome-overlay .welcome-content .welcome-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(230,57,70,0.5);
+        }
+        .welcome-overlay .welcome-content .welcome-sub {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99998;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -20px;
+            border-radius: 2px;
+            animation: confettiDrop linear forwards;
+        }
+
+        /* ============================================================ */
+        /* BG PATTERN */
         /* ============================================================ */
         .bg-pattern {
             position: fixed;
@@ -108,7 +207,7 @@
         }
 
         /* ============================================================ */
-        /* HERO SECTION (CUSTOMER) */
+        /* HERO SECTION */
         /* ============================================================ */
         .hero-section {
             position: relative;
@@ -364,6 +463,7 @@
             cursor: pointer;
             transition: 0.2s;
             white-space: nowrap;
+            font-family: 'Inter', sans-serif;
         }
         .btn-switch-nav:hover {
             background: rgba(255,255,255,0.15);
@@ -413,7 +513,7 @@
         }
 
         /* ============================================================ */
-        /* SERVICE CARDS - Premium Design */
+        /* SERVICE CARDS */
         /* ============================================================ */
         .service-grid {
             display: grid;
@@ -503,7 +603,7 @@
         }
 
         /* ============================================================ */
-        /* BOOKING WA - Premium */
+        /* BOOKING WA */
         /* ============================================================ */
         .booking-wa-container {
             background: #ffffff;
@@ -696,19 +796,6 @@
             border-color: #94a3b8;
         }
 
-        .btn-danger {
-            background: #dc3545;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 60px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-danger:hover { background: #c82333; }
-
         /* ============================================================ */
         /* MEKANIK */
         /* ============================================================ */
@@ -793,6 +880,8 @@
             .section-title { font-size: 1.4rem; }
             .footer-info { flex-direction: column; gap: 8px; text-align: center; }
             .service-grid { grid-template-columns: 1fr; }
+            .welcome-overlay .welcome-content h2 { font-size: 1.8rem; }
+            .welcome-overlay .welcome-content .icon-big { font-size: 3.5rem; }
         }
         @media (max-width: 480px) {
             .hero-text h1 { font-size: 1.6rem; }
@@ -802,10 +891,13 @@
             .navbar-menu a { font-size: 0.6rem; padding: 4px 10px; }
             .navbar-brand h1 { font-size: 1rem; }
             .booking-wa-container .wa-header { flex-direction: column; text-align: center; }
+            .welcome-overlay .welcome-content h2 { font-size: 1.4rem; }
+            .welcome-overlay .welcome-content .icon-big { font-size: 2.8rem; }
+            .welcome-overlay .welcome-content p { font-size: 0.9rem; }
         }
 
         /* ============================================================ */
-        /* ADMIN PANELS - Clean & Professional */
+        /* ADMIN PANELS */
         /* ============================================================ */
         .admin-panel, .service-admin-panel, .settings-panel {
             background: #ffffff;
@@ -1237,8 +1329,8 @@
             padding: 14px 20px;
             border-radius: 16px;
             margin: 10px 0;
-            background: #d4edda;
-            color: #155724;
+            background: #dcfce7;
+            color: #166534;
             font-weight: 500;
             display: none;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
@@ -1290,9 +1382,6 @@
         .show-customer #section-manage-services,
         .show-customer #section-settings { display: none !important; }
 
-        /* ============================================================ */
-        /* CUSTOMER ONLY HERO */
-        /* ============================================================ */
         .show-customer .hero-section { display: block; }
         .show-admin .hero-section { display: none; }
 
@@ -1315,6 +1404,20 @@
     <!-- ===== BACKGROUND PATTERN ===== -->
     <div class="bg-pattern"></div>
 
+    <!-- ===== WELCOME OVERLAY ===== -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-content">
+            <div class="icon-big"><i class="fas fa-motorcycle"></i></div>
+            <h2 id="welcomeTitle">Selamat Datang di <span>BELEKS MOTOR SERVICE</span></h2>
+            <p id="welcomeSub">Kami siap memberikan servis motor terbaik untuk Anda</p>
+            <button class="welcome-btn" id="welcomeBtn"><i class="fas fa-arrow-right"></i> Mulai Sekarang</button>
+            <div class="welcome-sub" id="welcomeRole">Mode: Customer</div>
+        </div>
+    </div>
+
+    <!-- ===== CONFETTI CONTAINER ===== -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
     <!-- ===== LOADING OVERLAY ===== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
@@ -1325,7 +1428,7 @@
     <nav class="navbar" id="navbar">
         <a href="#section-layanan" class="navbar-brand">
             <i class="fas fa-motorcycle"></i>
-            <h1>BELEKS <span>MOTOR</span></h1>
+            <h1>BELEKS <span>MOTOR</span> SERVICE</h1>
             <span class="version">v2.0</span>
         </a>
 
@@ -1788,6 +1891,7 @@
             let currentRole = 'customer';
             let transactionNumber = 1;
             let dpInCart = 0;
+            let isFirstLoad = true;
 
             // Settings
             let settings = {
@@ -1816,6 +1920,12 @@
             const loadingOverlay = document.getElementById('loadingOverlay');
             const loadingText = document.getElementById('loadingText');
             const dbStatus = document.getElementById('dbStatus');
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            const welcomeTitle = document.getElementById('welcomeTitle');
+            const welcomeSub = document.getElementById('welcomeSub');
+            const welcomeRole = document.getElementById('welcomeRole');
+            const welcomeBtn = document.getElementById('welcomeBtn');
+            const confettiContainer = document.getElementById('confettiContainer');
 
             // WA Booking
             const waName = document.getElementById('waName');
@@ -1847,6 +1957,57 @@
             const footerWhatsapp = document.getElementById('footerWhatsapp');
             const footerPhone = document.getElementById('footerPhone');
             const waNumberDisplay = document.getElementById('waNumberDisplay');
+
+            // ============================================================
+            // CONFETTI
+            // ============================================================
+            function createConfetti() {
+                const colors = ['#e63946', '#ff6b7a', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6b6b', '#a66cff'];
+                for (let i = 0; i < 60; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                    confetti.style.height = (Math.random() * 8 + 4) + 'px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = (Math.random() * 2) + 's';
+                    confettiContainer.appendChild(confetti);
+                }
+                setTimeout(() => {
+                    confettiContainer.innerHTML = '';
+                }, 5000);
+            }
+
+            // ============================================================
+            // WELCOME OVERLAY
+            // ============================================================
+            function showWelcome(role) {
+                if (role === 'admin') {
+                    welcomeTitle.innerHTML = '👋 Selamat Datang <span>Admin</span>';
+                    welcomeSub.textContent = 'Anda memiliki akses penuh ke kasir, produk, dan pengaturan.';
+                    welcomeRole.textContent = 'Mode: Admin';
+                    // Admin welcome dengan efek berbeda
+                    createConfetti();
+                } else {
+                    welcomeTitle.innerHTML = 'Selamat Datang di <span>BELEKS MOTOR SERVICE</span>';
+                    welcomeSub.textContent = 'Kami siap memberikan servis motor terbaik untuk Anda';
+                    welcomeRole.textContent = 'Mode: Customer';
+                }
+                welcomeOverlay.classList.add('show');
+                
+                // Auto close setelah 3 detik
+                setTimeout(() => {
+                    closeWelcome();
+                }, 3000);
+            }
+
+            function closeWelcome() {
+                welcomeOverlay.classList.remove('show');
+            }
+
+            welcomeBtn.addEventListener('click', closeWelcome);
 
             // ============================================================
             // REALTIME DATABASE FUNCTIONS
@@ -2631,14 +2792,34 @@
             });
 
             document.getElementById('switchNavBtn').addEventListener('click', function() {
-                if (currentRole === 'customer') showPasswordModal();
-                else { applyRole('customer'); showNotification('👋 Kembali ke mode Customer', 'info'); }
+                if (currentRole === 'customer') {
+                    showPasswordModal();
+                } else {
+                    applyRole('customer');
+                    showWelcome('customer');
+                    showNotification('👋 Kembali ke mode Customer', 'info');
+                }
             });
 
-            document.getElementById('confirmPasswordBtn').addEventListener('click', checkPassword);
+            document.getElementById('confirmPasswordBtn').addEventListener('click', function() {
+                const input = document.getElementById('passwordInput');
+                const error = document.getElementById('passwordError');
+                if (input.value.trim() === '123456789') {
+                    closePasswordModal();
+                    applyRole('admin');
+                    showWelcome('admin');
+                    showNotification('✅ Selamat datang Admin!', 'success');
+                } else {
+                    error.classList.add('show');
+                    input.value = '';
+                    input.focus();
+                }
+            });
             document.getElementById('cancelPasswordBtn').addEventListener('click', closePasswordModal);
             document.getElementById('passwordInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') checkPassword();
+                if (e.key === 'Enter') {
+                    document.getElementById('confirmPasswordBtn').click();
+                }
                 if (e.key === 'Escape') closePasswordModal();
             });
             passwordModal.addEventListener('click', function(e) { if (e.target === this) closePasswordModal(); });
@@ -2815,6 +2996,11 @@
                 applyRole('customer');
                 navigateTo('section-layanan');
             }
+
+            // Tampilkan welcome setelah data siap
+            setTimeout(() => {
+                showWelcome('customer');
+            }, 500);
 
         })();
     </script>
